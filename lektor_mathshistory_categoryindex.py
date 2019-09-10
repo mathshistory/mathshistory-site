@@ -105,7 +105,7 @@ class CategoryTagsType(Type):
         plugin = self.env.plugins[PLUGIN_NAME]
         categories = plugin.get_categories()
         rv = Type.to_json(self, pad, record, alt)
-        rv['tags'] = map(lambda c: c['tag'], categories)
+        rv['tags'] = [c['tag'] for c in categories]
         return rv
 
 
