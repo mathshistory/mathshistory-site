@@ -18,7 +18,7 @@ from lektor.db import F
 from lektor.types import Type
 from lektor.environment import PRIMARY_ALT
 
-PLUGIN_NAME = 'mathshistory_categoryindex'
+PLUGIN_NAME = 'mathshistory-categoryindex'
 VIRTUAL_SOURCE_ID = 'categoryindex'
 SOURCE_PATH = '/'
 OUTPUT_PATH = '/Categories'
