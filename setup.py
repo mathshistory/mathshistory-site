@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_chronology'],
     url='https://github.com/mathshistory/mathshistory-chronology',
-    version='0.1.0',
+    version='1.0.0',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
