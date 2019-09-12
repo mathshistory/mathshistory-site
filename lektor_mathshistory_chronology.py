@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import posixpath
+import traceback
 
 from lektor.build_programs import BuildProgram
 from lektor.pluginsystem import Plugin
@@ -17,7 +18,7 @@ def get_title(start, end):
     if start < 0:
         start = '%s BC' % (start * -1)
     if end < 0:
-        end = '%s BC' % (start * -1)
+        end = '%s BC' % (end * -1)
     return '%s - %s' % (start, end)
 
 
@@ -33,7 +34,7 @@ class ChronologyIndex(VirtualSourceObject):
         for section in self.config.sections():
             start = int(self.config.get('%s.start' % section))
             end = int(self.config.get('%s.end' % section))
-            page = ChronologyPage(self.parent, self.config, start, end)
+            page = ChronologyPage(self.parent, self.config, section)
             pages.append(page)
         return pages
 
@@ -47,13 +48,15 @@ class ChronologyIndex(VirtualSourceObject):
 
 
 class ChronologyPage(VirtualSourceObject):
-    def __init__(self, parent, config, start, end):
+    def __init__(self, parent, config, section):
         VirtualSourceObject.__init__(self, parent)
         self.i_want_to_live = self.pad  # See lektor-tags/issues/2
         self.config = config
-        self.start = int(start)
-        self.end = int(end)
-        self.template = 'plugins/chronology.html'
+        self.section = section
+        self.start = int(self.config.get('%s.start' % self.section))
+        self.end = int(self.config.get('%s.end' % self.section))
+        self.template = 'plugins/chronologycategory.html'
+        self._cache = None
 
     @property
     def title(self):
@@ -61,30 +64,28 @@ class ChronologyPage(VirtualSourceObject):
 
     @property
     def path(self):
-        return build_url([self.parent.path, '@%s' % VIRTUAL_SOURCE_ID, get_code(self.start, self.end)])
+        return build_url([self.parent.path, '@%s' % VIRTUAL_SOURCE_ID, self.section])
 
     @property
     def url_path(self):
-        return build_url([self.parent.url_path, get_code(self.start, self.end)])
+        return build_url([self.parent.url_path, self.section])
 
     @property
     def chronology(self):
-        all = self.parent['chronology'].blocks
+        try:
+            if self._cache == None:
+                self._cache = []
+                for page in self.pad.query(SOURCE_PATH).include_undiscoverable(True):
+                    year = page['year']
+                    if year >= self.start and year < self.end:
+                        self._cache.append(page)
 
-        # combine to single list
-        chronology = []
-        for block in all:
-            try:
-                year = int(block['year'])
-                if year >= self.start and year < self.end:
-                    chronology.append(block)
-            except:
-                pass
+                # sort them by year
+                self._cache = sorted(self._cache, key = lambda c: c['year'])
 
-        # sort them by start date
-        chronology = sorted(chronology, key = lambda c: c['year'])
-
-        return chronology
+            return self._cache
+        except:
+            traceback.print_exc()
 
 class ChronologyPageBuildProgram(BuildProgram):
     def produce_artifacts(self):
@@ -114,16 +115,14 @@ class MathshistoryChronologyPlugin(Plugin):
                 return
 
             for section in self.get_sections():
-                start = self.get_start(section)
-                end = self.get_end(section)
-                yield ChronologyPage(record, self.get_config(), start, end)
+                yield ChronologyPage(record, self.get_config(), section)
 
             yield ChronologyIndex(record, self.get_config())
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
         def popup_virtual_path_resolver(node, pieces):
-            if len(pieces) == 2:
-                return ChronologyPage(node, self.get_config(), pieces[0], pieces[1])
+            if len(pieces) == 1:
+                return ChronologyPage(node, self.get_config(), pieces[0])
 
         @self.env.virtualpathresolver('%sindex' % VIRTUAL_SOURCE_ID)
         def popup_virtual_path_resolver(node, pieces):
@@ -132,7 +131,3 @@ class MathshistoryChronologyPlugin(Plugin):
 
     def get_sections(self):
         return self.get_config().sections()
-    def get_start(self, name):
-        return self.get_config().get('%s.start' % name)
-    def get_end(self, name):
-        return self.get_config().get('%s.end' % name)
