@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Timelines Index{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Timelines</h1>
+    <h3>Index</h3>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-4 of-the-day-month">
+    <ul>
+    {% for page in this.pages %}
+      <li><a href="{{ page|url }}">{{ page.name }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

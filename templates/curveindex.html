@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Famous Curves Index{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Famous Curves Index</h1>
+    <ul>
+    {% for page in site.query('/Curves').filter(F._model == 'curve') %}
+      <li><a href="{{ page|url }}">{{ page.name }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>Other Content</h3>
+    <ul>
+    {% for page in site.query('/Curves').filter(F._model != 'curve') %}
+      <li><a href="{{ page|url }}">{{ page.title or page.name }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

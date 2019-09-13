@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}Pictures of {{ this.shortname }}{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.fullname }}</h1>
+    <p><a href="{{ this.path|url }}">Back to biography</a></p>
+  </div>
+</div>
+
+{% set biographyimages = this.attachments.images.filter(F._model == 'biographyimage') %}
+{% set bigimages = biographyimages.filter(F.main == False) %}
+
+{% if bigimages.count() > 0 %}
+{% for image in bigimages|sort(attribute='path') %}
+
+{% if loop.first or loop.index0 is divisibleby 2 %}
+<div class="row">
+{% endif %}
+
+  <div class="col-md-6">
+    <img src="{{ image|url }}" />
+  </div>
+
+{% if (loop.index0 + 1) is divisibleby 2 or loop.last %}
+</div>
+{% endif %}
+
+{% endfor %}
+{% endif %}
+
+{% endblock %}
+
+{% block footer %}
+{{ super() }}
+{% endblock %}

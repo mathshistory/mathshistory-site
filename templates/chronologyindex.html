@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Chronology Index{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Chronology All Years</h1>
+    {% for chronologyyear in site.query('/Chronology').include_undiscoverable(True).order_by('year') %}
+    <h4>{{ chronologyyear.year }}</h4>
+    <ul>
+      {% for event in chronologyyear.events.blocks %}
+      {{ event }}
+      {% endfor %}
+    </ul>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

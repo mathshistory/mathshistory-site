@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ this.shortname }}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.fullname }}</h1>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-12">
+    {{ this.content }}
+  </div>
+</div>
+
+{% import 'macros/references.html' as references %}
+{{ references.references(this.references) }}
+
+{% import 'macros/additional.html' as additional %}
+{{ additional.additional(this.additional, this.otherweb, this.shortname) }}
+
+<!-- END MAIN BODY -->
+
+{% endblock %}
+
+{% block footer %}
+{% if this.authors %}<p>Written by {{ this.authors }}</p>{% endif %}
+{% if this.update %}<p>Last Update {{ this.update }}</p>{% endif %}
+{{ super() }}
+{% endblock %}

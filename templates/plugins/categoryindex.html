@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ this.category.name }}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+      <h1>{{ this.category.name }}</h1>
+      <p>{{ this.category.description }}</p>
+  </div>
+</div>
+
+{% if this.biographies.count() > 0 or this.histtopics.count() > 0 %}
+<div class="row">
+  {% if this.biographies.count() > 0 %}
+  <div class="col-md-6">
+      <h3>Biographies</h3>
+      <ul>
+      {% for res in this.biographies %}
+        <li>{{ this.format_display(res)|safe }}</li>
+      {% endfor %}
+      </ul>
+  </div>
+  {% endif %}
+
+  {% if this.histtopics.count() > 0 %}
+  <div class="col-md-6">
+      <h3>History Topics</h3>
+      <ul>
+      {% for res in this.histtopics %}
+        <li>{{ this.format_display(res)|safe }}</li>
+      {% endfor %}
+      </ul>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

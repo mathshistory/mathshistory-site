@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Projects Index{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Projects Index</h1>
+    <h3>Index</h3>
+  </div>
+</div>
+
+
+<div class="row mt-5">
+  <div class="col-md-12">
+    {% if site.query('/Projects').count() > 0 %}
+    <ul>
+    {% for page in site.query('/Projects') %}
+      <li>
+        <p>
+          <b><a href="{{ page|url }}">{{ page.title }}</a></b>
+          <br/>
+          by {{ page.author }}
+        </p>
+      </li>
+    {% endfor %}
+    <ul>
+    {% else %}
+    <i>No projects found</i>
+    {% endif %}
+  </div>
+</div>
+
+<!-- END MAIN BODY -->
+
+{% endblock %}
+
+{% block footer %}
+{{ super() }}
+{% endblock %}

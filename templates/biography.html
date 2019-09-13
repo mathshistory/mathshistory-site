@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block title %}{{ this.shortname }} {% if this.birthyear %} ({{ this.birthyear }} - {% if this.deathyear %}{{ this.deathyear }}{% endif %}){% endif %} - Biography{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.fullname }}</h1>
+  </div>
+</div>
+
+{% if this.birthdate or this.birthplace or this.deathplace or this.deathplace or this.summary %}
+<div class="row mt-5">
+  <div class="col-md-8">
+    <h3>Quick Info</h3>
+
+    {% if this.birthdate or this.birthplace %}
+    <dt>Born</dt>
+    <dd>
+      {% if this.birthdate %}{{ this.birthdate }}{% endif %}
+      {% if this.birthdate and this.birthplace %}<br/>{% endif %}
+      {% if this.birthplace %}
+        {% if this.maplocation %}<a href="{{ '/Map/#%s'|format(this.maplocation)|url }}">{% endif %}
+        {{ this.birthplace }}
+        {% if this.maplocation %}</a>{% endif %}
+      {% endif %}
+    </dd>
+    {% endif %}
+
+    {% if this.deathdate or this.deathplace %}
+    <dt>Died</dt>
+    <dd>
+      {% if this.deathdate %}{{ this.deathdate }}{% endif %}
+      {% if this.deathdate and this.deathplace %}<br/>{% endif %}
+      {% if this.deathplace %}{{ this.deathplace }}{% endif %}
+    </dd>
+    {% endif %}
+
+    {% if this.summary %}
+    <dt>Summary</dt>
+    <dd>{{ this.summary }}</dd>
+    {% endif %}
+  </div>
+
+  {% import 'macros/thumbnail.html' as thumbnail %}
+  <div class="col-md-4">
+    <div class="row" style="text-align: center;">
+      {{ thumbnail.thumbnail(this.attachments.images, True, this.path) }}
+    </div>
+    {% if this.quotations.blocks|length > 0 %}
+    <div class="row mt-2" style="text-align: center;">
+      <a href="{{ '%s/@quotations'|format(this.path)|url }}" style="width: 100%;">Quotations by {{ this.shortname }}</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div class="row mt-5">
+  <div class="col-md-12">
+    <h3>Biography</h3>
+    {{ this.content }}
+  </div>
+</div>
+
+{% import 'macros/references.html' as references %}
+{{ references.references(this.references) }}
+
+{% import 'macros/additional.html' as additional %}
+{{ additional.additional(this.additional, this.otherweb, this.shortname) }}
+
+{% if this.honours.blocks|length > 0 %}
+<div class="row">
+  <div class="col-md-12">
+    <h3>Honours</h3>
+    <p>Honours awarded to {{ this.shortname }}</p>
+    <ol name="honours">
+      {% for honour in this.honours.blocks %}
+      {{ honour }}
+      {% endfor %}
+    </ol>
+  </div>
+</div>
+{% endif %}
+
+<!-- END MAIN BODY -->
+
+{% endblock %}
+
+{% block footer %}
+{% if this.authors %}<p>Written by {{ this.authors }}</p>{% endif %}
+{{ super() }}
+{% endblock %}

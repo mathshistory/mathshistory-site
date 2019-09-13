@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}{{ this.name }}{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Curves</h1>
+    <h3>{{ this.name }}</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    {% for image in this.attachments.images %}
+      {% if image._model == 'curveimage' and image.main %}
+        <img src="{{ image|url }}" alt="{{ image.description }}" />
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="col-md-6">
+    {% for equation in this.equations.blocks %}
+    {{ equation }}
+    {% endfor %}
+  </div>
+</div>
+
+<div class="row mt-5 nonoscript">
+  <div class="col-md-12">
+    <a href="{{ '%s/@curvesapplet'|format(this.path)|url }}">View the interactive version of this curve.</a>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-12">
+    <h3>Description</h3>
+    {{ this.content }}
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-12">
+    <h3>Associated Curves</h3>
+  </div>
+</div>
+
+<div class="row">
+  {% for image in this.attachments.images|sort(attribute='path') %}
+  {% if loop.first or loop.index0|int == (this.attachments.count())/2|int %}
+  <div class="col-md-6">
+    <ul>
+  {% endif %}
+      {% if image._model == 'curveimage' and not image.main %}
+      <li><a href="{{ image|url }}">{{ image.description }}</a></li>
+      {% else %}
+      <li><a href="{{ '/Curves/Definitions/'|url }}">Definitions of the Associated curves</a></li>
+      {% endif %}
+  {% if loop.last or (loop.index0 + 1)|int == (this.attachments.count())/2|int %}
+    </ul>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+
+<!-- END MAIN BODY -->
+
+{% endblock %}

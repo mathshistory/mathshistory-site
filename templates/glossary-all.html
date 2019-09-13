@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}All Glossary Items{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Glossary</h1>
+  </div>
+</div>
+
+{% for page in site.query('/Glossary/') %}
+{% if page._model == 'glossary' %}
+<div class="row">
+  <div class="col-md-12">
+    <a name="{{ page.path|basename|without_ext }}">
+      <h3>{{ page.term }}</h3>
+    </a>
+    <p>{{ page.content }}</p>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+
+{% endblock %}

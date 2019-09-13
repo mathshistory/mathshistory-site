@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ this.title }}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.headline }}</h1>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-12">
+    {{ this.content }}
+  </div>
+</div>
+
+{% import 'macros/references.html' as references %}
+{{ references.references(this.references) }}
+
+{% import 'macros/lastupdate.html' as lastupdate %}
+{{ lastupdate.lastupdate(this.update) }}
+
+<!-- END MAIN BODY -->
+
+{% endblock %}
+
+{% block footer %}
+{% if this.update %}<p>Last Update {{ this.update }}</p>{% endif %}
+{{ super() }}
+{% endblock %}

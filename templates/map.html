@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Birthplace Map{% endblock %}
+
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/ol.css'|asseturl }}" type="text/css">
+<script src="{{ '/static/js/ol.js'|asseturl }}"></script>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Birthplace Map</h1>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-9">
+    <div id="map" style="width: 100%; height: 500px;">
+      <noscript>
+        The birthplace map requires JavaScript enabled in your browser to work.
+      </noscript>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <h3 id="location-name">No Location Chosen</h3>
+    <h4 id="location-country"></h4>
+    <h4 id="location-latlong"></h4>
+    <p id="location-webref"><span>Choose a location on the map to see which mathematicians were born there.</span></p>
+    <ul id="location-people"></ul>
+  </div>
+</div>
+
+<script src="{{ '/static/js/birthplacemap.js'|asseturl }}"></script>
+
+<!-- END MAIN BODY -->
+
+{% endblock %}

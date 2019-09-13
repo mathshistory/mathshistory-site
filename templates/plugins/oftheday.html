@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block title %}{{ this.day }} - Mathematicians Of The Day{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Mathematicians Of The Day</h2>
+    <h3>{{ this.day }}</h3>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-6">
+    <h5>Born:</h5>
+    <ul>
+    {% for page in this.born %}
+      <li><a href="{{ page|url }}">{{ page.shortname }}</a>{% if page.birthyear and page.deathyear %} ({{ page.birthyear }} - {{ page.deathyear }}){% endif %}</li>
+    {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-6">
+    <h5>Died:</h5>
+    <ul>
+    {% for page in this.died %}
+      <li><a href="{{ page|url }}">{{ page.shortname }}</a>{% if page.birthyear and page.deathyear %} ({{ page.birthyear }} - {{ page.deathyear }}){% endif %}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% if this.quote %}
+<div class="row mt-5">
+  <div class="col-md-12">
+    <h4>Quotation of the day</h4>
+    <h5>From {{ this.quote.person.shortname }}</h5>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    {{ this.quote.quote }}
+  </div>
+
+  {% import 'macros/thumbnail.html' as thumbnail %}
+  <div class="col-md-4">
+    {{ thumbnail.thumbnail(this.quote.person.attachments.images, True, this.quote.person.path) }}
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

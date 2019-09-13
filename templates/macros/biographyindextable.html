@@ -1,0 +1,14 @@
+{% macro biographyindextable(virtualsource) -%}
+  <table celpadding="5">
+  {% set letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'] %}
+  {% for letter in letters %}
+  {% if loop.index0 is divisibleby 5 %}
+    <tr>
+  {% endif %}
+      <td><a href="{{ '/Biographies/@%s/%s'|format(virtualsource, letter)|url }}">{{ letter }}</a></td>
+  {% if (loop.index0 + 1) is divisibleby 5 or loop.last %}
+    </tr>
+  {% endif %}
+  {% endfor %}
+  </table>
+{%- endmacro %}

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Timelines for {{ this.period }}{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Timelines</h1>
+    <h3>{{ this.period }}</h3>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-6">
+    <img src="{{ '/Biographies/@timelinesimage/%s/'|format(this.period)|url }}" />
+  </div>
+</div>
+
+{% endblock %}

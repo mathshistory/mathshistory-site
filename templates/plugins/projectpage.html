@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}{{ this.projectpage.title }} - {{ this.title }} - Projects{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.title }}</h1>
+    <h3>{{ this.author }}</h3>
+    <h3>{{ this.projectpage.title }}</h3>
+  </div>
+</div>
+
+<div class="row mt-5 project-navigation">
+  <div class="col-md-4">
+    {% if this.previous %}
+    <a href="{{ this.previous|url }}">Previous Page</a>
+    <br/>
+    ({{ this.previous.projectpage.title }})
+    {% endif %}
+  </div>
+  <div class="col-md-4">
+    <a href="{{ this.parent|url }}">Contents</a>
+  </div>
+  <div class="col-md-4">
+    {% if this.next %}
+    <a href="{{ this.next|url }}">Next Page</a>
+    <br/>
+    ({{ this.next.projectpage.title }})
+    {% endif %}
+  </div>
+</div>
+
+
+<div class="row mt-5">
+  <div class="col-md-12">
+    {{ this.projectpage.content }}
+  </div>
+</div>
+
+<!-- END MAIN BODY -->
+
+{% endblock %}
+
+{% block footer %}
+{{ super() }}
+{% endblock %}

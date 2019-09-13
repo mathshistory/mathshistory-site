@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Chronology for {{ this.title }}{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Chronology</h1>
+    <h3>{{ this.title }}</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    {% for chronologyyear in this.chronology %}
+    <h4>{{ chronologyyear.year }}</h4>
+    <ul>
+      {% for event in chronologyyear.events.blocks %}
+      {{ event }}
+      {% endfor %}
+    </ul>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

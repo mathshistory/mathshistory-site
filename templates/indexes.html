@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Index of {{ this.indexof }}{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Index of {{ this.indexof }}</h1>
+    <ul>
+    {% for page in site.query(this.indexof) %}
+      <li>
+        <a href="{{ page|url }}">
+          {% if page.shortname|trim != '' %}
+            {{ page.shortname }}
+          {% elif page.fullname|trim != '' %}
+            {{ page.fullname }}
+          {% elif page.name|trim != '' %}
+            {{ page.name }}
+          {% elif page.headline|trim != '' %}
+            {{ page.headline }}
+          {% elif page.title|trim != '' %}
+            {{ page.title }}
+          {% else %}
+            {{ page }}
+          {% endif %}
+        </a>
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

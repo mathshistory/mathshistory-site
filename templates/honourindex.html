@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}Honours, etc. Index{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Honours Index</h1>
+    <ul>
+    {% for page in site.query('/Honours') %}
+      <li><a href="{{ page|url }}">{{ page.title }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

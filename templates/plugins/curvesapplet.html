@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block title %}Interactive: {{ this.parent.name }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<script src="{{ '/static/swingjs/swingjs2.js'|asseturl }}"></script>
+<script>
+  var options = {{ this.parent.appletoptions|safe }}
+
+  var j2sPath = '{{ '/static/swingjs/j2s'|url }}'
+</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Interactive Curves</h1>
+    <h3>{{ this.parent.name }}</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <noscript>
+      <i>JavaScript is required in order to run the interactive curves.</i>
+    </noscript>
+    <!-- inject the applet -->
+    <div style="border: 1px solid black;">
+      <script src="{{ '/static/js/curvesapplet.js'|asseturl }}"></script>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    {% for equation in this.parent.equations.blocks %}
+    {{ equation }}
+    {% endfor %}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>Click on the <b>Curve</b> menu to choose one of the associated curves. Then click on the diagram to choose a point for the involutes, pedal curve, etc. You can then move the point around and watch the associated curve change.</p>
+    <p>For the <b>inverse</b> (wrt a circle) click the mouse and drag to choose a centre and radius. You can then drag the centre of the circle<p>
+    <p>Use the buttons on the right to move the graph or the ones in the middle to alter the scale. The buttons on the left can be used to alter the value of the parameter <i>a</i>. The two <i>inc</i> buttons alter the rate at which you can vary the parameter.</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>The Famous Curves JavaScript applet was converted from the original 1996 Java applet using Bob Hanson's <a href="https://sourceforge.net/projects/swingjs/">SwingJS</a>.</p>
+    <p>You can see the original 1996 <a href="https://www-history.mcs.st-andrews.ac.uk/Java/Sources/Wholecode.html">Java source code</a>.</p>
+  </div>
+</div>
+
+<!-- END MAIN BODY -->
+
+{% endblock %}

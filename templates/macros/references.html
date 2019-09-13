@@ -1,0 +1,19 @@
+{% macro references(refs, title='References') -%}
+  {% if refs.blocks|length > 0 %}
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h3>{{ title }}</h3>
+      <ol name="references">
+        {% for reference in refs.blocks %}
+        {{ reference }}
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  {% endif %}
+
+  {# put in the popup script even if there are no references #}
+  <script>
+    var referenceData = {{ refs.blocks|refs_format|tojson }}
+  </script>
+{%- endmacro %}

@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Mathematicians Of The Day Index{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Mathematicians Of The Day</h2>
+    <h3>Index</h3>
+  </div>
+</div>
+
+{% for month in range(1, 13) %}
+{% if loop.index0 is divisibleby 3 %}
+<div class="row mt-5">
+{% endif %}
+  <div class="col-md-4 of-the-day-month">
+    <h5>{{ month|month_name }}</h5>
+    <table>
+    {% for day in month_days(month) %}
+    {% if (day - 1) is divisibleby 7 %}
+      <tr>
+    {% endif %}
+      <td><a href="{{ '/Biographies/@oftheday/%s'|format(format_day(day, month))|url }}">{{ day }}</a></td>
+    {% if day is divisibleby 7 or loop.last %}
+      </tr>
+    {% endif %}
+    {% endfor %}
+    </table>
+  </div>
+{% if (loop.index0 + 1) is divisibleby 3 or loop.last %}
+</div>
+{% endif %}
+{% endfor %}
+
+{% endblock %}

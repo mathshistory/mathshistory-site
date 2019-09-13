@@ -1,0 +1,19 @@
+<div class="bio">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>{{ this.shortname }}</h3>
+      {% if this.birthdate or this.birthplace %}
+      <h5>{% if this.birthyear %}{{ this.birthyear }}{% endif %} - {% if this.deathyear %}{{ this.deathyear }}{% endif %}</h5>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row summary">
+    {% import 'macros/thumbnail.html' as thumbnail %}
+    <div style="float: right;">
+      {{ thumbnail.thumbnail(this.attachments.images, False, this.path) }}
+    </div>
+    {% if this.summary %}
+    {{ this.summary }}
+    {% endif %}
+  </div>
+</div>
