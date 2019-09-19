@@ -44,6 +44,16 @@ blockquote:before {
   vertical-align: super;
 }
 
+/* [gl]...[/gl] */
+.gllink {
+  color: green;
+}
+
+/* [ac]...[/ac] */
+.aclink {
+  color: brown;
+}
+
 /* [big]...[/big] */
 .bigger {
   font-size: larger;
