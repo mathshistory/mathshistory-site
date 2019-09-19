@@ -1,0 +1,18 @@
+/* make text actually bold */
+b {
+  font-weight: bold;
+}
+
+/* reset link colors */
+a {
+  /*color: initial;*/
+  color: #0000EE;
+}
+a:active {
+  /*color: initial;*/
+  color: #EE0000;
+}
+a:visited {
+  /*color: initial;*/
+  color: #551A8B;
+}
