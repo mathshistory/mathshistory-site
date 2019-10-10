@@ -72,18 +72,17 @@
 
   <footer class="site-footer">
     <div class="row">
-      <div class="col-md-7">
-        {% block footer %}
-        Except where otherwise noted, the text of <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">MacTutor</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><a href="https://www-history.mcs.st-and.ac.uk/~john/">JOC</a>&#47;<a href="https://www-history.mcs.st-and.ac.uk/~edmund/">EFR</a></span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>. See separate <a href="http://www-history.mcs.st-andrews.ac.uk/Miscellaneous/Copyright.html">image information</a>.
-        {% endblock %}
+      <div class="col-md-6">
+        MacTutor by <a href="http://www-groups.mcs.st-andrews.ac.uk/~john/">John J O'Connor</a> and <a href="http://www-groups.mcs.st-andrews.ac.uk/~edmund/">Edmund F Robertson</a>
+        <br/>
+        View <a href="{{ '/license/'|url }}">full licensing information</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-6">
+        <img src="{{ '/static/img/st-andrews-logo-horizontal.png'|asseturl }}" alt="University of St Andrews logo">
+        <br/>
         School of Mathematics and Statistics
-        <br>
+        <br/>
         University of St Andrews, Scotland
-      </div>
-      <div class="col-md-3">
-        <img src="{{ '/static/img/st-andrews-logo.png'|asseturl }}" alt="University of St Andrews logo">
       </div>
     </div>
   </footer>

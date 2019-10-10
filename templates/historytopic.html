@@ -22,12 +22,13 @@
 {% import 'macros/additional.html' as additional %}
 {{ additional.additional(this.additional, this.otherweb, this.shortname) }}
 
+{% if this.authors or this.update %}
+<div class="row">
+  {% if this.authors %}<p>Written by {{ this.authors }}</p>{% endif %}
+  {% if this.update %}<p>Last Update {{ this.update }}</p>{% endif %}
+</div>
+{% endif %}
+
 <!-- END MAIN BODY -->
 
-{% endblock %}
-
-{% block footer %}
-{% if this.authors %}<p>Written by {{ this.authors }}</p>{% endif %}
-{% if this.update %}<p>Last Update {{ this.update }}</p>{% endif %}
-{{ super() }}
 {% endblock %}

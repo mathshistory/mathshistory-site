@@ -36,11 +36,12 @@
   {% endif %}
 </div>
 
+{% if this.authors %}
+<div class="row">
+  <p>Written by {{ this.authors }}</p>
+</div>
+{% endif %}
+
 <!-- END MAIN BODY -->
 
-{% endblock %}
-
-{% block footer %}
-{% if this.authors %}<p>Written by {{ this.authors }}</p>{% endif %}
-{{ super() }}
 {% endblock %}
