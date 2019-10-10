@@ -1,5 +1,16 @@
 /* css rules for the bbcode content that is converted into HTML */
 
+/* numbers, round brackets, square brackets, curly brackets */
+@font-face {
+  font-family: 'Nunito Sans Quotation';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Nunito Sans Regular'), local('NunitoSans-Regular'), url(https://fonts.gstatic.com/s/nunitosans/v5/pe0qMImSLYBIv1o4X1M8cce9I9tAcVwo.woff2) format('woff2');
+  unicode-range: U+30-39, U+28-29, U+4B, U+4D, U+7B, U+7D;
+}
+
+
 /* [quote]...[/quote] */
 blockquote {
   background: #f9f9f9;
@@ -9,6 +20,7 @@ blockquote {
   quotes: "\201C""\201D""\2018""\2019";
   font-style: italic;
   text-align: justify;
+  font-family: "Nunito Sans Quotation", "Nunito Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 }
 blockquote:before {
   color: #ccc;
