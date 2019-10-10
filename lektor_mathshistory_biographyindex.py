@@ -2,6 +2,7 @@
 import posixpath
 import json
 import string
+import traceback
 
 from lektor.build_programs import BuildProgram
 from lektor.pluginsystem import Plugin
@@ -18,17 +19,71 @@ SOURCE_PATH = '/Biographies'
 def all_letters():
     return list(string.ascii_lowercase)
 
+def purge_mlink(s):
+    #The below code is modified from the original htmlformat function to ensure compatibility
+    rawch   = ['á','à','â','ä','ã','Á','Â','Ä','é','è','ê','ë','É','î','í','ó','ô','ö','ò','õ','Ö','û','ú','ü','ù','Ü','ç','ï','ø','Ø','ñ','ł','Ł','ś','Ś','ț','Ț']
+    transch = ['a','a','a','a','a','A','A','A','e','e','e','e','E','i','i','o','o','o','o','o','O','u','u','u','u','U','c','i','o','O','n','l','L','s','S','t','T']
+    for idx, raw in enumerate(rawch):
+        trans = transch[idx]
+        s = s.replace(raw, trans)
+    return s
+
+
+class ChronologicalIndexPage(VirtualSourceObject):
+    def __init__(self, record):
+        VirtualSourceObject.__init__(self, record)
+        self.i_want_to_live = self.pad  # See lektor-tags/issues/2
+        self.template = 'plugins/biographyindexchronological.html'
+
+    @property
+    def people(self):
+        found = []
+        all = self.pad.query(SOURCE_PATH).all()
+        for person in all:
+            name = person['shortname']
+            purged = purge_mlink(name).lower()
+            found.append({
+                'person': person,
+                'purged': purged,
+                'birthyear': person['birthyear']
+            })
+        found = sorted(found, key=lambda p: (p['birthyear'], p['purged']))
+        found = [p['person'] for p in found]
+        return found
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%schronological' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([self.parent.url_path, 'chronological'])
+
 
 class BiographyIndexPage(VirtualSourceObject):
     def __init__(self, record, letter):
         VirtualSourceObject.__init__(self, record)
         self.i_want_to_live = self.pad  # See lektor-tags/issues/2
-        self.letter = letter
+        self.letter = letter.lower()
+        self.template = 'plugins/biographyindexcategory.html'
 
     @property
     def people(self):
-        items = self.pad.query(SOURCE_PATH).filter(F.alphabetical.contains(self.letter))
-        return items
+        found = []
+        all = self.pad.query(SOURCE_PATH).all()
+        for person in all:
+            alphabetical = person['alphabetical']
+            for display in alphabetical:
+                purged = purge_mlink(display).lower()
+                letter = purged[0]
+                if letter == self.letter:
+                    found.append({
+                        'person': person,
+                        'display': display,
+                        'purged': purged
+                    })
+        found = sorted(found, key=lambda p: p['purged'])
+        return found
 
     @property
     def path(self):
@@ -48,19 +103,7 @@ class BiographyIndexPageBuildProgram(BuildProgram):
         )
 
     def build_artifact(self, artifact):
-        artifact.render_template_into('plugins/biographyindexcategory.html', this=self.source)
-
-
-class AlphabeticalTagsType(Type):
-    widget = 'tags'
-
-    def value_from_raw(self, raw):
-        return json.loads(raw.value or u'[]')
-
-    def to_json(self, pad, record=None, alt=PRIMARY_ALT):
-        rv = Type.to_json(self, pad, record, alt)
-        rv['tags'] = all_letters()
-        return rv
+        artifact.render_template_into(self.source.template, this=self.source)
 
 
 class MathshistoryBiographyindexPlugin(Plugin):
@@ -69,13 +112,19 @@ class MathshistoryBiographyindexPlugin(Plugin):
 
     def on_setup_env(self, **extra):
         self.env.add_build_program(BiographyIndexPage, BiographyIndexPageBuildProgram)
-        self.env.add_type(AlphabeticalTagsType)
+        self.env.add_build_program(ChronologicalIndexPage, BiographyIndexPageBuildProgram)
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
         def biographyindex_path_resolver(node, pieces):
             if len(pieces) == 1:
                 if node.path == SOURCE_PATH:
                     return BiographyIndexPage(node, pieces[0])
+
+        @self.env.virtualpathresolver('%schronological' % VIRTUAL_SOURCE_ID)
+        def biographyindex_path_resolver(node, pieces):
+            if len(pieces) == 0:
+                if node.path == SOURCE_PATH:
+                    return ChronologicalIndexPage(node)
 
         @self.env.generator
         def biographyindex_generator(record):
@@ -87,3 +136,6 @@ class MathshistoryBiographyindexPlugin(Plugin):
 
             for letter in all_letters():
                 yield BiographyIndexPage(record, letter)
+
+            # do the chronological index page too
+            yield ChronologicalIndexPage(record)
