@@ -1,15 +1,15 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ this.letter }} - Biographies Index{% endblock %}
+{% block title %}Chronological Biographies Index{% endblock %}
 
 {% block body %}
 
 <div class="row">
   <div class="col">
-      <h1>Names starting with {{ this.letter }}</h1>
+      <h1>Chronological Biographies Index</h1>
       <ul>
       {% for person in this.people %}
-        <li><a href="{{ person['person']|url }}">{{ person['display'] }}</a>{% if person['person'].birthyear %} ({{ person['person'].birthyear }} - {% if person['person'].deathyear %}{{ person['person'].deathyear }}{% endif %}){% endif %}</li>
+        <li><a href="{{ person|url }}">{{ person.shortname }}</a>{% if person.birthyear %} ({{ person.birthyear }} - {% if person.deathyear %}{{ person.deathyear }}{% endif %}){% endif %}</li>
       {% endfor %}
       </ul>
   </div>
