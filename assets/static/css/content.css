@@ -69,3 +69,7 @@ blockquote:before {
   color: red !important;
   cursor: pointer;
 }
+
+.katex {
+  font-size: 1em !important;
+}
