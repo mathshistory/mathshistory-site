@@ -7,7 +7,7 @@
     <h1>Societies Index</h1>
     <ul>
     {% for page in site.query('/Societies') %}
-      <li><a href="{{ page|url }}">{{ page.title }}</a></li>
+      <li><a href="{{ page|url }}">{{ page.name }}</a></li>
     {% endfor %}
     </ul>
   </div>
