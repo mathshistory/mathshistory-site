@@ -1,5 +1,5 @@
 {% macro references(refs, title='References') -%}
-  {% if refs.blocks|length > 0 %}
+  {% if refs and refs.blocks|length > 0 %}
   {% set hide = refs.blocks|length > 10 %}
   <div class="row mt-5">
     <div class="col-md-12">

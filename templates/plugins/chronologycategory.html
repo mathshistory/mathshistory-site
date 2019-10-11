@@ -14,9 +14,11 @@
     {% for chronologyyear in this.chronology %}
     <h4>{{ chronologyyear.year }}</h4>
     <ul>
+      {% if chronologyyear.events %}
       {% for event in chronologyyear.events.blocks %}
       {{ event }}
       {% endfor %}
+      {% endif %}
     </ul>
     {% endfor %}
   </div>

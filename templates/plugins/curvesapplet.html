@@ -32,9 +32,11 @@
   </div>
 
   <div class="col-md-6">
+    {% if this.parent.equations %}
     {% for equation in this.parent.equations.blocks %}
     {{ equation }}
     {% endfor %}
+    {% endif %}
   </div>
 </div>
 

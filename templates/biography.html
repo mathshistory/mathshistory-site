@@ -46,7 +46,7 @@
     <div class="row" style="text-align: center;">
       {{ thumbnail.thumbnail(this.attachments.images, True, this.path) }}
     </div>
-    {% if this.quotations.blocks|length > 0 %}
+    {% if this.quotations and this.quotations.blocks|length > 0 %}
     <div class="row mt-2" style="text-align: center;">
       <a href="{{ '%s/@quotations'|format(this.path)|url }}" style="width: 100%;">Quotations by {{ this.shortname }}</a>
     </div>
@@ -68,7 +68,7 @@
 {% import 'macros/additional.html' as additional %}
 {{ additional.additional(this.additional, this.otherweb, this.shortname) }}
 
-{% if this.honours.blocks|length > 0 %}
+{% if this.honours and this.honours.blocks|length > 0 %}
 <div class="row">
   <div class="col-md-12">
     <h3>Honours</h3>

@@ -12,9 +12,11 @@
 
 <div class="row">
   <div class="col-md-12">
+    {% if this.parent.quotations %}
     {% for quote in this.parent.quotations.blocks %}
     {{ quote }}
     {% endfor %}
+    {% endif %}
   </div>
 </div>
 
