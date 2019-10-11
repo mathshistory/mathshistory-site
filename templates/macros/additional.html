@@ -1,11 +1,11 @@
 {% macro additional(additionals, otherwebs, name) -%}
-  {% if (additionals.blocks|length > 0) or (otherwebs.blocks|length > 0) %}
+  {% if (additionals and additionals.blocks|length > 0) or (otherwebs and otherwebs.blocks|length > 0) %}
   <div class="row">
     <div class="col-md-12">
       <h3>Additional Resources</h3>
     </div>
 
-    {% if (additionals.blocks|length > 0) %}
+    {% if (additionals and additionals.blocks|length > 0) %}
     <div class="col-md-6">
       <p>Other pages about {{ name }}:</p>
       <ol name="additional">
@@ -16,7 +16,7 @@
     </div>
     {% endif %}
 
-    {% if (otherwebs.blocks|length > 0) %}
+    {% if (otherwebs and otherwebs.blocks|length > 0) %}
     <div class="col-md-6">
       <p>Other pages in around the web about {{ name }}:</p>
       <ol name="otherweb">
