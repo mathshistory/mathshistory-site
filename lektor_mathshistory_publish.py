@@ -31,7 +31,7 @@ def yield_git_commands(dir, commit_message):
             yield line
 
     # push the changes
-    git_push = get_git_command() + ['push']
+    git_push = get_git_command(dir) + ['push']
     push_command = Command(git_push, env={})
     with push_command:
         for line in push_command:
