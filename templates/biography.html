@@ -71,13 +71,18 @@
 {% if this.honours and this.honours.blocks|length > 0 %}
 <div class="row">
   <div class="col-md-12">
-    <h3>Honours</h3>
+    <h3>Honours <span class="nonoscript">(<a href="#" id="honours-toggle">show</a>)</span></h3>
+  </div>
+</div>
+<div class="row" id="honours-list">
+  <div class="col-md-12">
     <p>Honours awarded to {{ this.shortname }}</p>
     <ol name="honours">
       {% for honour in this.honours.blocks %}
       {{ honour }}
       {% endfor %}
     </ol>
+  </div>
   </div>
 </div>
 {% endif %}

@@ -2,9 +2,11 @@
   {% if (additionals and additionals.blocks|length > 0) or (otherwebs and otherwebs.blocks|length > 0) %}
   <div class="row">
     <div class="col-md-12">
-      <h3>Additional Resources</h3>
+      <h3>Additional Resources <span class="nonoscript">(<a href="#" id="additional-toggle">show</a>)</span></h3>
     </div>
+  </div>
 
+  <div class="row" id="additional-list">
     {% if (additionals and additionals.blocks|length > 0) %}
     <div class="col-md-6">
       <p>Other pages about {{ name }}:</p>
