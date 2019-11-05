@@ -66,28 +66,28 @@
 
     {% block body %}{% endblock %}
 
-  </main>
+    <footer class="site-footer mt-3">
+      <div class="row">
+        <div class="col-md-5">
+          MacTutor by <a href="http://www-groups.mcs.st-andrews.ac.uk/~john/">John J O'Connor</a> and <a href="http://www-groups.mcs.st-andrews.ac.uk/~edmund/">Edmund F Robertson</a>. View <a href="{{ '/license/'|url }}">full copyright information</a>.
+        </div>
+        <div class="col-md-5">
+          School of Mathematics and Statistics
+          <br/>
+          University of St Andrews, Scotland
+        </div>
+        <div class="col-md-2">
+          <img src="{{ '/static/img/st-andrews-logo.png'|asseturl }}" alt="University of St Andrews logo">
+        </div>
+      </div>
+    </footer>
 
-  <footer class="site-footer">
-    <div class="row">
-      <div class="col-md-6">
-        MacTutor by <a href="http://www-groups.mcs.st-andrews.ac.uk/~john/">John J O'Connor</a> and <a href="http://www-groups.mcs.st-andrews.ac.uk/~edmund/">Edmund F Robertson</a>
-        <br/>
-        View <a href="{{ '/license/'|url }}">full licensing information</a>
-      </div>
-      <div class="col-md-6">
-        <img src="{{ '/static/img/st-andrews-logo-horizontal.png'|asseturl }}" alt="University of St Andrews logo">
-        <br/>
-        School of Mathematics and Statistics
-        <br/>
-        University of St Andrews, Scotland
-      </div>
-    </div>
-  </footer>
+  </main>
 
   <script src="{{ '/static/js/popper.min.js'|asseturl }}"></script>
   <script src="{{ '/static/js/tooltip.min.js'|asseturl }}"></script>
   <script src="{{ '/static/js/site-popups.js'|asseturl }}"></script>
+  <script src="{{ '/static/js/foldup.js'|asseturl }}"></script>
 </body>
 
 </html>
