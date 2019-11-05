@@ -1,17 +1,17 @@
 {% macro references(refs, title='References') -%}
   {% if refs and refs.blocks|length > 0 %}
-  {% set hide = refs.blocks|length > 10 %}
   <div class="row mt-5">
     <div class="col-md-12">
-      <h3>{{ title }} {% if hide %}(<a href="#" id="references-toggle">show</a>){% endif %}</h3>
-      <div id="references-list">
-        <ol name="references">
-          {% for reference in refs.blocks %}
-          {{ reference }}
-          {% endfor %}
-        </ol>
-      </div>
-      {% if hide %}<script>document.getElementById('references-list').style.display = 'none'</script>{% endif %} {# do this is js so that if the browser doesn't have js enabled, it will still show #}
+      <h3>{{ title }} <span class="nonoscript">(<a href="#" id="references-toggle">show</a>)</span></h3>
+    </div>
+  </div>
+  <div class="row" id="references-list">
+    <div class="col-md-12">
+      <ol name="references">
+        {% for reference in refs.blocks %}
+        {{ reference }}
+        {% endfor %}
+      </ol>
     </div>
   </div>
   {% endif %}
@@ -20,5 +20,4 @@
   <script>
     var referenceData = {{ refs.blocks|refs_format|tojson }}
   </script>
-  <script src="{{ '/static/js/references.js'|asseturl }}"></script>
 {%- endmacro %}
