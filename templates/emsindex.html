@@ -1,7 +1,13 @@
 {% extends "layout.html" %}
-{% block title %}EMS Index{% endblock %}
-{% block body %}
 
+{% block title %}EMS Index{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
 <div class="row">
   <div class="col-md-12">
     <h1>EMS Index</h1>
@@ -12,5 +18,4 @@
     </ul>
   </div>
 </div>
-
 {% endblock %}

@@ -2,8 +2,12 @@
 
 {% block title %}Biographies Alphabetical Index{% endblock %}
 
-{% block body %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
 
+{% block body %}
 <div class="row">
   <div class="col">
     <div id="alphabetical-index-jumpbox" class="px-5 mb-3">
@@ -13,5 +17,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
