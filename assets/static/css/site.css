@@ -1,8 +1,3 @@
-@media (min-width: 768px) {
-  body {
-    background-image: url('../img/background.png');
-  }
-}
 p {
   text-align: justify;
 }
