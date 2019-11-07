@@ -21,6 +21,17 @@
   <link rel="stylesheet" href="{{ '/static/katex/katex.min.css'|asseturl }}">
   <link rel="stylesheet" href="{{ '/static/css/tooltip.css'|asseturl }}">
 
+  {# want the homepage ONLY to have full background #}
+  {% if this.path == '/' %}
+  <style>
+    @media (min-width: 768px) {
+      body {
+        background-image: url("{{ '/static/img/background.png'|asseturl }}");
+      }
+    }
+  </style>
+  {% endif %}
+
   <!-- opposite of noscript -->
   <noscript>
     <style>

@@ -1,7 +1,13 @@
 {% extends "layout.html" %}
-{% block title %}Famous Curves Index{% endblock %}
-{% block body %}
 
+{% block title %}Famous Curves Index{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
 <div class="row">
   <div class="col-md-12">
     <h1>Famous Curves Index</h1>
@@ -23,5 +29,4 @@
     </ul>
   </div>
 </div>
-
 {% endblock %}

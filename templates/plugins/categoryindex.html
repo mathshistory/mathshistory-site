@@ -2,8 +2,12 @@
 
 {% block title %}{{ this.category.name }}{% endblock %}
 
-{% block body %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
 
+{% block body %}
 <div class="row">
   <div class="col-md-12">
       <h1>{{ this.category.name }}</h1>
@@ -36,5 +40,4 @@
   {% endif %}
 </div>
 {% endif %}
-
 {% endblock %}

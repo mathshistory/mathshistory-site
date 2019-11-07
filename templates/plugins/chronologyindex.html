@@ -2,8 +2,12 @@
 
 {% block title %}Chronology Index{% endblock %}
 
-{% block body %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
 
+{% block body %}
 <div class="row">
   <div class="col">
     <h1>Index</h1>
@@ -15,5 +19,4 @@
     </ul>
   </div>
 </div>
-
 {% endblock %}

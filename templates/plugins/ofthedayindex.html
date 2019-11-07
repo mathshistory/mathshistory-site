@@ -1,7 +1,13 @@
 {% extends "layout.html" %}
-{% block title %}Mathematicians Of The Day Index{% endblock %}
-{% block body %}
 
+{% block title %}Mathematicians Of The Day Index{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
 <div class="row">
   <div class="col-md-12">
     <h2>Mathematicians Of The Day</h2>
@@ -31,5 +37,4 @@
 </div>
 {% endif %}
 {% endfor %}
-
 {% endblock %}
