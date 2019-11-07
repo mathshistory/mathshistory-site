@@ -87,10 +87,12 @@
 </div>
 {% endif %}
 
-{% if this.authors %}
+{% if this.authors or this.update %}
 <div class="row">
   <div class="col-md-12">
-    Written by {{ this.authors }}
+    {% if this.authors %}Written by {{ this.authors }}{% endif %}
+    {% if this.authors and this.update %}<br/>{% endif %}
+    {% if this.update %}Last Update {{ this.update }}{% endif %}
   </div>
 </div>
 {% endif %}
