@@ -7,8 +7,27 @@
 <div class="row">
   <div class="col">
       <h1>Chronological Biographies Index</h1>
+
+      {% if this.jumps|length > 0 %}
+      <h4 id="jumps">
+        Jump to year:
+        {% for jump in this.jumps %}
+        <a href="#jump-{{ jump }}">{{ jump }}</a>{% if not loop.last %},{% endif %}
+        {% endfor %}
+      </h4>
+      {% endif %}
+
       <ul>
       {% for person in this.people %}
+
+        {% if this.jumps|length > 0 %}
+        {% if person['birthyear'] > this.jumps|first %}
+      </ul>
+      <h4 id="jump-{{ this.jumps|first }}">{{ this.jumps.pop(0) }} (<a href="#jumps">Back to top</a>)</h4>
+      <ul>
+        {% endif %}
+        {% endif %}
+
         <li><a href="{{ person|url }}">{{ person.shortname }}</a>{% if person.birthyear %} ({{ person.birthyear }} - {% if person.deathyear %}{{ person.deathyear }}{% endif %}){% endif %}</li>
       {% endfor %}
       </ul>
