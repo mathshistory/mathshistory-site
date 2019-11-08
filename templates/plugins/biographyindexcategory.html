@@ -7,8 +7,25 @@
 <div class="row">
   <div class="col">
       <h1>Names starting with {{ this.letter }}</h1>
+
+      {% if this.jumps|length > 0 %}
+      <h4 id="jumps">
+        Jump to section:
+        {% for jump in this.jumps %}
+        <a href="#jump-{{ jump }}">{{ jump }}</a>{% if not loop.last %},{% endif %}
+        {% endfor %}
+      </h4>
+      {% endif %}
+
       <ul>
       {% for person in this.people %}
+        {% if this.jumps|length > 0 %}
+        {% if person['purged'].startswith(this.jumps|first) %}
+      </ul>
+      <h4 id="jump-{{ this.jumps|first }}">{{ this.jumps.pop(0) }} (<a href="#jumps">Back to top</a>)</h4>
+      <ul>
+        {% endif %}
+        {% endif %}
         <li><a href="{{ person['person']|url }}">{{ person['display'] }}</a>{% if person['person'].birthyear %} ({{ person['person'].birthyear }} - {% if person['person'].deathyear %}{{ person['person'].deathyear }}{% endif %}){% endif %}</li>
       {% endfor %}
       </ul>
