@@ -3,6 +3,7 @@ import posixpath
 import json
 import string
 import traceback
+import json
 
 from lektor.build_programs import BuildProgram
 from lektor.pluginsystem import Plugin
@@ -61,10 +62,11 @@ class ChronologicalIndexPage(VirtualSourceObject):
 
 
 class BiographyIndexPage(VirtualSourceObject):
-    def __init__(self, record, letter):
+    def __init__(self, record, letter, jumps):
         VirtualSourceObject.__init__(self, record)
         self.i_want_to_live = self.pad  # See lektor-tags/issues/2
         self.letter = letter.lower()
+        self.jumps = jumps
         self.template = 'plugins/biographyindexcategory.html'
 
     @property
@@ -110,6 +112,16 @@ class MathshistoryBiographyindexPlugin(Plugin):
     name = 'mathshistory-biographyindex'
     description = u'Creates the alphabetical index pages for the biographies of the Maths History website.'
 
+    def get_jumps(self, letter):
+        letter = letter.lower()
+        config = self.get_config()
+        jumps_string = config.get('%s.jumps' % letter, '[]')
+        try:
+            jumps_array = json.loads(jumps_string)
+            return jumps_array
+        except json.JSONDecodeError:
+            return []
+
     def on_setup_env(self, **extra):
         self.env.add_build_program(BiographyIndexPage, BiographyIndexPageBuildProgram)
         self.env.add_build_program(ChronologicalIndexPage, BiographyIndexPageBuildProgram)
@@ -118,7 +130,8 @@ class MathshistoryBiographyindexPlugin(Plugin):
         def biographyindex_path_resolver(node, pieces):
             if len(pieces) == 1:
                 if node.path == SOURCE_PATH:
-                    return BiographyIndexPage(node, pieces[0])
+                    jumps = self.get_jumps(pieces[0])
+                    return BiographyIndexPage(node, pieces[0], jumps)
 
         @self.env.virtualpathresolver('%schronological' % VIRTUAL_SOURCE_ID)
         def biographyindex_path_resolver(node, pieces):
@@ -135,7 +148,8 @@ class MathshistoryBiographyindexPlugin(Plugin):
                 return
 
             for letter in all_letters():
-                yield BiographyIndexPage(record, letter)
+                jumps = self.get_jumps(letter)
+                yield BiographyIndexPage(record, letter, jumps)
 
             # do the chronological index page too
             yield ChronologicalIndexPage(record)
