@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_biographyindex'],
     url='https://github.com/mathshistory/mathshistory-biographyindex',
-    version='1.0.0',
+    version='1.0.1',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
