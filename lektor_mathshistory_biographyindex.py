@@ -31,9 +31,10 @@ def purge_mlink(s):
 
 
 class ChronologicalIndexPage(VirtualSourceObject):
-    def __init__(self, record):
+    def __init__(self, record, jumps):
         VirtualSourceObject.__init__(self, record)
         self.i_want_to_live = self.pad  # See lektor-tags/issues/2
+        self.jumps = jumps
         self.template = 'plugins/biographyindexchronological.html'
 
     @property
@@ -137,7 +138,8 @@ class MathshistoryBiographyindexPlugin(Plugin):
         def biographyindex_path_resolver(node, pieces):
             if len(pieces) == 0:
                 if node.path == SOURCE_PATH:
-                    return ChronologicalIndexPage(node)
+                    jumps = self.get_jumps('chronological')
+                    return ChronologicalIndexPage(node, jumps)
 
         @self.env.generator
         def biographyindex_generator(record):
@@ -152,4 +154,5 @@ class MathshistoryBiographyindexPlugin(Plugin):
                 yield BiographyIndexPage(record, letter, jumps)
 
             # do the chronological index page too
-            yield ChronologicalIndexPage(record)
+            jumps = self.get_jumps('chronological')
+            yield ChronologicalIndexPage(record, jumps)
