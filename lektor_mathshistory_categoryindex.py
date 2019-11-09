@@ -29,6 +29,22 @@ DISPLAY_HONOUR = '<a href="{{ this|url }}">{{ this.title }}</a>'
 DISPLAY_SOCIETY = '<a href="{{ this|url }}">{{ this.name }}</a>'
 
 
+class CategoryIndexPage(VirtualSourceObject):
+    def __init__(self, record, categories):
+        VirtualSourceObject.__init__(self, record)
+        self.i_want_to_live = self.pad  # See lektor-tags/issues/2
+        self.categories = categories
+        self.template = 'plugins/categoryindex.html'
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%sindex' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([OUTPUT_PATH])
+
+
 class CategoryPage(VirtualSourceObject):
     def __init__(self, record, category):
         VirtualSourceObject.__init__(self, record)
@@ -38,12 +54,7 @@ class CategoryPage(VirtualSourceObject):
         self._histtopics = None
         self._societies = None
         self._honours = None
-
-    def record_dependencies(self, records):
-        ctx = get_ctx()
-        for record in records:
-            path = self.pad.db.to_fs_path(record.path)
-            ctx.record_dependency(path)
+        self.template = 'plugins/category.html'
 
     def get_results(self, parent):
         tag = self.category['tag']
@@ -76,34 +87,30 @@ class CategoryPage(VirtualSourceObject):
     @property
     def sections(self):
         sections = []
-        try:
-            if len(self.biographies) > 0:
-                sections.append({
-                    'name': 'Biographies',
-                    'id': 'biographies',
-                    'pages': self.biographies
-                })
-            if len(self.histtopics) > 0:
-                sections.append({
-                    'name': 'History Topics',
-                    'id': 'histtopics',
-                    'pages': self.histtopics
-                })
-            if len(self.societies) > 0:
-                sections.append({
-                    'name': 'Societies',
-                    'id': 'societies',
-                    'pages': self.societies
-                })
-            if len(self.honours) > 0:
-                sections.append({
-                    'name': 'Honours',
-                    'id': 'honours',
-                    'pages': self.honours
-                })
-        except:
-            traceback.print_exc()
-        print(sections)
+        if len(self.biographies) > 0:
+            sections.append({
+                'name': 'Biographies',
+                'id': 'biographies',
+                'pages': self.biographies
+            })
+        if len(self.histtopics) > 0:
+            sections.append({
+                'name': 'History Topics',
+                'id': 'histtopics',
+                'pages': self.histtopics
+            })
+        if len(self.societies) > 0:
+            sections.append({
+                'name': 'Societies',
+                'id': 'societies',
+                'pages': self.societies
+            })
+        if len(self.honours) > 0:
+            sections.append({
+                'name': 'Honours',
+                'id': 'honours',
+                'pages': self.honours
+            })
         return sections
 
     @property
@@ -144,7 +151,7 @@ class CategoryPageBuildProgram(BuildProgram):
         )
 
     def build_artifact(self, artifact):
-        artifact.render_template_into('plugins/categoryindex.html', this=self.source)
+        artifact.render_template_into(self.source.template, this=self.source)
 
 
 class CategoryTagsType(Type):
@@ -161,7 +168,6 @@ class CategoryTagsType(Type):
         return rv
 
 
-_sections_cache = None
 class MathshistoryCategoryindexPlugin(Plugin):
     name = 'mathshistory-categoryindex'
     description = u'Creates the category index pages for the biographies of the Maths History website.'
@@ -170,21 +176,32 @@ class MathshistoryCategoryindexPlugin(Plugin):
         config = self.get_config()
         categories = []
         for cat in config.sections():
-            categories.append({
-                'tag': cat,
-                'name': config.get('%s.name' % cat),
-                'description': config.get('%s.description' % cat)
-            })
+            categories.append(self.get_category(cat))
         return categories
+
+    def get_category(self, tag):
+        config = self.get_config()
+        return {
+            'tag': tag,
+            'name': config.get('%s.name' % tag),
+            'description': config.get('%s.description' % tag)
+        }
 
     def on_setup_env(self, **extra):
         self.env.add_build_program(CategoryPage, CategoryPageBuildProgram)
+        self.env.add_build_program(CategoryIndexPage, CategoryPageBuildProgram)
         self.env.add_type(CategoryTagsType)
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
         def category_path_resolver(node, pieces):
             if len(pieces) == 1:
-                return CategoryPage(node, pieces[0])
+                category = self.get_category(pieces[0])
+                return CategoryPage(node,category)
+
+        @self.env.virtualpathresolver('%sindex' % VIRTUAL_SOURCE_ID)
+        def category_index_path_resolver(node, pieces):
+            categories = self.get_categories()
+            return CategoryIndexPage(node, categories)
 
         @self.env.generator
         def category_generator(record):
@@ -195,5 +212,7 @@ class MathshistoryCategoryindexPlugin(Plugin):
                 return
 
             categories = self.get_categories()
+            yield CategoryIndexPage(record, categories)
+
             for category in categories:
                 yield CategoryPage(record, category)
