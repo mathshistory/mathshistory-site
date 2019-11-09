@@ -10,34 +10,39 @@
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-      <h1>{{ this.category.name }}</h1>
-      <p>{{ this.category.description }}</p>
+    <h1>{{ this.category.name }}</h1>
+    <p>{{ this.category.description }}</p>
+
+    {% if this.sections|length > 2 %}
+    <h4 id="jumps">
+      Jump to section:
+      {% for section in this.sections %}
+      <a href="#jump-{{ section['id'] }}">{{ section['name'] }}</a>{% if not loop.last %},{% endif %}
+      {% endfor %}
+    </h4>
+    {% endif %}
   </div>
 </div>
 
-{% if this.biographies.count() > 0 or this.histtopics.count() > 0 %}
-<div class="row">
-  {% if this.biographies.count() > 0 %}
-  <div class="col-md-6">
-      <h3>Biographies</h3>
-      <ul>
-      {% for res in this.biographies %}
-        <li>{{ this.format_display(res)|safe }}</li>
-      {% endfor %}
-      </ul>
-  </div>
-  {% endif %}
+{% for section in this.sections %}
 
-  {% if this.histtopics.count() > 0 %}
+{% if loop.first or loop.index0 is divisibleby 2 %}
+<div class="row">
+{% endif %}
+
   <div class="col-md-6">
-      <h3>History Topics</h3>
-      <ul>
-      {% for res in this.histtopics %}
-        <li>{{ this.format_display(res)|safe }}</li>
-      {% endfor %}
-      </ul>
+    <h3 id="jump-{{ section['id'] }}">{{ section['name'] }}</h3>
+    <ul>
+    {% for page in section['pages'] %}
+      <li>{{ this.format_display(page)|safe }}</li>
+    {% endfor %}
+    </ul>
   </div>
-  {% endif %}
+
+{% if (loop.index0 + 1) is divisibleby 2 or loop.last %}
 </div>
 {% endif %}
+
+{% endfor %}
+
 {% endblock %}
