@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ this.category.name }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.category.name }}</h1>
+    <p>{{ this.category.description }}</p>
+
+    {% if this.sections|length > 2 %}
+    <h4 id="jumps">
+      Jump to section:
+      {% for section in this.sections %}
+      <a href="#jump-{{ section['id'] }}">{{ section['name'] }}</a>{% if not loop.last %},{% endif %}
+      {% endfor %}
+    </h4>
+    {% endif %}
+  </div>
+</div>
+
+{% for section in this.sections %}
+
+{% if loop.first or loop.index0 is divisibleby 2 %}
+<div class="row">
+{% endif %}
+
+  <div class="col-md-6">
+    <h3 id="jump-{{ section['id'] }}">{{ section['name'] }}</h3>
+    <ul>
+    {% for page in section['pages'] %}
+      <li>{{ this.format_display(page)|safe }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+
+{% if (loop.index0 + 1) is divisibleby 2 or loop.last %}
+</div>
+{% endif %}
+
+{% endfor %}
+
+{% endblock %}
