@@ -23,8 +23,9 @@ class MapData(VirtualSourceObject):
                 # find the places
                 places = {}
                 for place in self.pad.query(SOURCE_PATH).include_undiscoverable(True):
-                    places[place['id']] = {
-                        'id': place['id'],
+                    id = place['_slug']
+                    places[id] = {
+                        'id': id,
                         'name': place['name'],
                         'country': place['country'],
                         'webref': place['webref'].url,
