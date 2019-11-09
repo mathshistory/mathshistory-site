@@ -25,6 +25,8 @@ OUTPUT_PATH = '/Categories'
 
 DISPLAY_HISTTOPIC = '<a href="{{ this|url }}">{{ this.shortname }}</a>'
 DISPLAY_BIOGRAPHY = '<a href="{{ this|url }}">{{ this.shortname }}</a>{% if this.birthyear %} ({{ this.birthyear }} - {% if this.deathyear %}{{ this.deathyear }}{% endif %}){% endif %}'
+DISPLAY_HONOUR = '<a href="{{ this|url }}">{{ this.title }}</a>'
+DISPLAY_SOCIETY = '<a href="{{ this|url }}">{{ this.name }}</a>'
 
 
 class CategoryPage(VirtualSourceObject):
@@ -34,6 +36,8 @@ class CategoryPage(VirtualSourceObject):
         self.category = category
         self._biographies = None
         self._histtopics = None
+        self._societies = None
+        self._honours = None
 
     def record_dependencies(self, records):
         ctx = get_ctx()
@@ -43,7 +47,7 @@ class CategoryPage(VirtualSourceObject):
 
     def get_results(self, parent):
         tag = self.category['tag']
-        return self.pad.query(parent).filter(F.tags.contains(tag))
+        return self.pad.query(parent).filter(F.tags.contains(tag)).all()
 
     @property
     def biographies(self):
@@ -57,6 +61,50 @@ class CategoryPage(VirtualSourceObject):
             self._histtopics = self.get_results('/HistTopics/')
         return self._histtopics
 
+    @property
+    def societies(self):
+        if self._societies == None:
+            self._societies = self.get_results('/Societies/')
+        return self._societies
+
+    @property
+    def honours(self):
+        if self._honours == None:
+            self._honours = self.get_results('/Honours/')
+        return self._honours
+
+    @property
+    def sections(self):
+        sections = []
+        try:
+            if len(self.biographies) > 0:
+                sections.append({
+                    'name': 'Biographies',
+                    'id': 'biographies',
+                    'pages': self.biographies
+                })
+            if len(self.histtopics) > 0:
+                sections.append({
+                    'name': 'History Topics',
+                    'id': 'histtopics',
+                    'pages': self.histtopics
+                })
+            if len(self.societies) > 0:
+                sections.append({
+                    'name': 'Societies',
+                    'id': 'societies',
+                    'pages': self.societies
+                })
+            if len(self.honours) > 0:
+                sections.append({
+                    'name': 'Honours',
+                    'id': 'honours',
+                    'pages': self.honours
+                })
+        except:
+            traceback.print_exc()
+        print(sections)
+        return sections
 
     @property
     def path(self):
@@ -72,6 +120,10 @@ class CategoryPage(VirtualSourceObject):
             display_exp = DISPLAY_BIOGRAPHY
         elif record['_model'] == 'historytopic':
             display_exp = DISPLAY_HISTTOPIC
+        elif record['_model'] == 'society':
+            display_exp = DISPLAY_SOCIETY
+        elif record['_model'] == 'honour':
+            display_exp = DISPLAY_HONOUR
         else:
             error = 'ERROR: unknown model:', record['_model']
             print(error)
