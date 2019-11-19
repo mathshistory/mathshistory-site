@@ -27,12 +27,12 @@ p {
   padding-top: 15px;
   padding-bottom: 15px;
 }
-@media (min-width:992px) {
-.cr-foooter {
-  text-align: left;
+@media (min-width:768px) {
+  .cr-footer {
+    text-align: left;
   }
-.links-foooter {
-  text-align: right;
+  .links-footer {
+    text-align: right;
   }
 }
 
