@@ -19,7 +19,7 @@
       {% if this.birthdate %}{{ this.birthdate }}{% endif %}
       {% if this.birthdate and this.birthplace %}<br/>{% endif %}
       {% if this.birthplace %}
-        {% if this.maplocation %}<a href="{{ '/Map/#%s'|format(this.maplocation)|url }}">{% endif %}
+        {% if this.maplocation %}<a href="{{ '/Map/#%s'|format(this.maplocation)|url }}" target="_blank">{% endif %}
         {{ this.birthplace }}
         {% if this.maplocation %}</a>{% endif %}
       {% endif %}
