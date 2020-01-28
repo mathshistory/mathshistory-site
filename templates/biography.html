@@ -46,11 +46,6 @@
     <div class="row" style="text-align: center;">
       {{ thumbnail.thumbnail(this.attachments.images, True, this.path) }}
     </div>
-    {% if this.quotations and this.quotations.blocks|length > 0 %}
-    <div class="row mt-2" style="text-align: center;">
-      <a href="{{ '%s/@quotations'|format(this.path)|url }}" style="width: 100%;">Quotations by {{ this.shortname }}</a>
-    </div>
-    {% endif %}
   </div>
 </div>
 {% endif %}
@@ -61,6 +56,14 @@
     {{ this.content }}
   </div>
 </div>
+
+{% if this.quotations and this.quotations.blocks|length > 0 %}
+<div class="row mt-2">
+  <div class="col-md-12">
+    <a href="{{ '%s/@quotations'|format(this.path)|url }}">Quotations by {{ this.shortname }}</a>
+  </div>
+</div>
+{% endif %}
 
 {% import 'macros/references.html' as references %}
 {{ references.references(this.references) }}
