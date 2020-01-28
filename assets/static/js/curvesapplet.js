@@ -6,12 +6,13 @@ if (!self.SwingJS) {
   var info = {
     code: "uk.ac.stand.mcs.wwwhistory.famouscurves.FamousCurves",
     main: null,
-    core: "NONE",
+    core: "famouscurves",
     width: 400,
     height: 400,
     readyFunction: null,
     j2sPath: j2sPath,
     allowjavascript: true,
+    console: 'sysoutdiv',
     ...options
   }
 
