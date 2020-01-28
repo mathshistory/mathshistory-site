@@ -1,4 +1,4 @@
-function popupOptions (title) {
+function popupOptions (title, className) {
   return {
     title: title,
     trigger: 'click',
@@ -11,7 +11,8 @@ function popupOptions (title) {
           enabled: false
         }
       }
-    }
+    },
+    template: '<div class="tooltip ' + className + '" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
   }
 }
 
@@ -56,18 +57,18 @@ function formatGlossaryFragment (fragment, popup, urlContext) {
 }
 
 
-function preloadPopups (elements, urls, index) {
+function preloadPopups (elements, urls, type, index) {
   if (typeof index === 'undefined') index = 0
   if (index >= elements.length) return
 
   getPopupFragment(urls[index], function (error, fragment) {
     if (error) {
       console.error(error)
-      return preloadPopups(elements, urls, index + 1)
+      return preloadPopups(elements, urls, type, index + 1)
     }
 
     // add the tooltip in
-    var popup = new Tooltip(elements[index], popupOptions(fragment))
+    var popup = new Tooltip(elements[index], popupOptions(fragment, type))
 
     // special case for glossaries
     // make gllinks in the popup, show in that popup
@@ -91,14 +92,13 @@ function preloadPopups (elements, urls, index) {
     }
 
     // recurse round to the next link
-    preloadPopups(elements, urls, index+1)
+    preloadPopups(elements, urls, type, index+1)
   })
 }
 
 // place to store links and elements
 var urls = []
 var elements = []
-
 // mlinks
 var links = document.getElementsByClassName('mlink')
 for (var i = 0; i < links.length; i++) {
@@ -107,7 +107,12 @@ for (var i = 0; i < links.length; i++) {
   urls.push(popupLocation)
   elements.push(link)
 }
+// preload those popups
+preloadPopups(elements, urls, 'biography')
 
+// place to store links and elements
+urls = []
+elements = []
 // gllinks - only if NOT on glossary page
 if (window.location.pathname.indexOf('/Glossary/') === -1) {
   links = document.getElementsByClassName('gllink')
@@ -118,16 +123,15 @@ if (window.location.pathname.indexOf('/Glossary/') === -1) {
     elements.push(link)
   }
 }
-
 // preload those popups
-preloadPopups(elements, urls)
+preloadPopups(elements, urls, 'glossary')
 
 // translations
 var translations = document.getElementsByClassName('translation')
 for (var i = 0; i < translations.length; i++) {
   var translation = translations[i]
   var text = translation.getAttribute('data-translation')
-  var popup = new Tooltip(translation, popupOptions(text))
+  var popup = new Tooltip(translation, popupOptions(text, 'translation'))
 }
 
 // references
@@ -135,11 +139,11 @@ if (typeof referenceData !== 'undefined') {
   referenceData.forEach(reference => {
     var rnum = reference.number
     var fragment = document.createElement('div')
-    fragment.className = 'bio'
+    fragment.className = 'popup-content'
     fragment.innerHTML = reference.reference
     var elements = document.getElementsByClassName(`reference-${rnum}`)
     for (var i = 0; i < elements.length; i++) {
-      var popup = new Tooltip(elements[i], popupOptions(fragment))
+      var popup = new Tooltip(elements[i], popupOptions(fragment, 'reference'))
       elements[i].onclick = function (e) {
         e.preventDefault()
         return false

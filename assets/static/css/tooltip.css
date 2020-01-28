@@ -2,6 +2,37 @@
 
 /* thanks https://github.com/FezVrasta/popper.js/issues/730 */
 
+/* custom colours are specified here */
+.tooltip.biography {
+  background-color: #CCDDFF;
+}
+.tooltip.biography > .tooltip-arrow {
+  border-color: #CCDDFF;
+}
+
+.tooltip.glossary {
+  background-color: #CCFFD9;
+}
+.tooltip.glossary > .tooltip-arrow {
+  border-color: #CCFFD9;
+}
+
+.tooltip.translation {
+  background-color: #FFCCCC;
+}
+.tooltip.translation > .tooltip-arrow {
+  border-color: #ffCCCC;
+}
+
+.tooltip.reference {
+  background-color: #ffff99;
+}
+.tooltip.reference > .tooltip-arrow {
+  border-color: #ffff99;
+}
+
+/* end of custom colours */
+
 .tooltip {
   opacity: initial;
 }
@@ -100,20 +131,20 @@
   margin-right: 0;
 }
 
-.tooltip-inner .bio {
+.tooltip-inner .popup-content {
   width: 250px;
 }
-.tooltip-inner .bio .row {
+.tooltip-inner .popup-content .row {
   margin: 0;
 }
-.tooltip-inner .bio .row .col-md-8,
-.tooltip-inner .bio .row .col-md-4,
-.tooltip-inner .bio .row .col-md-12 {
+.tooltip-inner .popup-content .row .col-md-8,
+.tooltip-inner .popup-content .row .col-md-4,
+.tooltip-inner .popup-content .row .col-md-12 {
   padding: 0;
 }
-.tooltip-inner .bio .row .col-md-4 img {
+.tooltip-inner .popup-content .row .col-md-4 img {
   max-width: 100%;
 }
-.tooltip-inner .bio .row.summary {
+.tooltip-inner .popup-content .row.summary {
   display: block;
 }
