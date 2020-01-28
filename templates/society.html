@@ -6,7 +6,6 @@
   <div class="col-md-12">
     <h1>{{ this.headline }}</h1>
     <h3>Founded in {{ this.foundation }}</h3>
-    {{ this.website }}
   </div>
 </div>
 
@@ -16,17 +15,19 @@
   </div>
 </div>
 
+{% if this.website %}
+<div class="row mt-5">
+  <div class="col-md-12">
+    Visit the <a href="{{ this.website }}">society website</a>.
+  </div>
+</div>
+{% endif %}
+
 {% import 'macros/references.html' as references %}
 {{ references.references(this.references) }}
 
 {% import 'macros/lastupdate.html' as lastupdate %}
 {{ lastupdate.lastupdate(this.update) }}
-
-{% if this.update %}
-<div class="row">
-  <p>Last Update {{ this.update }}</p>
-</div>
-{% endif %}
 
 <!-- END MAIN BODY -->
 
