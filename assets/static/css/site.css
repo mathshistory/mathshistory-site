@@ -54,3 +54,7 @@ p {
 .project-navigation {
   text-align: center;
 }
+
+.biography-thumbnail {
+  width: 145px;
+}

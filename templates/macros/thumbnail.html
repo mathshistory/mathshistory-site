@@ -11,8 +11,9 @@
     <a href="{{ thumbnail.first()|url }}">
     {% endif %}
     {% endif %}
-    <img src="{{ thumbnail.first()|url }}" />
+    <img class="biography-thumbnail" src="{{ thumbnail.first()|url }}" />
     {% if link %}
+    <br/>
     More Images
     </a>
     {% endif %}
