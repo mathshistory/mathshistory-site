@@ -10,7 +10,7 @@
 </div>
 
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-8">
     {% for image in this.attachments.images %}
       {% if image._model == 'curveimage' and image.main %}
         <img src="{{ image|url }}" alt="{{ image.description }}" />
@@ -18,7 +18,7 @@
     {% endfor %}
   </div>
 
-  <div class="col-md-6">
+  <div class="col-md-4">
     {% if this.equations %}
     {% for equation in this.equations.blocks %}
     {{ equation }}
