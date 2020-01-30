@@ -8,13 +8,26 @@
 {% endblock %}
 
 {% block body %}
-<div class="row">
+<div class="row px-5">
   <div class="col">
-    <div id="alphabetical-index-jumpbox" class="px-5 mb-3">
+    <div id="alphabetical-index-jumpbox" class="mb-3">
       <h1>Alphabetical Index</h1>
       {% import 'macros/biographyindextable.html' as table %}
       {{ table.biographyindextable() }}
     </div>
   </div>
+</div>
+
+<div class="row px-5 mt-3">
+  <div id="alphabetical-index-jumpbox" class="col-md-12">
+    <h1>Categories</h1>
+  </div>
+  {% for column in plugin_categories()|slice(2) -%}
+  <div class="col-md-6">
+    {% for category in column %}
+    <li><a href="{{ '/@categoryindex/%s'|format(category['tag'])|url }}">{{ category['name'] }}</a></li>
+    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="row">
+<!--<div class="row">
   <div class="col-md-12">
     <h1>History Topic Index</h1>
     <ul>
@@ -17,5 +17,20 @@
     {% endfor %}
     </ul>
   </div>
+</div>-->
+<div class="row">
+  <div class="col-md-12">
+    <h1>History Topic Index</h1>
+  </div>
+</div>
+
+<div class="row">
+  {% for column in plugin_categories()|slice(2) -%}
+  <div class="col-md-6">
+    {% for category in column %}
+    <li><a href="{{ '/@categoryindex/%s'|format(category['tag'])|url }}">{{ category['name'] }}</a></li>
+    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}
