@@ -192,6 +192,8 @@ class MathshistoryCategoryindexPlugin(Plugin):
         self.env.add_build_program(CategoryIndexPage, CategoryPageBuildProgram)
         self.env.add_type(CategoryTagsType)
 
+        self.env.jinja_env.globals.update(plugin_categories=self.get_categories)
+
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
         def category_path_resolver(node, pieces):
             if len(pieces) == 1:
