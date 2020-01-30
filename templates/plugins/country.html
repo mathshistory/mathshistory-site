@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}Mathematicians Born In {{ this.country }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Mathematicians Born In {{ this.country }}</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <ul>
+      {% for person in this.mathematicians -%}
+      <li><a href="{{ person|url }}">{{ person.shortname }}</a>{% if person.birthyear %} ({{ person.birthyear }} - {% if person.deathyear %}{{ person.deathyear }}{% endif %}){% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="col-md-4">
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4>Countries</h4>
+      {% for country in this.countries %}
+      <li><a href="{{ '/Biographies/@countries/%s'|format(country['country'])|url }}">{{ country['country'] }}</a> ({{ country['number'] }})</li>
+      {% endfor %}
+    </div>
+  </aside>
+  <!-- END SIDEBAR -->
+</div>
+{% endblock %}
