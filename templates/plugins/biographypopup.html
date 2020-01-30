@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <h3>{{ this.shortname }}</h3>
       {% if this.birthdate or this.birthplace %}
-      <h5>{% if this.birthyear %}{{ this.birthyear }}{% endif %} - {% if this.deathyear %}{{ this.deathyear }}{% endif %}</h5>
+      <h5>{% if this.birthyear %}{{ this.birthyear|format_year }}{% endif %} - {% if this.deathyear %}{{ this.deathyear|format_year }}{% endif %}</h5>
       {% endif %}
     </div>
   </div>

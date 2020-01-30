@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}{{ this.shortname }} {% if this.birthyear %} ({{ this.birthyear }} - {% if this.deathyear %}{{ this.deathyear }}{% endif %}){% endif %} - Biography{% endblock %}
+{% block title %}{{ this.shortname }} {% if this.birthyear %} ({{ this.birthyear|format_year }} - {% if this.deathyear %}{{ this.deathyear|format_year }}{% endif %}){% endif %} - Biography{% endblock %}
 {% block body %}
 
 <div class="row">

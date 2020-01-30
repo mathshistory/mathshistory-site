@@ -19,7 +19,7 @@
   <div class="col-md-8">
     <ul>
       {% for person in this.mathematicians -%}
-      <li><a href="{{ person|url }}">{{ person.shortname }}</a>{% if person.birthyear %} ({{ person.birthyear }} - {% if person.deathyear %}{{ person.deathyear }}{% endif %}){% endif %}</li>
+      <li><a href="{{ person|url }}">{{ person.shortname }}</a>{% if person.birthyear %} ({{ person.birthyear|format_year }} - {% if person.deathyear %}{{ person.deathyear|format_year }}{% endif %}){% endif %}</li>
       {% endfor %}
     </ul>
   </div>
