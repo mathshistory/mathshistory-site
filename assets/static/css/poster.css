@@ -1,0 +1,29 @@
+.poster {
+  margin: 50px;
+}
+
+.poster .poster-main {
+  text-align: center;
+  font-family:helvetica;
+}
+
+.poster .poster-main h1 {
+  font-size:48px;
+}
+.poster .poster-main h2 {
+  font-size:32px;
+}
+
+.poster .poster-main img {
+  height: 350px;
+}
+
+.poster .poster-description {
+  font-family:helvetica;
+  font-size:24px;
+}
+
+.poster .poster-moreinfo {
+  font-family:helvetica;
+  font-size:18px;
+}

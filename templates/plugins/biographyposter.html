@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Poster of {{ this.parent.shortname }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{{ '/static/css/poster.css'|asseturl }}" />
+  </head>
+  <body class="poster">
+    <div class="poster-main">
+      <p>
+        {% set biographyimages = this.parent.attachments.images.filter(F._model == 'biographyimage') %}
+        {% set bigimages = biographyimages.filter(F.main == False) %}
+        <img src="{{ bigimages.first()|url }}" />
+      </p>
+
+      <h1>{{ this.parent.shortname }}</h1>
+      <h2>{{ this.borndied }} {{ this.years }} years ago</h2>
+      <h1>{{ this.date }}</h1>
+    </div>
+
+    <div class="poster-description">
+      <p>{{ this.parent.summary }}</p>
+
+    <div class="poster-moreinfo">
+      <p>
+        <i>Find out more at</i>: {{ this.biographyurl }}
+      </p>
+    </div>
+
+  </body>
+</html>
