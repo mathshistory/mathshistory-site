@@ -314,9 +314,9 @@ def katexrender(match, record):
     p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     out, err = p.communicate(latex.encode('utf-8'))
     if p.returncode != 0:
-        return '<span className="math-error">%s</span>' % latex
+        return '<span class="math-error">%s</span>' % latex
     html = out.decode('utf-8')
-    return '<span className="math">%s</span>' % html
+    return '<span class="math">%s</span>' % html
 
 def imgreplace(match, record):
     tag = match.group('tag')
