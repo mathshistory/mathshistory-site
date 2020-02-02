@@ -14,12 +14,12 @@ lektor-mathshistory-biographyindex = 1.0.1
 lektor-mathshistory-daily = 0.1.0
 lektor-mathshistory-categoryindex = 2.1.0
 lektor-mathshistory-chronology = 1.0.0
-lektor-mathshistory-bbcode = 0.1.1
 lektor-mathshistory-chooser = 0.1.0
 lektor-mathshistory-search = 0.1
 lektor-mathshistory-publish = 0.1.1
 lektor-mathshistory-countries = 0.1.0
 lektor-mathshistory-posters = 0.1.0
+lektor-mathshistory-renderer = 0.1.0
 
 [servers.preview]
 name = Preview
