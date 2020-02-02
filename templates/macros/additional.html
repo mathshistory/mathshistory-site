@@ -24,7 +24,7 @@
       <ol name="otherweb">
         {% for otherweb in otherwebs.blocks %}
         {# we're not just using {{ otherweb }} because we want to make it open in new tab #}
-        <li><a href="{{ otherweb.link }}" target="_blank">{{ otherweb.text|safe }}</a></li>
+        <li><a href="{{ otherweb.link|url }}" target="_blank">{{ otherweb.text|safe }}</a></li>
         {% endfor %}
       </ol>
     </div>

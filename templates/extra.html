@@ -22,12 +22,6 @@
 {% import 'macros/lastupdate.html' as lastupdate %}
 {{ lastupdate.lastupdate(this.update) }}
 
-{% if this.update %}
-<div class="row">
-  <p>Last Update {{ this.update }}</p>
-</div>
-{% endif %}
-
 <!-- END MAIN BODY -->
 
 {% endblock %}
