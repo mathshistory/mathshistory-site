@@ -20,29 +20,12 @@ from lektor.environment import PRIMARY_ALT
 
 PLUGIN_NAME = 'mathshistory-categoryindex'
 VIRTUAL_SOURCE_ID = 'categoryindex'
-SOURCE_PATH = '/'
 OUTPUT_PATH = '/Categories'
 
-DISPLAY_HISTTOPIC = '<a href="{{ this|url }}">{{ this.shortname }}</a>'
-DISPLAY_BIOGRAPHY = '<a href="{{ this|url }}">{{ this.shortname }}</a>{% if this.birthyear %} ({{ this.birthyear|format_year }} - {% if this.deathyear %}{{ this.deathyear|format_year }}{% endif %}){% endif %}'
-DISPLAY_HONOUR = '<a href="{{ this|url }}">{{ this.title }}</a>'
-DISPLAY_SOCIETY = '<a href="{{ this|url }}">{{ this.name }}</a>'
-
-
-class CategoryIndexPage(VirtualSourceObject):
-    def __init__(self, record, categories):
-        VirtualSourceObject.__init__(self, record)
-        self.i_want_to_live = self.pad  # See lektor-tags/issues/2
-        self.categories = categories
-        self.template = 'plugins/categoryindex.html'
-
-    @property
-    def path(self):
-        return build_url([self.parent.path, '@%sindex' % VIRTUAL_SOURCE_ID])
-
-    @property
-    def url_path(self):
-        return build_url([OUTPUT_PATH])
+TYPE_BIOGRAPHIES = 'biographies'
+TYPE_HISTTOPICS = 'histtopics'
+TYPE_HONOURS = 'honours'
+TYPE_SOCIETIES = 'societies'
 
 
 class CategoryPage(VirtualSourceObject):
@@ -50,97 +33,64 @@ class CategoryPage(VirtualSourceObject):
         VirtualSourceObject.__init__(self, record)
         self.i_want_to_live = self.pad  # See lektor-tags/issues/2
         self.category = category
-        self._biographies = None
-        self._histtopics = None
-        self._societies = None
-        self._honours = None
+        self._cache = None
         self.template = 'plugins/category.html'
+        # configure these, in subclasses
+        self.type = ''
+        self.tytle = ''
+        self.display = ''
 
-    def get_results(self, parent):
+    @property
+    def pages(self):
+        # todo, display them properly
         tag = self.category['tag']
-        return self.pad.query(parent).filter(F.tags.contains(tag)).all()
-
-    @property
-    def biographies(self):
-        if self._biographies == None:
-            self._biographies = self.get_results('/Biographies/')
-        return self._biographies
-
-    @property
-    def histtopics(self):
-        if self._histtopics == None:
-            self._histtopics = self.get_results('/HistTopics/')
-        return self._histtopics
-
-    @property
-    def societies(self):
-        if self._societies == None:
-            self._societies = self.get_results('/Societies/')
-        return self._societies
-
-    @property
-    def honours(self):
-        if self._honours == None:
-            self._honours = self.get_results('/Honours/')
-        return self._honours
-
-    @property
-    def sections(self):
-        sections = []
-        if len(self.biographies) > 0:
-            sections.append({
-                'name': 'Biographies',
-                'id': 'biographies',
-                'pages': self.biographies
-            })
-        if len(self.histtopics) > 0:
-            sections.append({
-                'name': 'History Topics',
-                'id': 'histtopics',
-                'pages': self.histtopics
-            })
-        if len(self.societies) > 0:
-            sections.append({
-                'name': 'Societies',
-                'id': 'societies',
-                'pages': self.societies
-            })
-        if len(self.honours) > 0:
-            sections.append({
-                'name': 'Honours',
-                'id': 'honours',
-                'pages': self.honours
-            })
-        return sections
+        all = self.parent.children
+        return all.filter(F.tags.contains(tag))
 
     @property
     def path(self):
-        return build_url([self.parent.path, '@%s' % VIRTUAL_SOURCE_ID])
+        tag = self.category['tag']
+        return build_url([self.parent.path, '@%s' % VIRTUAL_SOURCE_ID, tag])
 
     @property
     def url_path(self):
         tag = self.category['tag']
-        return build_url([OUTPUT_PATH, tag])
+        return build_url([self.parent.path, 'category-%s' % tag])
 
-    def format_display(self, record):
-        if record['_model'] == 'biography':
-            display_exp = DISPLAY_BIOGRAPHY
-        elif record['_model'] == 'historytopic':
-            display_exp = DISPLAY_HISTTOPIC
-        elif record['_model'] == 'society':
-            display_exp = DISPLAY_SOCIETY
-        elif record['_model'] == 'honour':
-            display_exp = DISPLAY_HONOUR
-        else:
-            error = 'ERROR: unknown model:', record['_model']
-            print(error)
-            return error
+    def format_display(self, display_item):
+        record = display_item['record']
+        display = display_item['display']
+        exp = FormatExpression(self.pad.env, self.display)
+        return exp.evaluate(self.pad, this=record, display=display)
 
-        try:
-            exp = FormatExpression(self.pad.env, display_exp)
-            return exp.evaluate(self.pad, this=record)
-        except:
-            traceback.print_exc()
+
+class BiographiesCategoryPage(CategoryPage):
+    def __init__(self, record, category):
+        CategoryPage.__init__(self, record, category)
+        self.type = TYPE_BIOGRAPHIES
+        self.title = 'Biographies'
+        self.display = '<a href="{{ this|url }}">{{ this.shortname }}</a>{% if this.birthyear %} ({{ this.birthyear|format_year }} - {% if this.deathyear %}{{ this.deathyear|format_year }}{% endif %}){% endif %}'
+
+class HisttopicsCategoryPage(CategoryPage):
+    def __init__(self, record, category):
+        CategoryPage.__init__(self, record, category)
+        self.type = TYPE_HISTTOPICS
+        self.title = 'History Topics'
+        self.display = '<a href="{{ this|url }}">{{ this.shortname }}</a>'
+
+class HonoursCategoryPage(CategoryPage):
+    def __init__(self, record, category):
+        CategoryPage.__init__(self, record, category)
+        self.type = TYPE_HONOURS
+        self.title = 'Honours'
+        self.display = '<a href="{{ this|url }}">{{ this.title }}</a>'
+
+class SocietiesCategoryPage(CategoryPage):
+    def __init__(self, record, category):
+        CategoryPage.__init__(self, record, category)
+        self.type = TYPE_SOCIETIES
+        self.title = 'Societies'
+        self.display = '<a href="{{ this|url }}">{{ this.name }}</a>'
 
 
 class CategoryPageBuildProgram(BuildProgram):
@@ -167,6 +117,38 @@ class CategoryTagsType(Type):
         rv['tags'] = [c['tag'] for c in categories]
         return rv
 
+def num_entries(category, type):
+    if pad == None:
+        ctx = get_ctx()
+        if ctx is not None:
+            pad = ctx.pad
+        else:
+            pass
+
+def purge_mlink(s):
+    #The below code is modified from the original htmlformat function to ensure compatibility
+    rawch   = ['á','à','â','ä','ã','Á','Â','Ä','é','è','ê','ë','É','î','í','ó','ô','ö','ò','õ','Ö','û','ú','ü','ù','Ü','ç','ï','ø','Ø','ñ','ł','Ł','ś','Ś','ț','Ț']
+    transch = ['a','a','a','a','a','A','A','A','e','e','e','e','E','i','i','o','o','o','o','o','O','u','u','u','u','U','c','i','o','O','n','l','L','s','S','t','T']
+    for idx, raw in enumerate(rawch):
+        trans = transch[idx]
+        s = s.replace(raw, trans)
+    return s
+
+def query_to_display(query):
+    display_records = []
+    for record in query:
+        alphabetical = record['alphabetical']
+        for display in alphabetical:
+            purged = purge_mlink(display).lower()
+            data = {
+                'record': record,
+                'display': display,
+                'purged': purged
+            }
+            display_records.append(data)
+    display_records_sorted = sorted(display_records, key=lambda p: p['purged'])
+    return display_records_sorted
+
 
 class MathshistoryCategoryindexPlugin(Plugin):
     name = 'mathshistory-categoryindex'
@@ -189,32 +171,47 @@ class MathshistoryCategoryindexPlugin(Plugin):
 
     def on_setup_env(self, **extra):
         self.env.add_build_program(CategoryPage, CategoryPageBuildProgram)
-        self.env.add_build_program(CategoryIndexPage, CategoryPageBuildProgram)
         self.env.add_type(CategoryTagsType)
 
         self.env.jinja_env.globals.update(plugin_categories=self.get_categories)
+        self.env.jinja_env.filters['query_to_display'] = query_to_display
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
-        def category_path_resolver(node, pieces):
+        def category_path_resolver(record, pieces):
             if len(pieces) == 1:
                 category = self.get_category(pieces[0])
-                return CategoryPage(node,category)
 
-        @self.env.virtualpathresolver('%sindex' % VIRTUAL_SOURCE_ID)
-        def category_index_path_resolver(node, pieces):
-            categories = self.get_categories()
-            return CategoryIndexPage(node, categories)
+                if record.path == '/Biographies':
+                    return BiographiesCategoryPage(record, category)
+
+                if record.path == '/HistTopics':
+                    return HisttopicsCategoryPage(record, category)
+
+                if record.path == '/Honours':
+                    return HonoursCategoryPage(record, category)
+
+                if record.path == '/Societies':
+                    return SocietiesCategoryPage(record, category)
 
         @self.env.generator
-        def category_generator(record):
+        def biographies_category_generator(record):
             if not isinstance(record, Page):
                 return
 
-            if record.path != SOURCE_PATH:
-                return
-
             categories = self.get_categories()
-            yield CategoryIndexPage(record, categories)
 
-            for category in categories:
-                yield CategoryPage(record, category)
+            if record.path == '/Biographies':
+                for category in categories:
+                    yield BiographiesCategoryPage(record, category)
+
+            if record.path == '/HistTopics':
+                for category in categories:
+                    yield HisttopicsCategoryPage(record, category)
+
+            if record.path == '/Honours':
+                for category in categories:
+                    yield HonoursCategoryPage(record, category)
+
+            if record.path == '/Societies':
+                for category in categories:
+                    yield SocietiesCategoryPage(record, category)
