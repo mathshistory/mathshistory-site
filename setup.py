@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_pictdisplay'],
     url='https://github.com/mathshistory/mathshistory-pictdisplay',
-    version='0.1.0',
+    version='0.2.0',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',

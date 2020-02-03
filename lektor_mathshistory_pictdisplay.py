@@ -6,6 +6,7 @@ from lektor.pluginsystem import Plugin
 from lektor.sourceobj import VirtualSourceObject
 from lektor.utils import build_url
 from lektor.db import Page
+from lektor.db import F
 
 VIRTUAL_SOURCE_ID = 'pictdisplay'
 
@@ -13,6 +14,14 @@ VIRTUAL_SOURCE_ID = 'pictdisplay'
 class PictDisplay(VirtualSourceObject):
     def __init__(self, parent):
         VirtualSourceObject.__init__(self, parent)
+
+    @property
+    def bigpictures(self):
+        attachments = self.parent.attachments
+        images = attachments.images.filter(F._model == 'biographyimage')
+        bigimages = images.filter(F.main == False)
+        bigimages_sorted = bigimages.order_by('order')
+        return bigimages_sorted
 
     @property
     def path(self):
@@ -31,7 +40,7 @@ class PictDisplayBuildProgram(BuildProgram):
         )
 
     def build_artifact(self, artifact):
-        artifact.render_template_into('plugins/pictdisplay.html', this=self.source.parent)
+        artifact.render_template_into('plugins/pictdisplay.html', this=self.source)
 
 
 class MathshistoryPictdisplayPlugin(Plugin):
@@ -47,7 +56,10 @@ class MathshistoryPictdisplayPlugin(Plugin):
                 return
 
             if record['_model'] == 'biography':
-                if record.attachments.count() > 1:
+                attachments = record.attachments
+                images = attachments.images.filter(F._model == 'biographyimage')
+                bigimages = images.filter(F.main == False)
+                if bigimages.count() > 0:
                     yield PictDisplay(record)
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
