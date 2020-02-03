@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ this.category.name }}{% endblock %}
+{% block title %}{{ this.category.name }} - {{ this.title }}{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -10,41 +10,42 @@
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-    <h1>{{ this.category.name }}</h1>
-    <p>{{ this.category.description }}</p>
-
-    <p><a href="{{ '/@categoryindexindex/'|url }}">Back to the Categories Index</a></p>
-
-    {% if this.sections|length > 2 %}
-    <h4 id="jumps">
-      Jump to section:
-      {% for section in this.sections %}
-      <a href="#jump-{{ section['id'] }}">{{ section['name'] }}</a>{% if not loop.last %},{% endif %}
-      {% endfor %}
-    </h4>
-    {% endif %}
+    <h1>{{ this.category.name }} - {{ this.title }}</h1>
+    {% if this.category.description|length %}<p>{{ this.category.description }}</p>{% endif %}
   </div>
 </div>
 
-{% for section in this.sections %}
-
-{% if loop.first or loop.index0 is divisibleby 2 %}
 <div class="row">
-{% endif %}
-
-  <div class="col-md-6">
-    <h3 id="jump-{{ section['id'] }}">{{ section['name'] }}</h3>
+  <div class="col-md-8">
     <ul>
-    {% for page in section['pages'] %}
-      <li>{{ this.format_display(page)|safe }}</li>
-    {% endfor %}
+      {% for display_item in this.pages|query_to_display %}
+      <li><a href="{{ display_item.record|url }}">{{ display_item.display }}</a></li>
+      {% else %}
+      <i>There are no {{ this.title }} pages in the {{ this.category.name }} category.</i>
+      {% endfor %}
     </ul>
   </div>
 
-{% if (loop.index0 + 1) is divisibleby 2 or loop.last %}
-</div>
-{% endif %}
+  <!-- SIDEBAR -->
+  <aside class="col-md-4">
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4>Other {{ this.category.name }} Pages</h4>
+      <ul>
+        <li><a href="{{ '/Biographies/@categoryindex/%s'|format(this.category.tag)|url }}">Biographies</a></li>
+        <li><a href="{{ '/HistTopics/@categoryindex/%s'|format(this.category.tag)|url }}">History Topics</a></li>
+        <li><a href="{{ '/Honours/@categoryindex/%s'|format(this.category.tag)|url }}">Honours</a></li>
+        <li><a href="{{ '/Societies/@categoryindex/%s'|format(this.category.tag)|url }}">Societies</a></li>
+      </ul>
 
-{% endfor %}
+      <h4>Other {{ this.title }} Categories</h4>
+      <ul>
+        {% for category in plugin_categories() %}
+        <li><a href="{{ '%s/@categoryindex/%s'|format(this.parent.path, category.tag)|url }}">{{ category.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </aside>
+  <!-- END SIDEBAR -->
+</div>
 
 {% endblock %}

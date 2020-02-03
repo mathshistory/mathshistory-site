@@ -25,7 +25,7 @@
   {% for column in plugin_categories()|slice(2) -%}
   <div class="col-md-6">
     {% for category in column %}
-    <li><a href="{{ '/@categoryindex/%s'|format(category['tag'])|url }}">{{ category['name'] }}</a></li>
+    <li><a href="{{ '/Biographies/@categoryindex/%s'|format(category['tag'])|url }}">{{ category['name'] }}</a></li>
     {% endfor %}
   </div>
   {% endfor %}
