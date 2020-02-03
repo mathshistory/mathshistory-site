@@ -5,6 +5,7 @@ import os
 import time
 import traceback
 import random
+import math
 
 from lektor.build_programs import BuildProgram
 from lektor.environment import Expression, FormatExpression
@@ -23,12 +24,20 @@ OUTPUT_PATH = '/OfTheDay'
 _born_cache = None
 _died_cache = None
 
-# setup the random seed
-year = time.localtime().tm_year
-random.seed(year)
 
-def random_int():
-    return random.randint(0, 3000)
+def random_int(day):
+    # setup the random seed
+    year = time.localtime().tm_year
+    random.seed(year)
+
+    # convert day-month into day of the year
+    year_day = time.strptime(day, '%m-%d').tm_yday
+
+    # run random year_day times
+    for i in range(0,year_day):
+        random_num = random.randint(0,10000)
+
+    return random_num
 
 def get_born_cache(pad):
     get_page_cache(pad)
@@ -174,11 +183,14 @@ class OfTheDayPage(VirtualSourceObject):
             print('no quotations')
             return None
 
-        random = random_int()
-        while random >= len(quotes):
-            random = int(random / 2)
+        # gives random number between 0 and 10000
+        random_num = random_int(self.day)
 
-        chosen = quotes[random]
+        # convert that to index
+        max = len(quotes)
+        random_item_index = math.floor((random_num/10000)*max)
+
+        chosen = quotes[random_item_index]
         self._quote = chosen
         return chosen
 
