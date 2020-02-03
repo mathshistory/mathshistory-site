@@ -58,3 +58,16 @@ p {
 .biography-thumbnail {
   width: 145px;
 }
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.pictdisplay.row {
+  text-align: center;
+  padding: 10px;
+}
+.pictdisplay.row p {
+  text-align: center;
+}

@@ -1,33 +1,37 @@
 {% extends "layout.html" %}
-{% block title %}Pictures of {{ this.shortname }}{% endblock %}
+{% block title %}Pictures of {{ this.parent.shortname }}{% endblock %}
 {% block body %}
 
 <div class="row">
   <div class="col-md-12">
-    <h1>{{ this.fullname }}</h1>
-    <p><a href="{{ this.path|url }}">Back to biography</a></p>
+    <h1>{{ this.parent.fullname }}</h1>
+    <p><a href="{{ this.parent.path|url }}">View biography</a></p>
   </div>
 </div>
 
-{% set biographyimages = this.attachments.images.filter(F._model == 'biographyimage') %}
-{% set bigimages = biographyimages.filter(F.main == False) %}
+{% for image in this.bigpictures %}
 
-{% if bigimages.count() > 0 %}
-{% for image in bigimages|sort(attribute='path') %}
-
-{% if loop.first or loop.index0 is divisibleby 2 %}
-<div class="row">
+{% if loop.first or image.position == 'C' or image.position == 'L' %}
+<div class="row pictdisplay">
 {% endif %}
 
+  {% if image.position == 'C' %}
+  <div class="col-md-12">
+  {% else %}
   <div class="col-md-6">
-    <img src="{{ image|url }}" />
+  {% endif %}
+
+  <img src="{{ image|url }}"{% if image.height %} style="height: {{ image.height }}px"{% endif %} />
+  {% if image.description %}
+  <p>{{ image.description }}</p>
+  {% endif %}
+
   </div>
 
-{% if (loop.index0 + 1) is divisibleby 2 or loop.last %}
+{% if loop.last or image.position == 'C' or image.position == 'R' %}
 </div>
 {% endif %}
 
 {% endfor %}
-{% endif %}
 
 {% endblock %}
