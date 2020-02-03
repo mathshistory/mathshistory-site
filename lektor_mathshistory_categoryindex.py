@@ -24,7 +24,7 @@ SOURCE_PATH = '/'
 OUTPUT_PATH = '/Categories'
 
 DISPLAY_HISTTOPIC = '<a href="{{ this|url }}">{{ this.shortname }}</a>'
-DISPLAY_BIOGRAPHY = '<a href="{{ this|url }}">{{ this.shortname }}</a>{% if this.birthyear %} ({{ this.birthyear }} - {% if this.deathyear %}{{ this.deathyear }}{% endif %}){% endif %}'
+DISPLAY_BIOGRAPHY = '<a href="{{ this|url }}">{{ this.shortname }}</a>{% if this.birthyear %} ({{ this.birthyear|format_year }} - {% if this.deathyear %}{{ this.deathyear|format_year }}{% endif %}){% endif %}'
 DISPLAY_HONOUR = '<a href="{{ this|url }}">{{ this.title }}</a>'
 DISPLAY_SOCIETY = '<a href="{{ this|url }}">{{ this.name }}</a>'
 
