@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 from lektor.pluginsystem import Plugin
+from lektor.context import get_ctx
+
+from markupsafe import escape
+from werkzeug.urls import url_parse
+
 import time
 import os
 
@@ -29,7 +34,20 @@ class MathshistoryJinjaPlugin(Plugin):
                 year = '%s BC' % (year * -1)
             return year
 
+        def any_url(link):
+            ctx = get_ctx()
+            if ctx is not None:
+                record = ctx.source
+                if record is not None:
+                    url = url_parse(link)
+                    if not url.scheme:
+                        link = record.url_to(link, base_url=ctx.base_url)
+            link = escape(link)
+            return link
+
+
         self.env.jinja_env.filters['refs_format'] = refs_format
         self.env.jinja_env.filters['basename'] = basename
         self.env.jinja_env.filters['without_ext'] = without_ext
         self.env.jinja_env.filters['format_year'] = format_year
+        self.env.jinja_env.filters['any_url'] = any_url

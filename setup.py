@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_jinja'],
     url='https://github.com/mathshistory/mathshistory-jinja',
-    version='0.2.0',
+    version='0.3.0',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
