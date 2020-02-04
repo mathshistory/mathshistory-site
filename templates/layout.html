@@ -59,6 +59,7 @@
     <!-- END HEADER -->
 
     <!-- NAVIGATION -->
+    {% if not this.path.startswith('/Extras/') %}
     <div class="container nav-bar">
       <div class="row nav">
         {% for href, title in [
@@ -73,6 +74,7 @@
         {% endfor %}
       </div>
     </div>
+    {% endif %}
     <!-- END NAVIGATION -->
 
     {% block body %}{% endblock %}
@@ -100,6 +102,9 @@
   <script src="{{ '/static/js/tippy-bundle.iife.min.js'|asseturl }}"></script>
   <script src="{{ '/static/js/site-popups.js'|asseturl }}"></script>
   <script src="{{ '/static/js/foldup.js'|asseturl }}"></script>
+  {% if not this.path.startswith('/Extras/') %}
+  <script src="{{ '/static/js/extras-popup.js'|asseturl }}"></script>
+  {% endif %}
 </body>
 
 </html>
