@@ -357,11 +357,12 @@ def imgreplace(match, record):
     return fixed
 
 def correct_link(link, record):
-    if record is not None:
-        url = url_parse(link)
-        if not url.scheme:
-            if get_ctx():
-                link = record.url_to(link, base_url=get_ctx().base_url)
+    url = url_parse(link)
+    if not url.scheme:
+        context = get_ctx()
+        if context:
+            record = context.record
+            link = record.url_to(link)
     link = escape(link)
     return link
 
