@@ -1,3 +1,26 @@
+// associated curves
+tippy('.associated-curve',{
+  content(element) {
+    console.log(arguments)
+    var img = document.createElement('img')
+    img.src = element.href
+    return img
+  },
+  onCreate(instance) {
+    instance._hasLoaded = false;
+    instance.reference.onclick = function (e) {
+      e.preventDefault();
+      return false;
+    }
+  },
+  allowHTML: true,
+  trigger: 'click',
+  duration: [0,0],
+  interactive: true,
+  appendTo: document.body
+})
+
+
 // all translations
 tippy('.translation',{
   content(element) {

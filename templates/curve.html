@@ -43,24 +43,17 @@
 <div class="row mt-5">
   <div class="col-md-12">
     <h3>Associated Curves</h3>
+    <p><a href="{{ '/Curves/Definitions/'|url }}">Definitions of the Associated curves</a></p>
   </div>
 </div>
 
 <div class="row">
-  {% for image in this.attachments.images|sort(attribute='path') %}
-  {% if loop.first or loop.index0|int == (this.attachments.count())/2|int %}
+  {% for column in this.attachments.images.filter(F.main == False).filter(F._model == 'curveimage')|sort(attribute='path')|slice(2) -%}
   <div class="col-md-6">
-    <ul>
-  {% endif %}
-      {% if image._model == 'curveimage' and not image.main %}
-      <li><a href="{{ image|url }}">{{ image.description }}</a></li>
-      {% else %}
-      <li><a href="{{ '/Curves/Definitions/'|url }}">Definitions of the Associated curves</a></li>
-      {% endif %}
-  {% if loop.last or (loop.index0 + 1)|int == (this.attachments.count())/2|int %}
-    </ul>
+    {% for image in column %}
+    <li><a href="{{ image|url }}" class="associated-curve">{{ image.description }}</a></li>
+    {% endfor %}
   </div>
-  {% endif %}
   {% endfor %}
 </div>
 
