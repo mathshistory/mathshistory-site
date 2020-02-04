@@ -187,8 +187,9 @@ def render(source, record):
     source = re.sub(regex, lambda match: drender(match, record), source)
 
     # convert [refnum]
-    regex = re.compile(r'\[(\d+)\]', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span>[<a href="#reference-\1" class="reference reference-\1">\1</a>]</span>', source)
+    regex = re.compile(r'\[(?P<number>\d+)\]', re.MULTILINE | re.DOTALL)
+    source = re.sub(regex, lambda match: referencerender(match, record), source)
+    #source = re.sub(regex, r'<span>[<a href="#reference-\1" class="reference reference-\1">\1</a>]</span>', source)
 
     # convert <T num>
     regex = re.compile(r'<T (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
@@ -254,6 +255,9 @@ def societyrender(match, record):
 
 def extrarender(match, record):
     number = match.group('number')
+    if 'additional' not in record:
+        print('Extra not found. Skipping.')
+        return ''
     extras = record['additional'].blocks
     extra = list(filter(lambda extra: int(extra['number']) == int(number), extras))
     if len(extra) != 1:
@@ -264,8 +268,29 @@ def extrarender(match, record):
     href = correct_link(href, record)
     return '<a href="%s">THIS LINK</a>' % href
 
+def referencerender(match, record):
+    number = match.group('number')
+    if 'references' not in record:
+        print('Reference not found. Skipping.')
+        return '[%s]' % number
+    references = record['references'].blocks
+    references = list(filter(lambda t: int(t['number']) == int(number), references))
+    if len(references) != 1:
+        print('Reference not found. Skipping.')
+        return '[%s]' % number
+    reference = references[0]
+    text = reference['reference'].__html__().strip()
+    html = '<span>[<a href="#reference-%s" class="reference" data-popup="">%s</a>]</span>' % (number, number)
+    soup = BeautifulSoup(html, 'html5lib')
+    soup.find('a')['data-popup'] = text
+    html = str(soup.find('span')).strip()
+    return html
+
 def trender(match, record):
     number = match.group('number')
+    if 'translations' not in record:
+        print('Translation not found. Skipping.')
+        return ''
     translations = record['translations'].blocks
     translation = list(filter(lambda t: int(t['number']) == int(number), translations))
     if len(translation) != 1:
@@ -273,7 +298,11 @@ def trender(match, record):
         return ''
     translation = translation[0]
     text = translation['translation'].__html__().strip()
-    return '<span><a data-translation="%s" class="translation nonoscript">&#9417;</a><noscript>(%s)</noscript></span>' % (text, text)
+    html = '<span><a data-popup="" class="translation nonoscript">&#9417;</a><noscript>(%s)</noscript></span>' % (text)
+    soup = BeautifulSoup(html, 'html5lib')
+    soup.find('a')['data-popup'] = text
+    html = str(soup.find('span')).strip()
+    return html
 
 def drender(match, record):
     content = match.group('content')
@@ -324,7 +353,7 @@ def imgreplace(match, record):
     img = soup.find('img')
     src = img['src']
     img['src'] = correct_link(img['src'], record)
-    fixed = img.prettify().strip()
+    fixed = str(img).strip()
     return fixed
 
 def correct_link(link, record):
