@@ -266,7 +266,7 @@ def extrarender(match, record):
     extra = extra[0]
     href = extra['link'].strip()
     href = correct_link(href, record)
-    return '<a href="%s">THIS LINK</a>' % href
+    return '<a class="elink" href="%s" target="_blank">THIS LINK</a>' % href
 
 def referencerender(match, record):
     number = match.group('number')
