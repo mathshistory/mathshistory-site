@@ -15,9 +15,4 @@
     </div>
   </div>
   {% endif %}
-
-  {# put in the popup script even if there are no references #}
-  <script>
-    var referenceData = {{ refs.blocks|refs_format|tojson }}
-  </script>
 {%- endmacro %}
