@@ -19,7 +19,7 @@ lektor-mathshistory-search = 0.1
 lektor-mathshistory-publish = 0.1.1
 lektor-mathshistory-countries = 0.1.0
 lektor-mathshistory-posters = 0.1.0
-lektor-mathshistory-renderer = 0.2.1
+lektor-mathshistory-renderer = 0.2.2
 
 [servers.preview]
 name = Preview
