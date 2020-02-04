@@ -72,7 +72,11 @@ function linkPopupTrigger(instance) {
   var request = new XMLHttpRequest()
   request.onreadystatechange = function () {
     if (this.readyState !== 4) return
-    if (this.status !== 200) return cb({status: this.status})
+    if (this.status !== 200) {
+      // on error, just go to the link as normal
+      window.location.href = url
+      return false
+    }
 
     // we have the response
     var response = this.responseText
