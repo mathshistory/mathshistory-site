@@ -361,8 +361,8 @@ def correct_link(link, record):
     if not url.scheme:
         context = get_ctx()
         if context:
-            record = context.record
-            link = record.url_to(link)
+            source = context.source
+            link = source.url_to(link)
     link = escape(link)
     return link
 
