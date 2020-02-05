@@ -97,7 +97,7 @@ function linkPopupTrigger(instance) {
     if (this.readyState !== 4) return
     if (this.status !== 200) {
       // on error, just go to the link as normal
-      window.location.href = url
+      window.location.href = instance.reference.href
       return false
     }
 
