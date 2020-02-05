@@ -23,16 +23,20 @@
   </div>
 
   <!-- SIDEBAR -->
+  {% for category in get_categories_by_type(site, 'societies') %}
+  {% if loop.first %}
   <aside class="col-md-4">
     <div class="p-3 mb-3 bg-light rounded">
       <h4>Categories</h4>
       <ul>
-        {% for category in plugin_categories() %}
-        <li><a href="{{ '/Societies/@categoryindex/%s'|format(category.tag)|url }}">{{ category.name }}</a></li>
-        {% endfor %}
+  {% endif %}
+        <li><a href="{{ '/Societies/@categoryindex/%s'|format(category._slug)|url }}">{{ category.name }}</a></li>
+  {% if loop.last %}
       </ul>
     </div>
   </aside>
+  {% endif %}
+  {% endfor %}
   <!-- END SIDEBAR -->
 </div>
 {% endblock %}
