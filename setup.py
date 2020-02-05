@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_categoryindex'],
     url='https://github.com/mathshistory/mathshistory-categoryindex',
-    version='3.0.0',
+    version='4.0.0',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
