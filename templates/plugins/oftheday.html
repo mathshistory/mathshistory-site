@@ -1,5 +1,33 @@
 {% extends "layout.html" %}
+
 {% block title %}{{ this.day }} - Mathematicians Of The Day{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="{{ this.day }}">
+<meta property="og:description" content="Mathematicians that were born or died on {{ this.day }}{% if this.quote %}, including a quote from {{ this.quote.person.shortname }}{% endif %}">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+{% set thumbnail = this.quote.person.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
+{% if thumbnail %}
+<meta property="og:image" content="{{ thumbnail|canonical_url }}">
+<meta property="og:image:width" content="{{ thumbnail.width }}">
+<meta property="og:image:height" content="{{ thumbnail.height }}">
+<meta property="og:image:type" content="image/{{ thumbnail.type }}">
+{% endif %}
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{{ this.day }}" />
+<meta name="twitter:description" content="Mathematicians that were born or died on {{ this.day }}{% if this.quote %}, including a quote from {{ this.quote.person.shortname }}{% endif %}" />
+{% if thumbnail %}
+<meta name="twitter:image" content="{{ thumbnail|canonical_url }}" />
+{% endif %}
+{% endblock %}
+
 {% block body %}
 
 <div class="row">

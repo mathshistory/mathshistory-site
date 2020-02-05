@@ -1,13 +1,26 @@
 {% extends "layout.html" %}
 
-{% block title %}Birthplace Map{% endblock %}
-
-
 {% block head %}
 {{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="Birthplace Map">
+<meta property="og:description" content="An interactive map showing the birthplaces of the mathematicians in the Maths History archive.">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+{% set thumbnail = this.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{{ this.shortname }}" />
+<meta name="twitter:description" content="An interactive map showing the birthplaces of the mathematicians in the Maths History archive." />
+
 <link rel="stylesheet" href="{{ '/static/css/ol.css'|asseturl }}" type="text/css">
 <script src="{{ '/static/js/ol.js'|asseturl }}"></script>
 {% endblock %}
+
+{% block title %}Birthplace Map{% endblock %}
 
 
 {% block body %}
