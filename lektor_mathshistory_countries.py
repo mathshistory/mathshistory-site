@@ -19,9 +19,11 @@ from lektor.utils import cleanup_path
 
 VIRTUAL_SOURCE_ID = 'countries'
 SOURCE_PATH = '/Biographies'
-OUTPUT_PATH = '/Countries'
+DATA_PATH = '/Countries'
+PASS_UNKNOWN = '--Unknown--'
 
 _countries_cache = None
+_countries_name_cache = None
 
 def random_int():
     return random.randint(0, 3000)
@@ -30,20 +32,24 @@ def get_countries_cache(pad):
     get_page_cache(pad)
     return _countries_cache
 
+def get_countries_name_cache(pad):
+    get_page_cache(pad)
+    return _countries_name_cache
+
 def get_page_cache(pad):
-    global _countries_cache
+    global _countries_cache, _countries_name_cache
     if _countries_cache != None:
         return
     _countries_cache = {}
 
     # first get the countries
-    locations_to_countries = {}
-    for name, _, is_attachment in pad.db.iter_items('/Map'):
-        if is_attachment or name is None or name == '':
+    _countries_name_cache = {}
+    for slug, _, is_attachment in pad.db.iter_items(DATA_PATH):
+        if is_attachment or slug is None or slug == '' or slug == PASS_UNKNOWN:
             continue
         # use special pad_get which doesn't auto add dependencies
-        record = pad_get(pad, '%s/%s' % ('/Map', name))
-        locations_to_countries[name] = record['country']
+        record = pad_get(pad, '%s/%s' % (DATA_PATH, slug))
+        _countries_name_cache[slug] = record['name']
 
 
     # now get the biographies
@@ -52,11 +58,11 @@ def get_page_cache(pad):
             continue
         # use special pad_get which doesn't auto add dependencies
         record = pad_get(pad, '%s/%s' % (SOURCE_PATH, name))
-        location = record['maplocation']
-        if location is None or location == '' or location not in locations_to_countries:
+        country = record['country']
+        if country is None or country == '' or country not in _countries_name_cache:
             continue
 
-        country = locations_to_countries[location]
+        country = _countries_name_cache[country]
         if country is None or country == '':
             continue
 
@@ -65,72 +71,15 @@ def get_page_cache(pad):
         _countries_cache[country].append(record)
 
 
-class CountryIndexPage(VirtualSourceObject):
-    def __init__(self, parent):
-        VirtualSourceObject.__init__(self, parent)
-        self.template = 'plugins/countryindex.html'
+def mathematicians_by_country(pad, country):
+    cache = get_countries_cache(pad)
+    return cache[country]
 
-    @property
-    def countries(self):
-        cache = get_countries_cache(self.pad)
-        as_array = [{'country':k,'number':len(v)} for (k,v) in cache.items()]
-        return sorted(as_array, key=lambda k: k['country'])
-
-    @property
-    def path(self):
-        return build_url([self.parent.path, '@%sindex' % VIRTUAL_SOURCE_ID])
-
-    @property
-    def url_path(self):
-        return build_url([OUTPUT_PATH])
-
-
-class CountryPage(VirtualSourceObject):
-    def __init__(self, record, country):
-        VirtualSourceObject.__init__(self, record)
-        self.i_want_to_live = self.pad  # See lektor-tags/issues/2
-        self.country = country
-        self._quote = None
-        self.template = 'plugins/country.html'
-
-    def record_dependencies(self, records):
-        ctx = get_ctx()
-        for record in records:
-            path = self.pad.db.to_fs_path(record.path)
-            ctx.record_dependency(path)
-
-    @property
-    def mathematicians(self):
-        cache = get_countries_cache(self.pad)
-        #self.record_dependencies(cache[self.country])
-        return cache[self.country]
-
-    @property
-    def countries(self):
-        cache = get_countries_cache(self.pad)
-        as_array = [{'country':k,'number':len(v)} for (k,v) in cache.items()]
-        return sorted(as_array, key=lambda k: k['country'])
-
-    @property
-    def path(self):
-        return build_url([self.parent.path, '@%s' % VIRTUAL_SOURCE_ID])
-
-    @property
-    def url_path(self):
-        #url_country = re.sub(r'\W+', '', self.country.lower())
-        return build_url([OUTPUT_PATH, self.country])
-
-
-# this build program is used for category pages and index pages
-class CountryPageBuildProgram(BuildProgram):
-    def produce_artifacts(self):
-        self.declare_artifact(
-            posixpath.join(self.source.url_path, 'index.html'),
-            sources=list(self.source.iter_source_filenames()),
-        )
-
-    def build_artifact(self, artifact):
-        artifact.render_template_into(self.source.template, this=self.source)
+def all_countries(pad):
+    cache = get_countries_cache(pad)
+    name_cache = get_countries_name_cache(pad)
+    as_array = [{'slug':k,'name':name_cache[k],'number':len(v)} for (k,v) in cache.items()]
+    return sorted(as_array, key=lambda k: k['name'])
 
 
 class MathshistoryCountriesPlugin(Plugin):
@@ -138,31 +87,8 @@ class MathshistoryCountriesPlugin(Plugin):
     description = u'Creates the country pages, listing mathematicians by birth country.'
 
     def on_setup_env(self, **extra):
-        self.env.add_build_program(CountryPage, CountryPageBuildProgram)
-        self.env.add_build_program(CountryIndexPage, CountryPageBuildProgram)
-
-        @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
-        def countries_path_resolver(node, pieces):
-            if len(pieces) == 1 and node.path == SOURCE_PATH:
-                    return CountryPage(node, pieces[0])
-
-        @self.env.virtualpathresolver('%sindex' % VIRTUAL_SOURCE_ID)
-        def countries_index_path_resolver(node, pieces):
-            if len(pieces) == 0 and node.path == SOURCE_PATH:
-                    return CountryIndexPage(node)
-
-        @self.env.generator
-        def countries_generator(record):
-            if record.path != SOURCE_PATH:
-                return
-
-            pad = self.env.new_pad()
-            for country in pad.query('/Map').include_undiscoverable(True).distinct('country'):
-                if country is None or country == '':
-                    continue
-                yield CountryPage(record, country)
-
-            yield CountryIndexPage(record)
+        self.env.jinja_env.globals.update(mathematicians_by_country=mathematicians_by_country)
+        self.env.jinja_env.globals.update(all_countries=all_countries)
 
 
 
