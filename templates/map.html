@@ -17,7 +17,6 @@
 <meta name="twitter:description" content="An interactive map showing the birthplaces of the mathematicians in the Maths History archive." />
 
 <link rel="stylesheet" href="{{ '/static/css/ol.css'|asseturl }}" type="text/css">
-<script src="{{ '/static/js/ol.js'|asseturl }}"></script>
 {% endblock %}
 
 {% block title %}Birthplace Map{% endblock %}
@@ -42,8 +41,9 @@
   <div class="col-md-3">
     <h3 id="location-name">No Location Chosen</h3>
     <h4 id="location-country"></h4>
-    <h4 id="location-latlong"></h4>
+    <h5 id="location-latlong"></h5>
     <p id="location-webref"><span>Choose a location on the map to see which mathematicians were born there.</span></p>
+    <p id="gaz-webref"></p>
     <ul id="location-people"></ul>
   </div>
 </div>
@@ -54,6 +54,8 @@
   </div>
 </div>
 
+<script src="{{ '/static/js/ol.js'|asseturl }}"></script>
+<script src="{{ '/static/js/interactivemap.js'|asseturl }}"></script>
 <script src="{{ '/static/js/birthplacemap.js'|asseturl }}"></script>
 
 <!-- END MAIN BODY -->
