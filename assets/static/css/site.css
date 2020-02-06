@@ -66,10 +66,12 @@ img {
 
 .pictdisplay.row {
   text-align: center;
-  padding: 10px;
 }
 .pictdisplay.row p {
   text-align: center;
+}
+.pictdisplay.row img {
+  padding: 10px;
 }
 
 #_Loader-status {
