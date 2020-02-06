@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 
-{% block title %}Mathematicians Born In {{ this.country }}{% endblock %}
+{% block title %}Mathematicians Born In {{ this.name }}{% endblock %}
 
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
 
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.country }}">
-<meta property="og:description" content="A list of the mathematicians born in {{ this.country }}">
+<meta property="og:title" content="{{ this.name }}">
+<meta property="og:description" content="A list of the mathematicians born in {{ this.name }}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
@@ -16,22 +16,22 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.country }}" />
-<meta name="twitter:description" content="A list of the mathematicians born in {{ this.country }}" />
+<meta name="twitter:title" content="{{ this.name }}" />
+<meta name="twitter:description" content="A list of the mathematicians born in {{ this.name }}" />
 {% endblock %}
 
 {% block body %}
 
 <div class="row">
   <div class="col-md-12">
-    <h2>Mathematicians Born In {{ this.country }}</h2>
+    <h2>Mathematicians Born In {{ this.name }}</h2>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-8">
     <ul>
-      {% for person in this.mathematicians -%}
+      {% for person in mathematicians_by_country(site, this._slug) -%}
       <li><a href="{{ person|url }}">{{ person.shortname }}</a>{% if person.birthyear %} ({{ person.birthyear|format_year }} - {% if person.deathyear %}{{ person.deathyear|format_year }}{% endif %}){% endif %}</li>
       {% endfor %}
     </ul>
@@ -41,8 +41,8 @@
   <aside class="col-md-4">
     <div class="p-3 mb-3 bg-light rounded">
       <h4>Countries</h4>
-      {% for country in this.countries %}
-      <li><a href="{{ '/Biographies/@countries/%s'|format(country['country'])|url }}">{{ country['country'] }}</a> ({{ country['number'] }})</li>
+      {% for country in all_countries(site) %}
+      <li><a href="{{ '/Countries/%s'|format(country['slug'])|url }}">{{ country['name'] }}</a> ({{ country['number'] }})</li>
       {% endfor %}
     </div>
   </aside>

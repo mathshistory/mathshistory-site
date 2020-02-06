@@ -16,11 +16,11 @@
 </div>
 
 <div class="row">
-  {% for column in this.countries|slice(2) -%}
+  {% for column in all_countries(site)|slice(2) -%}
   <div class="col-md-6">
     <ul>
       {% for country in column %}
-      <li><a href="{{ '/Biographies/@countries/%s'|format(country['country'])|url }}">{{ country['country'] }}</a> ({{ country['number'] }})</li>
+      <li><a href="{{ '/Countries/%s'|format(country['slug'])|url }}">{{ country['name'] }}</a> ({{ country['number'] }})</li>
       {% endfor %}
       </ul>
   </div>
