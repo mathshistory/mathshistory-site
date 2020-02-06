@@ -71,3 +71,10 @@ img {
 .pictdisplay.row p {
   text-align: center;
 }
+
+#_Loader-status {
+  display: none;
+}
+#testApplet_infotablediv {
+  display: none!important;
+}
