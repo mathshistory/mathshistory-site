@@ -4,7 +4,6 @@ url_style = relative
 
 [packages]
 lektor-mathshistory-quotations = 0.1.0
-lektor-mathshistory-projectpages = 0.1.0
 lektor-mathshistory-popups = 0.1.0
 lektor-mathshistory-pictdisplay = 0.2.0
 lektor-mathshistory-map = 0.2.0

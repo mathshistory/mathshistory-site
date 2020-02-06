@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ this.projectpage.title }} - {{ this.parent.title }} - Projects{% endblock %}
+{% block title %}{{ this.title }} - {{ this.parent.title }} - Projects{% endblock %}
 
 {% block head %}
 {{ super() }}
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.projectpage.title }}">
+<meta property="og:title" content="{{ this.title }}">
 <meta property="og:description" content="A student project on {{ this.parent.title }} by {{ this.parent.author }}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
@@ -14,7 +14,7 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.projectpage.title }}" />
+<meta name="twitter:title" content="{{ this.title }}" />
 <meta name="twitter:description" content="A student project on {{ this.parent.title }} by {{ this.parent.author }}" />
 {% endblock %}
 
@@ -24,34 +24,40 @@
   <div class="col-md-12">
     <h1>{{ this.parent.title }}</h1>
     <h3>{{ this.parent.author }}</h3>
-    <h3>{{ this.projectpage.title }}</h3>
+    <h3>{{ this.title }}</h3>
   </div>
 </div>
 
-<div class="row mt-5 project-navigation">
+<hr/>
+
+{% set prev = this.parent.children.order_by('-chapter').filter(F.chapter < this.chapter).first() %}
+{% set next = this.parent.children.order_by('chapter').filter(F.chapter > this.chapter).first() %}
+
+<div class="row project-navigation">
   <div class="col-md-4">
-    {% if this.previous %}
-    <a href="{{ this.previous|url }}">Previous Page</a>
+    {% if prev %}
+    <a href="{{ prev|url }}">Previous Page</a>
     <br/>
-    ({{ this.previous.projectpage.title }})
+    ({{ prev.title }})
     {% endif %}
   </div>
   <div class="col-md-4">
     <a href="{{ this.parent|url }}">Contents</a>
   </div>
   <div class="col-md-4">
-    {% if this.next %}
-    <a href="{{ this.next|url }}">Next Page</a>
+    {% if next %}
+    <a href="{{ next|url }}">Next Page</a>
     <br/>
-    ({{ this.next.projectpage.title }})
+    ({{ next.title }})
     {% endif %}
   </div>
 </div>
 
+<hr/>
 
-<div class="row mt-5">
+<div class="row">
   <div class="col-md-12">
-    {{ this.projectpage.content }}
+    {{ this.content }}
   </div>
 </div>
 

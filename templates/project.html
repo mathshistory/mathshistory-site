@@ -24,26 +24,31 @@
   <div class="col-md-12">
     <h1>{{ this.title }}</h1>
     <h3>{{ this.author }}</h3>
+    <p>Back to <a href="{{ this.parent|url }}">Projects Index</a></p>
   </div>
 </div>
 
+<hr/>
 
-<div class="row mt-5">
+<div class="row">
   <div class="col-md-12">
-    {% if this.pages and this.pages.blocks|length > 0 %}
+    {% if this.children and this.children.count() > 0 %}
     <h4>Contents</h4>
     <ol>
-    {% for page in this.pages.blocks %}
+    {% for page in this.children %}
       <li>
-          <a href="{{ '%s/@projectpage/%s/'|format(this.path, loop.index0)|url }}">{{ page.title }}</a>
+          <a href="{{ page|url }}">{{ page.title }}</a>
       </li>
     {% endfor %}
     <ul>
     {% else %}
-    <i>Error: No pages found</i>
+    <i>Error: No chapters found</i>
     {% endif %}
   </div>
 </div>
+
+{% import 'macros/references.html' as references %}
+{{ references.references(this.references) }}
 
 <!-- END MAIN BODY -->
 
