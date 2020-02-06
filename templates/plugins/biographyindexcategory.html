@@ -4,6 +4,8 @@
 
 {% block head %}
 {{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+
 <!-- opengraph -->
 <meta property="og:title" content="Letter {{ this.letter }} - Biographies">
 <meta property="og:description" content="Mathematician biographies whose names begin with {{ this.letter }}">
