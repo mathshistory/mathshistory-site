@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ this.title }} - Obituaries{% endblock %}
+{% block title %}{{ this.name }} - {% if this.wherefrom %}{{ this.wherefrom }}{% else %}Obituary{% endif %}{% endblock %}
 
 {% block head %}
 {{ super() }}
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.heading }} - Obituary">
-<meta property="og:description" content="{{ this.title }}">
+<meta property="og:title" content="{{ this.name }} - {% if this.wherefrom %}{{ this.wherefrom }}{% else %}Obituary{% endif %}">
+<meta property="og:description" content="{{ this.summary }}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
@@ -14,19 +14,24 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.heading }} - Obituary" />
-<meta name="twitter:description" content="{{ this.title }}" />
+<meta name="twitter:title" content="{{ this.name }} - {% if this.wherefrom %}{{ this.wherefrom }}{% else %}Obituary{% endif %}" />
+<meta name="twitter:description" content="{{ this.summary }}" />
 {% endblock %}
 
 {% block body %}
 
 <div class="row">
   <div class="col-md-12">
-    <h1>{{ this.heading }}</h1>
+    <h1>{{ this.name }}</h1>
+    {% if this.wherefrom %}<h3>{{ this.wherefrom }}</h3>{% endif %}
+    {% if this.summary %}<p>{{ this.summary }}</p>{% endif %}
+    <p><a href="{{ this.parent|url }}">Obituaries Index</a></p>
   </div>
 </div>
 
-<div class="row mt-5">
+<hr/>
+
+<div class="row">
   <div class="col-md-12">
     {{ this.content }}
   </div>
