@@ -58,6 +58,13 @@ p {
 .biography-thumbnail {
   width: 145px;
 }
+.biography-thumbnail-container {
+  text-align: center;
+}
+
+.curve-equation {
+  color: blue;
+}
 
 img {
   max-width: 100%;
@@ -79,4 +86,19 @@ img {
 }
 #testApplet_infotablediv {
   display: none!important;
+}
+#sysoutdiv {
+  display: none;
+}
+
+#map {
+  width: 100%;
+  height: 500px;
+}
+
+.curve-container {
+  text-align: center;
+}
+.curve-container img {
+  border: 1px solid black;
 }

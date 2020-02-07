@@ -8,7 +8,6 @@
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
-{% set thumbnail = this.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
 
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
@@ -30,9 +29,9 @@
   </div>
 </div>
 
-<div class="row mt-5">
+<div class="row mt-3">
   <div class="col-md-9">
-    <div id="map" style="width: 100%; height: 500px;">
+    <div id="map">
       <noscript>
         The birthplace map requires JavaScript enabled in your browser to work.
       </noscript>

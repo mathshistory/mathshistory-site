@@ -9,20 +9,20 @@
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
-{% set thumbnail = this.attachments.images.filter(F._model == 'curveimage').filter(F.main == True).first() %}
-{% if thumbnail %}
-<meta property="og:image" content="{{ thumbnail|canonical_url }}">
-<meta property="og:image:width" content="{{ thumbnail.width }}">
-<meta property="og:image:height" content="{{ thumbnail.height }}">
-<meta property="og:image:type" content="image/{{ thumbnail.type }}">
+{% set image = this.attachments.images.filter(F._model == 'curveimage' and F.main).first() %}
+{% if image %}
+<meta property="og:image" content="{{ image|canonical_url }}">
+<meta property="og:image:width" content="{{ image.width }}">
+<meta property="og:image:height" content="{{ image.height }}">
+<meta property="og:image:type" content="image/{{ image.type }}">
 {% endif %}
 
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
 <meta name="twitter:title" content="{{ this.name }}" />
-{% if thumbnail %}
-<meta name="twitter:image" content="{{ thumbnail|canonical_url }}" />
+{% if image %}
+<meta name="twitter:image" content="{{ image|canonical_url }}" />
 {% endif %}
 {% endblock %}
 
@@ -35,13 +35,14 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row curve-container">
   <div class="col-md-8">
-    {% for image in this.attachments.images %}
-      {% if image._model == 'curveimage' and image.main %}
-        <img src="{{ image|url }}" alt="{{ image.description }}" />
-      {% endif %}
-    {% endfor %}
+    {% set image = this.attachments.images.filter(F._model == 'curveimage' and F.main).first() %}
+    {% if image %}
+      <img src="{{ image|url }}" alt="{{ image.description }}" />
+    {% else %}
+    <i>Error displaying curve</i>
+    {% endif %}
   </div>
 
   <div class="col-md-4">
@@ -51,22 +52,24 @@
     {% endfor %}
     {% endif %}
   </div>
-</div>
 
-<div class="row mt-5 nonoscript">
-  <div class="col-md-12">
-    <a href="{{ '%s/@curvesapplet'|format(this.path)|url }}">View the interactive version of this curve.</a>
+  <div class="col-md-12 nonoscript">
+    <p><a href="{{ '%s/@curvesapplet'|format(this.path)|url }}">View the interactive version of this curve.</a></p>
   </div>
 </div>
 
-<div class="row mt-5">
+<hr/>
+
+<div class="row">
   <div class="col-md-12">
     <h3>Description</h3>
     {{ this.content }}
   </div>
 </div>
 
-<div class="row mt-5">
+<hr/>
+
+<div class="row">
   <div class="col-md-12">
     <h3>Associated Curves</h3>
     <p><a href="{{ '/Curves/Definitions/'|url }}">Definitions of the Associated curves</a></p>

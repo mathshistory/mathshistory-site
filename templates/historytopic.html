@@ -25,7 +25,9 @@
   </div>
 </div>
 
-<div class="row mt-5">
+<hr/>
+
+<div class="row">
   <div class="col-md-12">
     {{ this.content }}
   </div>
@@ -38,6 +40,7 @@
 {{ additional.additional(this.additional, this.otherweb, this.shortname) }}
 
 {% if this.authors or this.update %}
+<hr/>
 <div class="row">
   <div class="col-md-12">
     {% if this.authors %}Written by {{ this.authors }}{% endif %}
