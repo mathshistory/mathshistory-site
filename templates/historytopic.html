@@ -1,5 +1,20 @@
 {% extends "layout.html" %}
 
+{% block head %}
+{{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="{{ this.shortname }}">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{{ this.shortname }}" />
+<meta name="twitter:description" content="{{ this.summary }}" />
+{% endblock %}
+
 {% block title %}{{ this.shortname }}{% endblock %}
 
 {% block body %}
@@ -10,7 +25,9 @@
   </div>
 </div>
 
-<div class="row mt-5">
+<hr/>
+
+<div class="row">
   <div class="col-md-12">
     {{ this.content }}
   </div>
@@ -23,6 +40,7 @@
 {{ additional.additional(this.additional, this.otherweb, this.shortname) }}
 
 {% if this.authors or this.update %}
+<hr/>
 <div class="row">
   <div class="col-md-12">
     {% if this.authors %}Written by {{ this.authors }}{% endif %}

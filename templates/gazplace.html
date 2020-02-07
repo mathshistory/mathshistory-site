@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ this.place }} - Mathematical Gazetteer of the British Isles{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="{{ this.place }} - Mathematical Gazetteer of the British Isles">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{{ this.place }} - Mathematical Gazetteer of the British Isles" />
+
+<link rel="stylesheet" href="{{ '/static/css/ol.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.place }}</h1>
+    <h5>Mathematical Gazetteer of the British Isles</h5>
+  </div>
+</div>
+
+<hr/>
+
+<div class="row project-navigation">
+  {% set prev = this.parent.children.filter(F._model == 'gazplace').order_by('-_slug').filter(F._slug < this._slug).first() %}
+  {% set next = this.parent.children.filter(F._model == 'gazplace').order_by('_slug').filter(F._slug > this._slug).first() %}
+  <div class="col-md-4">
+    {% if prev %}
+    <a href="{{ prev|url }}">Previous Entry</a>
+    {% endif %}
+  </div>
+  <div class="col-md-4">
+    <a href="{{ this.parent|url }}">Gazateer Index</a>
+  </div>
+  <div class="col-md-4">
+    {% if next %}
+    <a href="{{ next|url }}">Next Entry</a>
+    {% endif %}
+  </div>
+</div>
+
+<hr/>
+
+<div class="row">
+  <div class="col-md-12">
+    {{ this.content }}
+  </div>
+</div>
+
+{% if this.longitude and this.latitude %}
+<hr/>
+<div class="row">
+  <div class="col-md-12">
+    <div id="gazateer-map"></div>
+  </div>
+</div>
+{% endif %}
+
+{% import 'macros/references.html' as references %}
+{{ references.references(this.references) }}
+
+{% if this.longitude and this.latitude %}
+<script>
+  var placeLongitude = {{ this.longitude }};
+  var placeLatitude = {{ this.latitude }};
+</script>
+<script src="{{ '/static/js/ol.js'|asseturl }}"></script>
+<script src="{{ '/static/js/interactivemap.js'|asseturl }}"></script>
+<script src="{{ '/static/js/gazmap.js'|asseturl }}"></script>
+{% endif %}
+
+
+<!-- END MAIN BODY -->
+
+{% endblock %}

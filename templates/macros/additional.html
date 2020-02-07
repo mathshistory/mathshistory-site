@@ -1,5 +1,6 @@
 {% macro additional(additionals, otherwebs, name) -%}
   {% if (additionals and additionals.blocks|length > 0) or (otherwebs and otherwebs.blocks|length > 0) %}
+  <hr/>
   <div class="row">
     <div class="col-md-12">
       <h3>Additional Resources <span class="nonoscript">(<a href="#" id="additional-toggle">show</a>)</span></h3>
@@ -20,12 +21,11 @@
 
     {% if (otherwebs and otherwebs.blocks|length > 0) %}
     <div class="col-md-6">
-      <p>Other pages in around the web about {{ name }}:</p>
+      <p>Other websites about {{ name }}:</p>
       <ol name="otherweb">
         {% for otherweb in otherwebs.blocks %}
-        {{ otherweb }}
         {# we're not just using {{ otherweb }} because we want to make it open in new tab #}
-        <li><a href="{{ otherweb.link }}" target="_blank">{{ otherweb.text|safe }}</a></li>
+        <li><a href="{{ otherweb.link|any_url }}" target="_blank">{{ otherweb.text|safe }}</a></li>
         {% endfor %}
       </ol>
     </div>

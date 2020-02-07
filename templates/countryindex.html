@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Mathematicians By Country{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Mathematicians By Country</h2>
+  </div>
+</div>
+
+<div class="row">
+  {% for column in all_countries(site)|slice(2) -%}
+  <div class="col-md-6">
+    <ul>
+      {% for country in column %}
+      <li><a href="{{ '/Countries/%s'|format(country['slug'])|url }}">{{ country['name'] }}</a> ({{ country['number'] }})</li>
+      {% endfor %}
+      </ul>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

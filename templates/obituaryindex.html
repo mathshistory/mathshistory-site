@@ -12,8 +12,8 @@
   <div class="col-md-12">
     <h1>Obituaries Index</h1>
     <ul>
-    {% for page in site.query('/Obituaries') %}
-      <li><a href="{{ page|url }}">{{ page.title }}</a></li>
+    {% for page in this.children %}
+      <li><a href="{{ page|url }}">{{ page.name }}{% if page.wherefrom %} - {{ page.wherefrom }}{% endif %}</a></li>
     {% endfor %}
     </ul>
   </div>

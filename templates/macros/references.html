@@ -1,6 +1,7 @@
 {% macro references(refs, title='References') -%}
   {% if refs and refs.blocks|length > 0 %}
-  <div class="row mt-5">
+  <hr/>
+  <div class="row">
     <div class="col-md-12">
       <h3>{{ title }} <span class="nonoscript">(<a href="#" id="references-toggle">show</a>)</span></h3>
     </div>
@@ -15,9 +16,4 @@
     </div>
   </div>
   {% endif %}
-
-  {# put in the popup script even if there are no references #}
-  <script>
-    var referenceData = {{ refs.blocks|refs_format|tojson }}
-  </script>
 {%- endmacro %}

@@ -1,48 +1,81 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ this.category.name }}{% endblock %}
+{% block title %}{{ this.category.name }} - {{ this.type.name }}{% endblock %}
 
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+
+<!-- opengraph -->
+<meta property="og:title" content="{{ this.category.name }} - {{ this.type.name }}">
+{% if this.category.description %}
+<meta property="og:description" content="{{ this.category.description }}">
+{% endif %}
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{{ this.category.name }} - {{ this.type.name }}" />
+{% if this.category.description %}
+<meta name="twitter:description" content="{{ this.category.description }}" />
+{% endif %}
 {% endblock %}
 
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-    <h1>{{ this.category.name }}</h1>
-    <p>{{ this.category.description }}</p>
-
-    {% if this.sections|length > 2 %}
-    <h4 id="jumps">
-      Jump to section:
-      {% for section in this.sections %}
-      <a href="#jump-{{ section['id'] }}">{{ section['name'] }}</a>{% if not loop.last %},{% endif %}
-      {% endfor %}
-    </h4>
-    {% endif %}
+    <h1>{{ this.category.name }} - {{ this.type.name }}</h1>
+    {% if this.category.description %}<p>{{ this.category.description }}</p>{% endif %}
   </div>
 </div>
 
-{% for section in this.sections %}
-
-{% if loop.first or loop.index0 is divisibleby 2 %}
 <div class="row">
-{% endif %}
-
-  <div class="col-md-6">
-    <h3 id="jump-{{ section['id'] }}">{{ section['name'] }}</h3>
+  <div class="col-md-8">
     <ul>
-    {% for page in section['pages'] %}
-      <li>{{ this.format_display(page)|safe }}</li>
-    {% endfor %}
+      {% for display_item in this.pages|query_to_display %}
+      <li><a href="{{ display_item.record|url }}">{{ display_item.display }}</a></li>
+      {% endfor %}
     </ul>
   </div>
 
-{% if (loop.index0 + 1) is divisibleby 2 or loop.last %}
-</div>
-{% endif %}
+  <!-- SIDEBAR -->
+  <aside class="col-md-4">
+    <div class="p-3 mb-3 bg-light rounded">
+      {% for type in get_types_by_category(site, this.category._slug) if type.id != this.type.id %}
+      {% if loop.first %}
+      <h4>Other {{ this.category.name }} Pages</h4>
+      <ul>
+      {% endif %}
+        {% if type.id != this.type.id %}
+        <li>
+          <a href="{{ '%s/@categoryindex/%s'|format(type.path, this.category._slug)|url }}">{{ type.name }}</a>
+        </li>
+        {% endif %}
+      {% if loop.last %}
+      </ul>
+      {% endif %}
+      {% endfor %}
 
-{% endfor %}
+      {% for category in get_categories_by_type(site, this.type.id) if category._slug != this.category._slug %}
+      {% if loop.first %}
+      <h4>Other {{ this.type.name }} Categories</h4>
+      <ul>
+      {% endif %}
+        {% if category._slug != this.category._slug %}
+        <li>
+          <a href="{{ '%s/@categoryindex/%s'|format(this.parent.path, category._slug)|url }}">{{ category.name }}</a>
+        </li>
+        {% endif %}
+      {% if loop.last %}
+      </ul>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </aside>
+  <!-- END SIDEBAR -->
+</div>
 
 {% endblock %}

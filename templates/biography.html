@@ -1,16 +1,47 @@
 {% extends "layout.html" %}
-{% block title %}{{ this.shortname }} {% if this.birthyear %} ({{ this.birthyear }} - {% if this.deathyear %}{{ this.deathyear }}{% endif %}){% endif %} - Biography{% endblock %}
-{% block body %}
 
+{% block title %}{{ this.shortname }} {% if this.birthyear %} ({{ this.birthyear|format_year }} - {% if this.deathyear %}{{ this.deathyear|format_year }}{% endif %}){% endif %} - Biography{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="{{ this.shortname }} - Biography">
+<meta property="og:description" content="{{ this.summary }}">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+{% set thumbnail = this.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
+{% if thumbnail %}
+<meta property="og:image" content="{{ thumbnail|canonical_url }}">
+<meta property="og:image:width" content="{{ thumbnail.width }}">
+<meta property="og:image:height" content="{{ thumbnail.height }}">
+<meta property="og:image:type" content="image/{{ thumbnail.type }}">
+{% endif %}
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{{ this.shortname }}" />
+<meta name="twitter:description" content="{{ this.summary }}" />
+{% if thumbnail %}
+<meta name="twitter:image" content="{{ thumbnail|canonical_url }}" />
+{% endif %}
+{% endblock %}
+
+{% block body %}
+{# we have to do this again, because blocks are scoped #}
+{% set thumbnail = this.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
 <div class="row">
   <div class="col-md-12">
     <h1>{{ this.fullname }}</h1>
   </div>
 </div>
 
+<hr/>
+
 {% if this.birthdate or this.birthplace or this.deathplace or this.deathplace or this.summary %}
-<div class="row mt-5">
-  <div class="col-md-8">
+<div class="row">
+  <div class="col-md-{% if thumbnail %}8{% else %}12{% endif %}">
     <h3>Quick Info</h3>
 
     {% if this.birthdate or this.birthplace %}
@@ -41,26 +72,35 @@
     {% endif %}
   </div>
 
-  {% import 'macros/thumbnail.html' as thumbnail %}
-  <div class="col-md-4">
-    <div class="row" style="text-align: center;">
-      {{ thumbnail.thumbnail(this.attachments.images, True, this.path) }}
-    </div>
-    {% if this.quotations and this.quotations.blocks|length > 0 %}
-    <div class="row mt-2" style="text-align: center;">
-      <a href="{{ '%s/@quotations'|format(this.path)|url }}" style="width: 100%;">Quotations by {{ this.shortname }}</a>
-    </div>
+  {% if thumbnail %}
+  {% set numbigimages = this.attachments.images.filter(F._model == 'biographyimage').filter(F.main == False).count() %}
+  <div class="col-md-4 biography-thumbnail-container">
+    <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
+    {% if numbigimages > 0 %}
+    <br/>
+    <a href="{{ '%s/@pictdisplay'|format(this.path)|url }}">View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
     {% endif %}
   </div>
+  {% endif %}
 </div>
 {% endif %}
 
-<div class="row mt-5">
+<hr/>
+
+<div class="row">
   <div class="col-md-12">
     <h3>Biography</h3>
     {{ this.content }}
   </div>
 </div>
+
+{% if this.quotations and this.quotations.blocks|length > 0 %}
+<div class="row mt-2">
+  <div class="col-md-12">
+    <a href="{{ '%s/@quotations'|format(this.path)|url }}">Quotations by {{ this.shortname }}</a>
+  </div>
+</div>
+{% endif %}
 
 {% import 'macros/references.html' as references %}
 {{ references.references(this.references) }}
@@ -69,6 +109,7 @@
 {{ additional.additional(this.additional, this.otherweb, this.shortname) }}
 
 {% if this.honours and this.honours.blocks|length > 0 %}
+<hr/>
 <div class="row">
   <div class="col-md-12">
     <h3>Honours <span class="nonoscript">(<a href="#" id="honours-toggle">show</a>)</span></h3>
@@ -88,6 +129,7 @@
 {% endif %}
 
 {% if this.authors or this.update %}
+<hr/>
 <div class="row">
   <div class="col-md-12">
     {% if this.authors %}Written by {{ this.authors }}{% endif %}

@@ -1,150 +1,147 @@
-function popupOptions (title) {
-  return {
-    title: title,
-    trigger: 'click',
-    placement: 'top',
-    html: true,
-    closeOnClickOutside: true,
-    popperOptions: {
-      modifiers: {
-        flip: {
-          enabled: false
-        }
-      }
+// associated curves
+tippy('.associated-curve',{
+  content(element) {
+    console.log(arguments)
+    var img = document.createElement('img')
+    img.src = element.href
+    return img
+  },
+  onCreate(instance) {
+    instance._hasLoaded = false;
+    instance.reference.onclick = function (e) {
+      e.preventDefault();
+      return false;
     }
-  }
-}
+  },
+  allowHTML: true,
+  trigger: 'click',
+  duration: [0,0],
+  interactive: true,
+  appendTo: document.body
+})
 
-function getPopupFragment (url, cb) {
+
+// all translations
+tippy('.translation',{
+  content(element) {
+    return element.getAttribute('data-popup')
+  },
+  allowHTML: true,
+  trigger: 'click',
+  theme: 'translation',
+  duration: [0,0],
+  interactive: true
+})
+
+// all references
+tippy('.reference',{
+  content(element) {
+    return element.getAttribute('data-popup')
+  },
+  allowHTML: true,
+  trigger: 'click',
+  theme: 'reference',
+  duration: [0,0],
+  interactive: true,
+  appendTo: document.body
+})
+
+// mlinks
+tippy('.mlink', {
+  onCreate(instance) {
+    instance._hasLoaded = false;
+    instance.reference.onclick = function (e) {
+      e.preventDefault();
+      return false;
+    }
+  },
+  onTrigger(instance) {
+    if (!instance._hasLoaded) {
+      return linkPopupTrigger(instance)
+    }
+  },
+  allowHTML: true,
+  trigger: 'click',
+  theme: 'mlink',
+  duration: [0,0],
+  interactive: true,
+  appendTo: document.body
+})
+
+// mlinks
+tippy('.gllink', {
+  onCreate(instance) {
+    instance._hasLoaded = false;
+    instance.reference.onclick = function (e) {
+      e.preventDefault();
+      return false;
+    }
+  },
+  onTrigger(instance) {
+    if (!instance._hasLoaded) {
+      return linkPopupTrigger(instance)
+    }
+  },
+  allowHTML: true,
+  trigger: 'click',
+  theme: 'gllink',
+  duration: [0,0],
+  interactive: true,
+  appendTo: document.body
+})
+
+function linkPopupTrigger(instance) {
+  var url = instance.reference.getAttribute('data-popup')
   var request = new XMLHttpRequest()
   request.onreadystatechange = function () {
     if (this.readyState !== 4) return
-    if (this.status !== 200) return cb({status: this.status})
+    if (this.status !== 200) {
+      // on error, just go to the link as normal
+      window.location.href = instance.reference.href
+      return false
+    }
 
+    // we have the response
     var response = this.responseText
-    var fragment = document.createElement('div')
-    fragment.innerHTML = response
 
-    cb(null, fragment)
+    // fix all the links in it
+    response = fixLinks(response, url, instance)
+
+    // set the popup content to it, and show it
+    instance.setContent(response)
+    instance.show()
+    instance._hasLoaded = true;
   }
   request.open('GET', url, true)
   request.send()
+  return false
 }
 
+function fixLinks(content, urlContext, instance) {
+  // convert to fragment
+  var fragment = document.createElement('div')
+  fragment.innerHTML = content
 
-function formatGlossaryFragment (fragment, popup, urlContext) {
-  var links = fragment.querySelectorAll('.gllink')
+  // get the absolute url of this popup
+  var absoluteUrl = new URL(urlContext, window.location.href).href
+
+  // fix all the urls
+  var links = fragment.getElementsByTagName('a')
   for (var i = 0; i < links.length; i++) {
     var link = links[i]
-    link.onclick = function (el, event) {
-      event.preventDefault()
-      var popupLocation = el.getAttribute('data-popup')
-
-      // compute actual location
-      popupLocation = new URL(popupLocation, urlContext)
-
-      getPopupFragment(popupLocation, function (error, fragment) {
-        if (error) console.error(error)
-
-        // recurse around
-        formatGlossaryFragment(fragment, popup, popupLocation)
-        popup.updateTitleContent(fragment)
-      })
-      return false
-    }.bind(this, link)
+    var href = link.getAttribute('href')
+    var actualLocation = new URL(href, absoluteUrl)
+    link.href = actualLocation
   }
-}
 
-
-function preloadPopups (elements, urls, index) {
-  if (typeof index === 'undefined') index = 0
-  if (index >= elements.length) return
-
-  getPopupFragment(urls[index], function (error, fragment) {
-    if (error) {
-      console.error(error)
-      return preloadPopups(elements, urls, index + 1)
+  // update the popup when the images load
+  var imgs = fragment.getElementsByTagName('img')
+  for (var i = 0; i < imgs.length; i++) {
+    var img = imgs[i]
+    img.onload = function () {
+      instance.popperInstance.update()
     }
-
-    // add the tooltip in
-    var popup = new Tooltip(elements[index], popupOptions(fragment))
-
-    // special case for glossaries
-    // make gllinks in the popup, show in that popup
-    if (elements[index].classList.contains('gllink')) {
-      var urlContext = new URL(urls[index], window.location.href).href
-      formatGlossaryFragment(fragment, popup, urlContext)
-    }
-
-    // special case for biographies
-    // on popup click, go to the full biography
-    if (elements[index].classList.contains('mlink')) {
-      fragment.onclick = function (href, event) {
-        window.location.href = href
-      }.bind(this, elements[index].href)
-    }
-
-    // on successful popup add, break the link
-    elements[index].onclick = function (e) {
-      e.preventDefault()
-      return false
-    }
-
-    // recurse round to the next link
-    preloadPopups(elements, urls, index+1)
-  })
-}
-
-// place to store links and elements
-var urls = []
-var elements = []
-
-// mlinks
-var links = document.getElementsByClassName('mlink')
-for (var i = 0; i < links.length; i++) {
-  var link = links[i]
-  var popupLocation = link.getAttribute('data-popup')
-  urls.push(popupLocation)
-  elements.push(link)
-}
-
-// gllinks - only if NOT on glossary page
-if (window.location.pathname.indexOf('/Glossary/') === -1) {
-  links = document.getElementsByClassName('gllink')
-  for (var i = 0; i < links.length; i++) {
-    var link = links[i]
-    var popupLocation = link.getAttribute('data-popup')
-    urls.push(popupLocation)
-    elements.push(link)
   }
-}
 
-// preload those popups
-preloadPopups(elements, urls)
-
-// translations
-var translations = document.getElementsByClassName('translation')
-for (var i = 0; i < translations.length; i++) {
-  var translation = translations[i]
-  var text = translation.getAttribute('data-translation')
-  var popup = new Tooltip(translation, popupOptions(text))
-}
-
-// references
-if (typeof referenceData !== 'undefined') {
-  referenceData.forEach(reference => {
-    var rnum = reference.number
-    var fragment = document.createElement('div')
-    fragment.className = 'bio'
-    fragment.innerHTML = reference.reference
-    var elements = document.getElementsByClassName(`reference-${rnum}`)
-    for (var i = 0; i < elements.length; i++) {
-      var popup = new Tooltip(elements[i], popupOptions(fragment))
-      elements[i].onclick = function (e) {
-        e.preventDefault()
-        return false
-      }
-      console.log(elements[i])
-    }
-  })
+  return fragment.innerHTML
 }

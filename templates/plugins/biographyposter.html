@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Poster of {{ this.parent.shortname }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{{ '/static/css/poster.css'|asseturl }}" />
+
+    <!-- opengraph -->
+    <meta property="og:title" content="{{ this.parent.shortname }} - Poster">
+    <meta property="og:description" content="{{ this.parent.summary }}">
+    <meta property="og:site_name" content="Maths History">
+    <meta property="og:locale" content="en_GB">
+    <meta property="og:url" content="{{ this|canonical_url }}">
+    {% set thumbnail = this.parent.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
+    {% if thumbnail %}
+    <meta property="og:image" content="{{ thumbnail|canonical_url }}">
+    <meta property="og:image:width" content="{{ thumbnail.width }}">
+    <meta property="og:image:height" content="{{ thumbnail.height }}">
+    <meta property="og:image:type" content="image/{{ thumbnail.type }}">
+    {% endif %}
+
+    <!-- twitter card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="Maths History" />
+    <meta name="twitter:title" content="{{ this.parent.shortname }} - Poster" />
+    <meta name="twitter:description" content="{{ this.parent.summary }}" />
+    {% if thumbnail %}
+    <meta name="twitter:image" content="{{ thumbnail|canonical_url }}" />
+    {% endif %}
+  </head>
+  <body class="poster">
+    <div class="poster-main">
+      <p>
+        {% set bigimages = this.parent.attachments.images.filter(F._model == 'biographyimage').filter(F.main == False) %}
+        <img src="{{ bigimages.first()|url }}" />
+      </p>
+
+      <h1>{{ this.parent.shortname }}</h1>
+      <h2>{{ this.borndied }} {{ this.years }} years ago</h2>
+      <h1>{{ this.date }}</h1>
+    </div>
+
+    <div class="poster-description">
+      <p>{{ this.parent.summary }}</p>
+
+    <div class="poster-moreinfo">
+      <p>
+        <i>Find out more at</i>: {{ this.parent|canonical_url }}
+      </p>
+    </div>
+
+  </body>
+</html>

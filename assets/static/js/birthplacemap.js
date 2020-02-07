@@ -19,19 +19,6 @@ function loadMap (places) {
   var startZoom = 1
   var fragment = location.hash.substr(1).trim().toLowerCase()
 
-  var selectedStyle = new ol.style.Style({
-    image: new ol.style.Circle({
-      radius: 6,
-      fill: new ol.style.Fill({
-        color: 'red'
-      }),
-      stroke: new ol.style.Stroke({
-        color: 'red',
-        width: 1
-      })
-    })
-  })
-
   // build up the markers
   var vectorSource = new ol.source.Vector({});
   for (var i = 0; i < places.length; i++) {
@@ -43,15 +30,16 @@ function loadMap (places) {
       lat: place.longitude,
       long: place.latitude,
       country: place.country,
-      webref: place.webref
+      webref: place.webref,
+      gaz: place.gaz
     })
 
     if (place.id.toLowerCase() === fragment) {
-      feature.setStyle(selectedStyle)
+      feature.setStyle(SELECTED_STYLE)
       currentFeature = feature
       startCenter = [place.longitude, place.latitude]
       startZoom = 7
-      showPlace(place.name, place.people, place.latitude, place.longitude, place.country, place.webref)
+      showPlace(place.name, place.people, place.latitude, place.longitude, place.country, place.webref, place.gaz)
     }
 
     vectorSource.addFeature(feature)
@@ -63,8 +51,8 @@ function loadMap (places) {
     layers: [
       new ol.layer.Tile({
         source: new ol.source.OSM({
-          attributions: 'All maps © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.',
-          url: 'http://archive.hictooth.com/maps/{z}/{x}/{y}.png'
+          attributions: ATTRIBUTIONS,
+          url: TILE_URL
         })
       }),
       new ol.layer.Vector({
@@ -74,8 +62,8 @@ function loadMap (places) {
     view: new ol.View({
       center: ol.proj.fromLonLat(startCenter),
       zoom: startZoom,
-      minZoom: 1,
-      maxZoom: 7
+      minZoom: MIN_ZOOM,
+      maxZoom: MAX_ZOOM
     })
   });
 
@@ -87,8 +75,8 @@ function loadMap (places) {
       if (currentFeature) currentFeature.setStyle(null)
 
       currentFeature = features[0]
-      currentFeature.setStyle(selectedStyle)
-      showPlace(currentFeature.get('name'), currentFeature.get('people'), currentFeature.get('lat'), currentFeature.get('long'), currentFeature.get('country'), currentFeature.get('webref'))
+      currentFeature.setStyle(SELECTED_STYLE)
+      showPlace(currentFeature.get('name'), currentFeature.get('people'), currentFeature.get('lat'), currentFeature.get('long'), currentFeature.get('country'), currentFeature.get('webref'), currentFeature.get('gaz'))
       e.preventDefault()
     }
   })
@@ -102,7 +90,7 @@ function loadMap (places) {
 }
 
 
-function showPlace (name, people, lat, long, country, webref) {
+function showPlace (name, people, lat, long, country, webref, gaz) {
   var locationHeader = document.getElementById('location-name')
   locationHeader.innerText = name
 
@@ -113,6 +101,13 @@ function showPlace (name, people, lat, long, country, webref) {
     countryHeader.innerText = ''
   }
 
+  var latLongHeader = document.getElementById('location-latlong')
+  if (lat && long) {
+    latLongHeader.innerText = lat + ', ' + long
+  } else {
+    latLongHeader.innerText = ''
+  }
+
   var wikiHeader = document.getElementById('location-webref')
   while (wikiHeader.firstChild) wikiHeader.removeChild(wikiHeader.firstChild)
   if (webref && webref !== '') {
@@ -120,6 +115,15 @@ function showPlace (name, people, lat, long, country, webref) {
     link.innerText = 'More Info'
     link.href = webref
     link.target = '_blank'
+    wikiHeader.appendChild(link)
+  }
+
+  if (gaz && gaz !== '') {
+    var link = document.createElement('a')
+    link.innerText = 'Gazateer entry'
+    link.href = gaz
+    link.target = '_blank'
+    wikiHeader.appendChild(document.createElement('br'))
     wikiHeader.appendChild(link)
   }
 

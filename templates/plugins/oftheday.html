@@ -1,5 +1,35 @@
 {% extends "layout.html" %}
+
 {% block title %}{{ this.day }} - Mathematicians Of The Day{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="{{ this.day }}">
+<meta property="og:description" content="Mathematicians that were born or died on {{ this.day }}{% if this.quote %}, including a quote from {{ this.quote.person.shortname }}{% endif %}">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+{% if this.quote %}
+{% set thumbnail = this.quote.person.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
+{% if thumbnail %}
+<meta property="og:image" content="{{ thumbnail|canonical_url }}">
+<meta property="og:image:width" content="{{ thumbnail.width }}">
+<meta property="og:image:height" content="{{ thumbnail.height }}">
+<meta property="og:image:type" content="image/{{ thumbnail.type }}">
+{% endif %}
+{% endif %}
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{{ this.day }}" />
+<meta name="twitter:description" content="Mathematicians that were born or died on {{ this.day }}{% if this.quote %}, including a quote from {{ this.quote.person.shortname }}{% endif %}" />
+{% if this.quote and thumbnail %}
+<meta name="twitter:image" content="{{ thumbnail|canonical_url }}" />
+{% endif %}
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -9,12 +39,20 @@
   </div>
 </div>
 
-<div class="row mt-5">
+<hr/>
+
+<div class="row">
   <div class="col-md-6">
     <h5>Born:</h5>
     <ul>
-    {% for page in this.born %}
-      <li><a href="{{ page|url }}">{{ page.shortname }}</a>{% if page.birthyear and page.deathyear %} ({{ page.birthyear }} - {{ page.deathyear }}){% endif %}</li>
+    {% for page in this.born|sort(attribute='birthyear') %}
+      <li>
+        {{ page.birthyear|format_year }}:
+        <a href="{{ page|url }}">{{ page.shortname }}</a>
+        {% if page|has_born_poster %}
+        (<a href="{{ '%s/@poster/born'|format(page.path)|url }}">poster</a>)
+        {% endif %}
+      </li>
     {% endfor %}
     </ul>
   </div>
@@ -22,30 +60,44 @@
   <div class="col-md-6">
     <h5>Died:</h5>
     <ul>
-    {% for page in this.died %}
-      <li><a href="{{ page|url }}">{{ page.shortname }}</a>{% if page.birthyear and page.deathyear %} ({{ page.birthyear }} - {{ page.deathyear }}){% endif %}</li>
+    {% for page in this.died|sort(attribute='deathyear') %}
+      <li>
+        {{ page.deathyear|format_year }}:
+        <a href="{{ page|url }}">{{ page.shortname }}</a>
+        {% if page|has_died_poster %}
+        (<a href="{{ '%s/@poster/died'|format(page.path)|url }}">poster</a>)
+        {% endif %}
+      </li>
     {% endfor %}
     </ul>
   </div>
 </div>
 
 {% if this.quote %}
-<div class="row mt-5">
+{% set thumbnail = this.quote.person.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
+<hr/>
+<div class="row">
   <div class="col-md-12">
     <h4>Quotation of the day</h4>
-    <h5>From {{ this.quote.person.shortname }}</h5>
+    <h5>From <a href="{{ this.quote.person|url }}">{{ this.quote.person.shortname }}</a></h5>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-{% if thumbnail %}8{% else %}12{% endif %}">
     {{ this.quote.quote }}
   </div>
 
-  {% import 'macros/thumbnail.html' as thumbnail %}
-  <div class="col-md-4">
-    {{ thumbnail.thumbnail(this.quote.person.attachments.images, True, this.quote.person.path) }}
+  {% if thumbnail %}
+  {% set numbigimages = this.quote.person.attachments.images.filter(F._model == 'biographyimage').filter(F.main == False).count() %}
+  <div class="col-md-4 biography-thumbnail-container">
+    <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
+    {% if numbigimages > 0 %}
+    <br/>
+    <a href="{{ '%s/@pictdisplay'|format(this.quote.person.path)|url }}">View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
+    {% endif %}
   </div>
+  {% endif %}
 </div>
 {% endif %}
 

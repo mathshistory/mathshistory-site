@@ -85,3 +85,34 @@ blockquote:before {
 .katex {
   font-size: 1em !important;
 }
+
+.blue-block {
+  background-color: #ccffff;
+  padding: 10px;
+}
+
+.grey-block {
+  background-color: #cccccc;
+  padding: 10px;
+}
+
+table {
+  width: 100%;
+}
+
+.math-error {
+  color: red;
+}
+
+.red-text {
+  color: red;
+}
+.blue-text {
+  color: blue;
+}
+.green-text {
+  color: green;
+}
+.brown-text {
+  color: brown;
+}
