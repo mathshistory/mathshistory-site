@@ -43,13 +43,6 @@ class BiographyPoster(VirtualSourceObject):
         return date
 
     @property
-    def biographyurl(self):
-        pad = get_ctx().pad
-        relative = pad.get('/').url_to(self.parent)
-        absolute = urljoin('http://mathshistory.st-andrews.ac.uk/', relative)
-        return absolute
-
-    @property
     def path(self):
         return build_url([self.parent.path, '@%s/' % VIRTUAL_SOURCE_ID, self.type])
 
