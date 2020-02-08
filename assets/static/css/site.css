@@ -36,6 +36,10 @@ p {
   }
 }
 
+.sidebar-links {
+  padding-left: 20px;
+}
+
 #alphabetical-index-jumpbox {
   text-align: center;
 }
