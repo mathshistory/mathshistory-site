@@ -33,7 +33,7 @@
         {% endif %}
         {% endif %}
 
-        <li>{% if person.birthyear %} ({{ person.birthyear|format_year }} - {% if person.deathyear %}{{ person.deathyear|format_year }}{% endif %}){% endif %}<a href="{{ person|url }}">{{ person.shortname }}</a></li>
+        <li>{% if person.birthyear %} ({{ person.birthyear|format_year }} - {% if person.deathyear %}{{ person.deathyear|format_year }}{% endif %}){% endif %} <a href="{{ person|url }}">{{ person.shortname }}</a></li>
       {% endfor %}
       </ul>
   </div>
