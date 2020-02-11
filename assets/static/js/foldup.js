@@ -1,5 +1,5 @@
-var toggleIds = ['references-toggle', 'additional-toggle', 'honours-toggle']
-var listIds = ['references-list', 'additional-list', 'honours-list']
+var toggleIds = ['references-toggle', 'additional-toggle', 'honours-toggle', 'xrefs-toggle']
+var listIds = ['references-list', 'additional-list', 'honours-list', 'xrefs-list']
 
 function setupToggle(toggleId, listId) {
   if (!!document.getElementById(toggleId)) {

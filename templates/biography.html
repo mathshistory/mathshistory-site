@@ -128,6 +128,25 @@
 </div>
 {% endif %}
 
+{% if this.xrefs and this.xrefs|length > 0 %}
+<hr/>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Cross-references <span class="nonoscript">(<a href="#" id="xrefs-toggle">show</a>)</span></h3>
+  </div>
+</div>
+<div class="row" id="xrefs-list">
+  <div class="col-md-12">
+    <ol name="xrefs">
+      {% for xref in this.xrefs %}
+      <li><a href="{{ xref.record|url }}">{{ xref.title }}</a></li>
+      {% endfor %}
+    </ol>
+  </div>
+  </div>
+</div>
+{% endif %}
+
 {% if this.authors or this.update %}
 <hr/>
 <div class="row">
