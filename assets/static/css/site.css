@@ -36,6 +36,10 @@ p {
   }
 }
 
+.nav>a {
+  color: black;
+}
+
 .sidebar-links {
   padding-left: 20px;
 }
