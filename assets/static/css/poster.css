@@ -9,13 +9,16 @@
 
 .poster .poster-main h1 {
   font-size:48px;
+  font-weight: normal;
 }
 .poster .poster-main h2 {
   font-size:32px;
+  font-weight: normal;
 }
 
 .poster .poster-main img {
   height: 350px;
+  border: 1px solid black;
 }
 
 .poster .poster-description {
