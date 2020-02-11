@@ -68,6 +68,11 @@ def can_generate(record, field):
     if not has_image:
         return False
 
+    # does it have a summary?
+    has_summary = record['summary'].source.strip() != ''
+    if not has_summary:
+        return False
+
     # can we format the born/died date properly?
     date = record[field]
     try:
