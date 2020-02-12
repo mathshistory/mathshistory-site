@@ -92,11 +92,12 @@ def render(source, record):
 
     # breaks and paragraphs (this needs to be fixed)
     # see /Honours/AMShistory/
-    '''source = source.replace('\n','¶')
+    source = source.replace('\n', '¶')
     source = source.replace('<n>¶','\n')
-    source = source.replace('¶¶','\n<p>')
-    source = source.replace('¶','<br>\n')'''
-    source = source.replace('\n\n','\n<br><br>\n')
+    source = source.replace('¶¶', '<br><br>')
+    source = source.replace('¶','<br>')
+
+    source = source.replace('<n>','')
 
     # convert <cp>...</cp>
     source = source.replace('<cp>','<div class="grey-block">')
@@ -166,12 +167,20 @@ def render(source, record):
     regex = re.compile(r'<f\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, r'<span class="bigger">\1</span>', source)
 
+    # convert <fp>...</fp>
+    regex = re.compile(r'<fp>(.*?)</fp>', re.MULTILINE | re.DOTALL)
+    source = re.sub(regex, r'<span class="bigger">\1</span>', source)
+
     # convert <f++>...</f++>
     regex = re.compile(r'<f\+\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, r'<span class="bigger"><span class="bigger">\1</span></span>', source)
 
     # convert <f->...</f->
     regex = re.compile(r'<f->(.*?)</f>', re.MULTILINE | re.DOTALL)
+    source = re.sub(regex, r'<span class="smaller">\1</span>', source)
+
+    # convert <fm>...</fm>
+    regex = re.compile(r'<fm>(.*?)</fm>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, r'<span class="smaller">\1</span>', source)
 
     # convert <c>...</c>
@@ -212,8 +221,8 @@ def render(source, record):
     source = source.replace('“','"')
     source = source.replace('”','"')
 
-    source = source.replace('<clear>', '<br clear=right>')
-    source = source.replace('<clearl>', '<br clear=left>')
+    source = source.replace('<clear>', '<br clear="right">')
+    source = source.replace('<clearl>', '<br clear="left">')
     source = source.replace('<proofend>', '<d xproofend right><br clear=right>')
 
     source = tags_to_unicode(source)
@@ -321,6 +330,8 @@ def drender(match, record):
     href = correct_link(href, record)
     if align != '':
         return '<img src="%s" %s />' % (href, other)
+    elif ':' in other:
+        return '<img src="%s" align="%s" style="%s" />' % (href, align, other)
     else:
         return '<img src="%s" align="%s" %s />' % (href, align, other)
 
