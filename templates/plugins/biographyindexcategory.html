@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ this.letter }} - Biographies Index{% endblock %}
+{% block title %}{{ this.letter|upper }} - Biographies Index{% endblock %}
 
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
 
 <!-- opengraph -->
-<meta property="og:title" content="Letter {{ this.letter }} - Biographies">
-<meta property="og:description" content="Mathematician biographies whose names begin with {{ this.letter }}">
+<meta property="og:title" content="Letter {{ this.letter|upper }} - Biographies">
+<meta property="og:description" content="Mathematician biographies whose names begin with {{ this.letter|upper }}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
@@ -16,15 +16,15 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="Letter {{ this.letter }} - Biographies" />
-<meta name="twitter:description" content="Mathematician biographies whose names begin with {{ this.letter }}" />
+<meta name="twitter:title" content="Letter {{ this.letter|upper }} - Biographies" />
+<meta name="twitter:description" content="Mathematician biographies whose names begin with {{ this.letter|upper }}" />
 {% endblock %}
 
 {% block body %}
 
 <div class="row">
   <div class="col">
-      <h1>Names starting with {{ this.letter }}</h1>
+      <h1>Names starting with {{ this.letter|upper }}</h1>
 
       {% if this.jumps|length > 0 %}
       <h4 id="jumps">

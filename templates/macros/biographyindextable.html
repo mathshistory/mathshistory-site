@@ -5,7 +5,7 @@
   {% if loop.index0 is divisibleby 5 %}
     <tr>
   {% endif %}
-      <td><a href="{{ '/Biographies/@biographyindex/%s'|format(letter)|url }}">{{ letter }}</a></td>
+      <td><a href="{{ '/Biographies/@biographyindex/%s'|format(letter)|url }}">{{ letter|upper }}</a></td>
   {% if (loop.index0 + 1) is divisibleby 5 or loop.last %}
     </tr>
   {% endif %}
