@@ -1,8 +1,14 @@
 body {
   background-color: #e5e5e5;
-}
-p {
+  font-family: 'Times New Roman';
+  letter-spacing: initial;
+  font-weight: initial;
+  line-height: initial;
+  font-size: initial;
   text-align: justify;
+}
+h1, h2, h3, h4, h5, h6, ol, ul {
+  text-align: left;
 }
 .container {
   background-color: #FFFFFF;
@@ -38,6 +44,7 @@ p {
 
 .nav>a {
   color: black;
+  font-weight: bold;
 }
 
 .sidebar-links {
