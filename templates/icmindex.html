@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}International Congresses of Mathematicians{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>International Congresses of Mathematicians</h1>
+    <p>The series of International Congresses of Mathematicians began in Zürich in 1897 following a so-called International Mathematical Congress held in Chicago four years before. Except for the war years the congresses have been held about every four years since. We have detailed reports of the Congresses from 1893 to 1990 below.</p>
+  </div>
+</div>
+
+<div class="row">
+  {% for col in site.query('/ICM').order_by('title')|slice(2) %}
+  <div class="col-md-6">
+    <ol start="{{ loop.index0 }}">
+      {% for page in col %}
+      <li><a href="{{ page|url }}">{{ page.title }}</a></li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>You can see the main speakers and titles of their talks for ALL the Congresses at <a href="{{ '/Honours/ICM'|url }}">THIS LINK</a>.</p>
+    <p>The Fields medals have been presented at every Congress since 1936. You can see the recipients at <a href="{{ '/Honours/FieldsMedal'|url }}">THIS LINK</a>.</p>
+    <p>You can see the main speakers and titles of their talks for ALL the Congresses at <a href="{{ '/Honours/ICM'|url }}">THIS LINK</a>.</p>
+  </div>
+</div>
+{% endblock %}
