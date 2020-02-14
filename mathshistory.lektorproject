@@ -18,7 +18,7 @@ lektor-mathshistory-search = 0.1
 lektor-mathshistory-publish = 0.1.1
 lektor-mathshistory-countries = 1.0.0
 lektor-mathshistory-posters = 1.0.1
-lektor-mathshistory-renderer = 0.4.0
+lektor-mathshistory-renderer = 0.4.1
 lektor-mathshistory-xrefs = 0.1.0
 
 [servers.preview]
