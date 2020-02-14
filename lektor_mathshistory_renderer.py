@@ -90,37 +90,28 @@ def render(source, record):
     # convert html character references (ie. &#62;) to unicode
     source = html.unescape(source)
 
-    # breaks and paragraphs (this needs to be fixed)
-    # see /Honours/AMShistory/
-    source = source.replace('\n', '¶')
-    source = source.replace('<n>¶','\n')
-    source = source.replace('¶¶', '<br><br>')
-    source = source.replace('¶','<br>')
-
-    source = source.replace('<n>','')
-
     # convert <cp>...</cp>
-    source = source.replace('<cp>','<div class="grey-block">')
-    source = source.replace('</cp>','</div>')
+    regex = re.compile(r'<cp>\s*(.*?)\s*</cp>', re.MULTILINE | re.DOTALL)
+    source = re.sub(regex, r'<div class="grey-block">\1</div>', source)
 
     # convert <cpb>...</cpb>
-    source = source.replace('<cpb>','<div class="blue-block">')
-    source = source.replace('</cpb>','</div>')
+    regex = re.compile(r'<cpb>\s*(.*?)\s*</cpb>', re.MULTILINE | re.DOTALL)
+    source = re.sub(regex, r'<div class="blue-block">\1</div>', source)
 
     # convert <Q>...</Q>
-    regex = re.compile(r'<[Qq]>(.*?)</[Qq]>', re.MULTILINE | re.DOTALL)
+    regex = re.compile(r'<[Qq]>\s*(?P<quote>.*?)\s*</[Qq]>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, r'<blockquote>\1</blockquote>', source)
 
     # convert <k>...</k>
-    source = source.replace('<k>','<div class="center-paragraph">')
-    source = source.replace('</k>','</div>')
+    regex = re.compile(r'<k>\s*(.*?)\s*</k>', re.MULTILINE | re.DOTALL)
+    source = re.sub(regex, r'<div class="center-paragraph">\1</div>', source)
 
     # convert <ind>...</ind>
-    source = source.replace('<ind>','<div class="indent-paragraph">')
-    source = source.replace('</ind>','</div>')
+    regex = re.compile(r'<ind>\s*(.*?)\s*</ind>', re.MULTILINE | re.DOTALL)
+    source = re.sub(regex, r'<div class="indent-paragraph">\1</div>', source)
 
     # convert latex to katex
-    regex = re.compile(r'<latex>(?P<latex>.*?)</latex>', re.MULTILINE | re.DOTALL)
+    regex = re.compile(r'<latex>\s*(?P<latex>.*?)\s*</latex>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, lambda match: katexrender(match, record), source)
 
     # convert ^superscript
@@ -214,6 +205,13 @@ def render(source, record):
 
 
     # other from the htmlformat function in the stack
+
+    # breaks and paragraphs (this needs to be fixed)
+    source = source.replace('\n', '¶')
+    source = source.replace('<n>¶','\n')
+    source = source.replace('¶¶', '<br><br>')
+    source = source.replace('¶','<br>')
+    source = source.replace('<n>','')
 
     # smart quotes
     source = source.replace('’',"'")
