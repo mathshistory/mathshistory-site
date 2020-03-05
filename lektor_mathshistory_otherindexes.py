@@ -18,6 +18,24 @@ VIRTUAL_SOURCE_ID = 'otherindexes'
 SOURCE_PATH = '/'
 OUTPUT_PATH = '/OtherIndexes/'
 
+class SocietiesFoundationIndexPage(VirtualSourceObject):
+    def __init__(self, parent):
+        VirtualSourceObject.__init__(self, parent)
+        self.template = 'plugins/societiesfoundationindex.html'
+
+    @property
+    def societies(self):
+        return self.pad.query('/Societies').order_by('foundation')
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%s/societies' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([OUTPUT_PATH, 'societies'])
+
+
 class PictureIndexPage(VirtualSourceObject):
     def __init__(self, parent):
         VirtualSourceObject.__init__(self, parent)
@@ -65,6 +83,7 @@ class MathshistoryOtherindexesPlugin(Plugin):
 
     def on_setup_env(self, **extra):
         self.env.add_build_program(PictureIndexPage, IndexBuildProgram)
+        self.env.add_build_program(SocietiesFoundationIndexPage, IndexBuildProgram)
 
         @self.env.generator
         def searchdata_generator(record):
@@ -74,6 +93,7 @@ class MathshistoryOtherindexesPlugin(Plugin):
             if record.path == SOURCE_PATH:
                 # do the picture index
                 yield PictureIndexPage(record)
+                yield SocietiesFoundationIndexPage(record)
 
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
@@ -84,3 +104,5 @@ class MathshistoryOtherindexesPlugin(Plugin):
             if len(pieces) == 1:
                 if pieces[0] == 'pictures':
                     return PictureIndexPage(node)
+                elif pieces[0] == 'societies':
+                    return SocietiesFoundationIndexPage(node)
