@@ -20,7 +20,7 @@ lektor-mathshistory-countries = 1.0.0
 lektor-mathshistory-posters = 1.0.1
 lektor-mathshistory-renderer = 0.4.1
 lektor-mathshistory-xrefs = 0.1.0
-lektor-mathshistory-otherindexes = 0.1.0
+lektor-mathshistory-otherindexes = 0.2.0
 
 [servers.preview]
 name = Preview
