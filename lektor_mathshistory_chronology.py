@@ -87,6 +87,29 @@ class ChronologyPage(VirtualSourceObject):
         except:
             traceback.print_exc()
 
+    @property
+    def previous(self):
+        all_sections = list(self.config.sections())
+        position = all_sections.index(self.section)
+        if position == 0:
+            return False
+        previous_section = all_sections[position - 1]
+        return ChronologyPage(self.parent, self.config, previous_section)
+
+    @property
+    def next(self):
+        all_sections = list(self.config.sections())
+        position = all_sections.index(self.section)
+        if position == len(all_sections):
+            return False
+        next_section = all_sections[position + 1]
+        return ChronologyPage(self.parent, self.config, next_section)
+
+    @property
+    def index(self):
+        return ChronologyIndex(self.parent, self.config)
+
+
 class ChronologyPageBuildProgram(BuildProgram):
     def produce_artifacts(self):
         self.declare_artifact(
