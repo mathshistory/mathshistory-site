@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}Some Topics in the History of Mathematical Education{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>Some Topics in the History of Mathematical Education</h1>
+    <ol>
+      {% for page in site.query('/Education') %}
+      <li><a href="{{ page|url }}">{{ page.title }}</a></li>
+      {% endfor %}
+    </ol>
+  </div>
+</div>
+{% endblock %}
