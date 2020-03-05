@@ -18,6 +18,50 @@ VIRTUAL_SOURCE_ID = 'otherindexes'
 SOURCE_PATH = '/'
 OUTPUT_PATH = '/OtherIndexes/'
 
+
+def purge_mlink(s):
+    #The below code is modified from the original htmlformat function to ensure compatibility
+    rawch   = ['á','à','â','ä','ã','Á','Â','Ä','é','è','ê','ë','É','î','í','ó','ô','ö','ò','õ','Ö','û','ú','ü','ù','Ü','ç','ï','ø','Ø','ñ','ł','Ł','ś','Ś','ț','Ț']
+    transch = ['a','a','a','a','a','A','A','A','e','e','e','e','E','i','i','o','o','o','o','o','O','u','u','u','u','U','c','i','o','O','n','l','L','s','S','t','T']
+    for idx, raw in enumerate(rawch):
+        trans = transch[idx]
+        s = s.replace(raw, trans)
+    return s
+
+
+class QuotationsIndexPage(VirtualSourceObject):
+    def __init__(self, parent):
+        VirtualSourceObject.__init__(self, parent)
+        self.template = 'plugins/quotationsindex.html'
+
+    @property
+    def mathematicians(self):
+        query = self.pad.query('/Biographies')
+        display_records = []
+        for record in query:
+            if len(record['quotations'].blocks) == 0:
+                continue
+            alphabetical = record['alphabetical']
+            for display in alphabetical:
+                purged = purge_mlink(display).lower()
+                data = {
+                    'record': record,
+                    'display': display,
+                    'purged': purged
+                }
+                display_records.append(data)
+        display_records_sorted = sorted(display_records, key=lambda p: p['purged'])
+        return display_records_sorted
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%s/quotations' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([OUTPUT_PATH, 'quotations'])
+
+
 class SocietiesFoundationIndexPage(VirtualSourceObject):
     def __init__(self, parent):
         VirtualSourceObject.__init__(self, parent)
@@ -84,6 +128,7 @@ class MathshistoryOtherindexesPlugin(Plugin):
     def on_setup_env(self, **extra):
         self.env.add_build_program(PictureIndexPage, IndexBuildProgram)
         self.env.add_build_program(SocietiesFoundationIndexPage, IndexBuildProgram)
+        self.env.add_build_program(QuotationsIndexPage, IndexBuildProgram)
 
         @self.env.generator
         def searchdata_generator(record):
@@ -94,6 +139,7 @@ class MathshistoryOtherindexesPlugin(Plugin):
                 # do the picture index
                 yield PictureIndexPage(record)
                 yield SocietiesFoundationIndexPage(record)
+                yield QuotationsIndexPage(record)
 
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
@@ -105,4 +151,6 @@ class MathshistoryOtherindexesPlugin(Plugin):
                 if pieces[0] == 'pictures':
                     return PictureIndexPage(node)
                 elif pieces[0] == 'societies':
+                    return SocietiesFoundationIndexPage(node)
+                elif pieces[0] == 'quotations':
                     return SocietiesFoundationIndexPage(node)
