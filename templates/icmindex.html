@@ -16,11 +16,13 @@
 </div>
 
 <div class="row">
+  {% set count = namespace(value=1) %}
   {% for col in site.query('/ICM').order_by('title')|slice(2) %}
   <div class="col-md-6">
-    <ol start="{{ loop.index0 }}">
+    <ol start="{{ count.value }}">
       {% for page in col %}
       <li><a href="{{ page|url }}">{{ page.title }}</a></li>
+      {% set count.value = count.value + 1 %}
       {% endfor %}
     </ol>
   </div>
