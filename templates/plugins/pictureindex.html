@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}Picture Index{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col">
+    <h1>Picture Index</h1>
+  </div>
+</div>
+
+{% for row in this.mathematicians|slice(6) %}
+<div class="row pictureindex-row">
+  {% for mathematician in row %}
+  <div class="col-md-2 pictureindex-col">
+    <a href="{{ '%s/@pictdisplay'|format(mathematician.page.path)|url }}">
+      <img src="{{ mathematician.thumbnail|url }}" class="pictureindex-thumbnail" />
+    </a>
+    <br/>
+    <a href="{{ mathematician.page|url }}">{{ mathematician.page.shortname }}</a>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}
+
+{% endblock %}
