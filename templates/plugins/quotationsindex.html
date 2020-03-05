@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}Quotations Index{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>Quotations Index</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    {% for mathematician in this.mathematicians %}
+    <li>
+      <a href="{{ '%s/@quotations'|format(mathematician.record.path)|url }}">{{ mathematician.display }}</a> ({{ mathematician.record.quotations.blocks|length }})
+    </li>
+    {% endfor %}
+  </div>
+
+  <!-- SIDEBAR -->
+
+  <!-- END SIDEBAR -->
+</div>
+{% endblock %}
