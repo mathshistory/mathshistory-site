@@ -29,6 +29,34 @@
   </div>
 </div>
 
+<hr/>
+<div class="row project-navigation">
+  <div class="col-md-3">
+    {% if this.previous %}
+    <a href="{{ this.previous|url }}">Previous Chronology</a>
+    <br/>
+    ({{ this.previous.title }})
+    {% endif %}
+  </div>
+
+  <div class="col-md-3">
+    <a href="{{ this.index|url }}">Chronology Index</a>
+  </div>
+
+  <div class="col-md-3">
+    <a href="{{ this.parent|url }}">All Chronology</a>
+  </div>
+
+  <div class="col-md-3">
+    {% if this.next %}
+    <a href="{{ this.next|url }}">Next Chronology</a>
+    <br/>
+    ({{ this.next.title }})
+    {% endif %}
+  </div>
+</div>
+<hr/>
+
 <div class="row">
   <div class="col-md-12">
     {% for chronologyyear in this.chronology %}
