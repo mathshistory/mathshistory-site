@@ -6,6 +6,7 @@ import time
 import traceback
 import random
 import math
+import datetime
 
 from lektor.build_programs import BuildProgram
 from lektor.environment import Expression, FormatExpression
@@ -194,6 +195,33 @@ class OfTheDayPage(VirtualSourceObject):
         self._quote = chosen
         return chosen
 
+    def get_deltaday(self, delta):
+        thisday_datetime = datetime.datetime.fromtimestamp(time.mktime(time.strptime(self.day, '%m-%d')))
+        delta_datetime = thisday_datetime + datetime.timedelta(days=delta)
+        day = delta_datetime.day
+        month = delta_datetime.month
+        formatted = format_day(day, month)
+        return OfTheDayPage(self.parent, formatted)
+
+    @property
+    def previous(self):
+        return self.get_deltaday(-1)
+
+    @property
+    def next(self):
+        return self.get_deltaday(1)
+
+    @property
+    def today(self):
+        today = datetime.datetime.today()
+        day = today.day
+        month = today.month
+        formatted = format_day(day, month)
+        return OfTheDayPage(self.parent, formatted)
+
+    @property
+    def year(self):
+        return OfTheDayIndexPage(self.parent)
 
     @property
     def path(self):
