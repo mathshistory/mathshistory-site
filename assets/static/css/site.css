@@ -117,3 +117,12 @@ img {
 .curve-container img {
   border: 1px solid black;
 }
+
+.pictureindex-col {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.pictureindex-thumbnail {
+  height: 125px;
+}

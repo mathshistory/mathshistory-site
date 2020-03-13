@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Chronology Index{% endblock %}
+{% block title %}Some Topics in the History of Mathematical Education{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -9,20 +9,13 @@
 
 {% block body %}
 <div class="row">
-  <div class="col">
-    <h1>Chronolgy Index</h1>
-  </div>
-</div>
-
-<div class="row">
-  {% for col in this.pages|slice(3) %}
-  <div class="col-md-4">
-    <ul>
-      {% for page in col %}
+  <div class="col-md-12">
+    <h1>Some Topics in the History of Mathematical Education</h1>
+    <ol>
+      {% for page in site.query('/Education') %}
       <li><a href="{{ page|url }}">{{ page.title }}</a></li>
       {% endfor %}
-    </ul>
+    </ol>
   </div>
-  {% endfor %}
 </div>
 {% endblock %}

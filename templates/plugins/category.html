@@ -74,6 +74,46 @@
       {% endif %}
       {% endfor %}
     </div>
+
+    {% if this.type.id == 'biographies' %}
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4>Alphabetical Index</h4>
+      {% import 'macros/biographyindextable.html' as table %}
+      {{ table.biographyindextable() }}
+    </div>
+    {% endif %}
+
+    {% if this.type.id == 'histtopics' %}
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4>Other History Topics</h4>
+      <ul>
+        <li><a href="{{ '/@otherindexes/histtopics'|url }}">Alphabetical List</a></li>
+        <li><a href="{{ '/Education'|url }}">Mathematical Education</a></li>
+        <li><a href="{{ '/HistTopics/History_overview'|url }}">Overview of the History of Mathematics</a></li>
+        <li><a href="{{ '/Miscellaneous/recent_changes'|url }}">Recent Changes</a></li>
+        <li><a href="{{ '/Projects'|url }}">Student Projects</a></li>
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if this.type.id == 'societies' %}
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4>Other Societies</h4>
+      <ul>
+        <li><a href="{{ '/Societies'|url }}">Alphabetical List</a></li>
+        <li><a href="{{ '/@otherindexes/societies'|url }}">Societies by Foundation Date</a></li>
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if this.type.id == 'honours' %}
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4>Other Honours</h4>
+      <ul>
+        <li><a href="{{ '/Honours'|url }}">Alphabetical List</a></li>
+      </ul>
+    </div>
+    {% endif %}
   </aside>
   <!-- END SIDEBAR -->
 </div>
