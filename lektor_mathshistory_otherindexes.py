@@ -11,7 +11,7 @@ from lektor.sourceobj import VirtualSourceObject
 from lektor.utils import build_url
 from lektor.db import Page
 from lektor.db import F
-from lektor.types import Type
+from lektor.types import Type, BadValue
 from lektor.environment import PRIMARY_ALT
 
 VIRTUAL_SOURCE_ID = 'otherindexes'
@@ -27,6 +27,108 @@ def purge_mlink(s):
         trans = transch[idx]
         s = s.replace(raw, trans)
     return s
+
+
+class GazMapPage(VirtualSourceObject):
+    def __init__(self, parent):
+        VirtualSourceObject.__init__(self, parent)
+        self.template = 'plugins/gazmap.html'
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%s/gazmap' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([OUTPUT_PATH, 'gazmap'])
+
+
+class GazMapData(VirtualSourceObject):
+    def __init__(self, parent):
+        VirtualSourceObject.__init__(self, parent)
+        self._cache = None
+
+    def places(self):
+        try:
+            if self._cache == None:
+                # find the places
+                places = {}
+                gazplaces = self.pad.query('/Gaz').filter(F._model == 'gazplace')
+                for place in gazplaces:
+                    id = place['_slug']
+                    lat = place['latitude']
+                    long = place['longitude']
+                    invalid = isinstance(lat, BadValue) or isinstance(long, BadValue)
+                    if not invalid:
+                        places[id] = {
+                            'id': id,
+                            'name': place['place'],
+                            'longitude': long,
+                            'latitude': lat
+                        }
+
+                # convert to list
+                places = [places[k] for k in places]
+
+                self._cache = places
+
+            return self._cache
+        except:
+            traceback.print_exc()
+
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%s/gazmap-data' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([OUTPUT_PATH, 'gazmap', 'data.json'])
+
+
+class OtherIndexesIndexPage(VirtualSourceObject):
+    def __init__(self, parent):
+        VirtualSourceObject.__init__(self, parent)
+        self.template = 'plugins/otherindexesindex.html'
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%s/other' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([OUTPUT_PATH, 'other'])
+
+
+class HistoryTopicsAlphabeticalIndexPage(VirtualSourceObject):
+    def __init__(self, parent):
+        VirtualSourceObject.__init__(self, parent)
+        self.template = 'plugins/historytopicalphabeticalindex.html'
+
+    @property
+    def histtopics(self):
+        query = self.pad.query('/HistTopics')
+        display_records = []
+        for record in query:
+            alphabetical = record['alphabetical']
+            for display in alphabetical:
+                purged = purge_mlink(display).lower()
+                data = {
+                    'record': record,
+                    'display': display,
+                    'purged': purged
+                }
+                display_records.append(data)
+        display_records_sorted = sorted(display_records, key=lambda p: p['purged'])
+        return display_records_sorted
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%s/histtopics' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([OUTPUT_PATH, 'histtopics'])
 
 
 class QuotationsIndexPage(VirtualSourceObject):
@@ -121,6 +223,19 @@ class IndexBuildProgram(BuildProgram):
         artifact.render_template_into(self.source.template, this=self.source)
 
 
+class MapDataBuildProgram(BuildProgram):
+    def produce_artifacts(self):
+        self.declare_artifact(
+            posixpath.join(self.source.url_path),
+            sources=list(self.source.iter_source_filenames()),
+        )
+
+    def build_artifact(self, artifact):
+        source = self.source
+        with artifact.open('w') as f:
+            json.dump(source.places(), f)
+
+
 class MathshistoryOtherindexesPlugin(Plugin):
     name = 'mathshistory-otherindexes'
     description = u'Creates various indexes needed by the Maths History site'
@@ -129,6 +244,10 @@ class MathshistoryOtherindexesPlugin(Plugin):
         self.env.add_build_program(PictureIndexPage, IndexBuildProgram)
         self.env.add_build_program(SocietiesFoundationIndexPage, IndexBuildProgram)
         self.env.add_build_program(QuotationsIndexPage, IndexBuildProgram)
+        self.env.add_build_program(HistoryTopicsAlphabeticalIndexPage, IndexBuildProgram)
+        self.env.add_build_program(OtherIndexesIndexPage, IndexBuildProgram)
+        self.env.add_build_program(GazMapPage, IndexBuildProgram)
+        self.env.add_build_program(GazMapData, MapDataBuildProgram)
 
         @self.env.generator
         def searchdata_generator(record):
@@ -140,6 +259,10 @@ class MathshistoryOtherindexesPlugin(Plugin):
                 yield PictureIndexPage(record)
                 yield SocietiesFoundationIndexPage(record)
                 yield QuotationsIndexPage(record)
+                yield HistoryTopicsAlphabeticalIndexPage(record)
+                yield OtherIndexesIndexPage(record)
+                yield GazMapPage(record)
+                yield GazMapData(record)
 
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
@@ -154,3 +277,11 @@ class MathshistoryOtherindexesPlugin(Plugin):
                     return SocietiesFoundationIndexPage(node)
                 elif pieces[0] == 'quotations':
                     return SocietiesFoundationIndexPage(node)
+                elif pieces[0] == 'histtopics':
+                    return HistoryTopicsAlphabeticalIndexPage(node)
+                elif pieces[0] == 'other':
+                    return OtherIndexesIndexPage(node)
+                elif pieces[0] == 'gazmap':
+                    return GazMapPage(node)
+                elif pieces[0] == 'gazmap-data':
+                    return GazMapData(node)
