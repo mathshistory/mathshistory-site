@@ -18,14 +18,26 @@
 <hr/>
 
 <div class="row">
-  {% for column in this.children.filter(F._model == 'gazplace').order_by('place')|slice(2) %}
-  <div class="col-md-6">
+  <div class="col-md-8">
     <ul>
-      {% for place in column %}
+      {% for place in this.children.filter(F._model == 'gazplace').order_by('place') %}
       <li><a href="{{ place|url }}">{{ place.place }}</a></li>
       {% endfor %}
     </ul>
   </div>
-  {% endfor %}
+
+  <!-- SIDEBAR -->
+  <aside class="col-md-4">
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4>Other Gazateer</h4>
+      <ul>
+        <li><a href="{{ '/@otherindexes/gazmap'|url }}">Interactive Map</a></li>
+        {% for page in this.children.filter(F._model == 'page') %}
+        <li><a href="{{ page|url }}">{{ page.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </aside>
+  <!-- END SIDEBAR -->
 </div>
 {% endblock %}
