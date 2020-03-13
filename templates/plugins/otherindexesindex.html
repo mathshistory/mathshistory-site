@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}Other Indexes{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+
+<!-- opengraph -->
+<meta property="og:title" content="Other Indexes">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="Other Indexes" />
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>Other Indexes</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <ul>
+      <li><a href="{{ '/Miscellaneous/about_us'|url }}">About Us</a></li>
+      <li><a href="{{ '/Miscellaneous/recent_changes'|url }}">Recent Changes</a></li>
+      <li><a href="{{ '/Chronology/@chronolgyindex'|url }}">Chronology</a></li>
+      <li><a href="{{ '/@otherindexes/quotations'|url }}">Quotations</a></li>
+      <li><a href="{{ '/Education'|url }}">Mathematical Education</a></li>
+      <li><a href="{{ '/ICM'|url }}">International Congresses of Mathematicians</a></li>
+      <li><a href="{{ '/EMS/index'|url }}">Edinburgh Mathematical Society</a></li>
+      <li><a href="{{ '/Strick'|url }}">Heinz Klaus Strick's Histories</a></li>
+      <li><a href="{{ '/Countries'|url }}">Mathematicians by Country</a></li>
+      <li><a href="{{ '/OfTheDay'|url }}">Anniversaries</a></li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

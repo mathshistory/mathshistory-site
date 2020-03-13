@@ -10,21 +10,14 @@
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-    <h1>History Topic Index</h1>
+    <h1>All History Topics</h1>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-8">
-    {% for category in get_categories_by_type(site, 'histtopics') %}
-    {% if loop.first %}
-    <h4>Categories</h4>
-    <ul>
-    {% endif %}
-      <li><a href="{{ '/HistTopics/@categoryindex/%s'|format(category._slug)|url }}">{{ category.name }}</a></li>
-    {% if loop.last %}
-    </ul>
-    {% endif %}
+    {% for histtopic in this.histtopics %}
+    <li><a href="{{ histtopic.record|url }}">{{ histtopic.display }}</a></li>
     {% endfor %}
   </div>
 
@@ -36,10 +29,21 @@
         <li><a href="{{ '/Education'|url }}">Mathematical Education</a></li>
         <li><a href="{{ '/HistTopics/History_overview'|url }}">Overview of the History of Mathematics</a></li>
         <li><a href="{{ '/Miscellaneous/recent_changes'|url }}">Recent Changes</a></li>
-        <li><a href="{{ '/@otherindexes/histtopics'|url }}">Alphabetical List</a></li>
-        <li><a href="{{ '/Projects'|url }}">Student Projects</a></li>
       </ul>
     </div>
+
+    {% for category in get_categories_by_type(site, 'histtopics') %}
+    {% if loop.first %}
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4>Categories</h4>
+      <ul>
+      {% endif %}
+        <li><a href="{{ '/HistTopics/@categoryindex/%s'|format(category._slug)|url }}">{{ category.name }}</a></li>
+      {% if loop.last %}
+      </ul>
+    </div>
+    {% endif %}
+    {% endfor %}
   </aside>
   <!-- END SIDEBAR -->
 </div>
