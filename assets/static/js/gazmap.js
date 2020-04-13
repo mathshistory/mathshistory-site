@@ -14,7 +14,7 @@ function loadMap () {
 
   // create the map
   var map = new ol.Map({
-    target: 'gazateer-map',
+    target: 'gazetteer-map',
     layers: [
       new ol.layer.Tile({
         source: new ol.source.OSM({

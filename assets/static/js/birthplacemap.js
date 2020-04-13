@@ -120,7 +120,7 @@ function showPlace (name, people, lat, long, country, webref, gaz) {
 
   if (gaz && gaz !== '') {
     var link = document.createElement('a')
-    link.innerText = 'Gazateer entry'
+    link.innerText = 'Gazetteer entry'
     link.href = gaz
     link.target = '_blank'
     wikiHeader.appendChild(document.createElement('br'))
