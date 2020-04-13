@@ -117,6 +117,20 @@ def all_days():
     return res
 
 
+class OfTheDayTodayPage(VirtualSourceObject):
+    def __init__(self, parent):
+        VirtualSourceObject.__init__(self, parent)
+        self.template = 'plugins/ofthedaytoday.php'
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%stoday' % VIRTUAL_SOURCE_ID])
+
+    @property
+    def url_path(self):
+        return build_url([OUTPUT_PATH, 'today'])
+
+
 class OfTheDayIndexPage(VirtualSourceObject):
     def __init__(self, parent):
         VirtualSourceObject.__init__(self, parent)
@@ -212,14 +226,6 @@ class OfTheDayPage(VirtualSourceObject):
         return self.get_deltaday(1)
 
     @property
-    def today(self):
-        today = datetime.datetime.today()
-        day = today.day
-        month = today.month
-        formatted = format_day(day, month)
-        return OfTheDayPage(self.parent, formatted)
-
-    @property
     def year(self):
         return OfTheDayIndexPage(self.parent)
 
@@ -243,6 +249,17 @@ class OfTheDayPageBuildProgram(BuildProgram):
     def build_artifact(self, artifact):
         artifact.render_template_into(self.source.template, this=self.source)
 
+# used for the PHP 'today' page
+class OfTheDayTodayBuildProgram(BuildProgram):
+    def produce_artifacts(self):
+        self.declare_artifact(
+            posixpath.join(self.source.url_path, 'index.php'),
+            sources=list(self.source.iter_source_filenames()),
+        )
+
+    def build_artifact(self, artifact):
+        artifact.render_template_into(self.source.template, this=self.source)
+
 
 class MathshistoryDailyPlugin(Plugin):
     name = 'mathshistory-daily'
@@ -251,6 +268,7 @@ class MathshistoryDailyPlugin(Plugin):
     def on_setup_env(self, **extra):
         self.env.add_build_program(OfTheDayPage, OfTheDayPageBuildProgram)
         self.env.add_build_program(OfTheDayIndexPage, OfTheDayPageBuildProgram)
+        self.env.add_build_program(OfTheDayTodayPage, OfTheDayTodayBuildProgram)
 
         self.env.jinja_env.globals.update(month_days=month_days)
         self.env.jinja_env.globals.update(format_day=format_day)
@@ -263,9 +281,14 @@ class MathshistoryDailyPlugin(Plugin):
                     return OfTheDayPage(node, pieces[0])
 
         @self.env.virtualpathresolver('%sindex' % VIRTUAL_SOURCE_ID)
-        def oftheday_path_resolver(node, pieces):
+        def oftheday_index_resolver(node, pieces):
             if len(pieces) == 0 and node.path == SOURCE_PATH:
                     return OfTheDayIndexPage(node)
+
+        @self.env.virtualpathresolver('%stoday' % VIRTUAL_SOURCE_ID)
+        def oftheday_today_resolver(node, pieces):
+            if len(pieces) == 0 and node.path == SOURCE_PATH:
+                    return OfTheDayTodayPage(node)
 
         @self.env.generator
         def oftheday_generator(record):
@@ -279,6 +302,7 @@ class MathshistoryDailyPlugin(Plugin):
                 yield OfTheDayPage(record, day)
 
             yield OfTheDayIndexPage(record)
+            yield OfTheDayTodayPage(record)
 
 
 
