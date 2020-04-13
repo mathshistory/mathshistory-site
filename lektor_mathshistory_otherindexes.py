@@ -196,10 +196,13 @@ class PictureIndexPage(VirtualSourceObject):
             images = attachments.images
             biographyimages = images.filter(F._model == 'biographyimage')
             thumbnail = biographyimages.filter(F.main == True).first()
+            bigimages = biographyimages.filter(F.main == False)
+            has_pictdisplay = bigimages.count() > 0
             if thumbnail:
                 with_thumbnails.append({
                     'page': m,
-                    'thumbnail': thumbnail
+                    'thumbnail': thumbnail,
+                    'has_pictdisplay': has_pictdisplay
                 })
         return with_thumbnails
 
