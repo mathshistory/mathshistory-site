@@ -67,6 +67,7 @@
     {% endif %}
 
     {% if this.summary %}
+    <hr/>
     <dt>Summary</dt>
     <dd>{{ this.summary }}</dd>
     {% endif %}
@@ -95,6 +96,7 @@
 </div>
 
 {% if this.quotations and this.quotations.blocks|length > 0 %}
+<hr/>
 <div class="row mt-2">
   <div class="col-md-12">
     <a href="{{ '%s/@quotations'|format(this.path)|url }}">Quotations by {{ this.shortname }}</a>
