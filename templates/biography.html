@@ -79,7 +79,7 @@
     <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
     {% if numbigimages > 0 %}
     <br/>
-    <a href="{{ '%s/@pictdisplay'|format(this.path)|url }}">View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
+    <a href="{{ '%s/@pictdisplay'|format(this.path)|url }}" target="_blank">View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
     {% endif %}
   </div>
   {% endif %}

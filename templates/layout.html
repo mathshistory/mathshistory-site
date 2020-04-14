@@ -62,7 +62,7 @@
     <!-- END HEADER -->
 
     <!-- NAVIGATION -->
-    {% if not this.path.startswith('/Extras/') %}
+    {% if not (this.path.startswith('/Extras/') or '/@pictdisplay' in this.path) %}
     <div class="container nav-bar">
       <div class="row nav">
         {% for href, title in [
@@ -77,6 +77,8 @@
         {% endfor %}
       </div>
     </div>
+    {% else %}
+    <hr/>
     {% endif %}
     <!-- END NAVIGATION -->
 
