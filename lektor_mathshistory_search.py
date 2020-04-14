@@ -13,23 +13,24 @@ VIRTUAL_SOURCE_ID = 'search'
 SOURCE_PATH = '/'
 
 
-class SearchHome(VirtualSourceObject):
+class Search(VirtualSourceObject):
     def __init__(self, parent):
         VirtualSourceObject.__init__(self, parent)
-        self.template = 'plugins/searchhome.html'
+        self.template = 'plugins/search.php'
 
     @property
     def path(self):
-        return build_url([self.parent.path, '@%shome' % VIRTUAL_SOURCE_ID])
+        return build_url([self.parent.path, '@%s' % VIRTUAL_SOURCE_ID])
 
     @property
     def url_path(self):
         return build_url([self.parent.url_path, 'Search'])
 
-class SearchHomeBuildProgram(BuildProgram):
+
+class SearchBuildProgram(BuildProgram):
     def produce_artifacts(self):
         self.declare_artifact(
-            posixpath.join(self.source.url_path, 'index.html'),
+            posixpath.join(self.source.url_path, 'index.php'),
             sources=list(self.source.iter_source_filenames()),
         )
 
@@ -42,17 +43,17 @@ class MathshistorySearchPlugin(Plugin):
     description = u'Provides search capability to the Maths History site.'
 
     def on_setup_env(self, **extra):
-        self.env.add_build_program(SearchHome, SearchHomeBuildProgram)
+        self.env.add_build_program(Search, SearchBuildProgram)
 
-        @self.env.virtualpathresolver('%shome' % VIRTUAL_SOURCE_ID)
-        def search_home_path_resolver(node, pieces):
+        @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
+        def search_path_resolver(node, pieces):
             if len(pieces) == 0:
                 if node.path == SOURCE_PATH:
-                    return SearchHome(node)
+                    return Search(node)
 
         @self.env.generator
         def search_generator(record):
             if record.path != SOURCE_PATH:
                 return
 
-            yield SearchHome(record)
+            yield Search(record)
