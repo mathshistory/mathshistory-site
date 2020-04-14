@@ -2,6 +2,8 @@
 
 Provides search capability to the Maths History site.
 
-Currently this is just a dummy plugin - as the testing/preview doesn't run a search indexer, this isn't used. It simply creates the search page with some text to that effect.
+Creates the PHP search file that is used to display the search home page, and
+search results page.
 
-In the future, this plugin will create the proper search page, as well as maybe creating data files of the pages that can be easily read by the search indexer.
+In the future, this plugin could create data files that are specifically tuned
+to be recognised by Funnelback in order to generate faceted search features.
