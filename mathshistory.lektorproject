@@ -27,3 +27,9 @@ name = Preview
 target = mathshistorypreview:///srv/sitebuild/html/
 enabled = yes
 default = yes
+
+[servers.production]
+name = Production/Live
+target = rsync://df58@l-mathshist-w1.st-andrews.ac.uk/var/www/html
+enabled = yes
+default = no
