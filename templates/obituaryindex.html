@@ -11,11 +11,13 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Obituaries Index</h1>
+    <!--noindex-->
     <ul>
     {% for page in this.children %}
       <li><a href="{{ page|url }}">{{ page.name }}{% if page.wherefrom %} - {{ page.wherefrom }}{% endif %}</a></li>
     {% endfor %}
     </ul>
+    <!--endnoindex-->
   </div>
 </div>
 {% endblock %}

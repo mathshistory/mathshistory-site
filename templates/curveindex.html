@@ -11,14 +11,17 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Famous Curves Index</h1>
+    <!--noindex-->
     <ul>
     {% for page in site.query('/Curves').filter(F._model == 'curve') %}
       <li><a href="{{ page|url }}">{{ page.name }}</a></li>
     {% endfor %}
     </ul>
+    <!--endnoindex-->
   </div>
 </div>
 
+<!--noindex-->
 <div class="row">
   <div class="col-md-12">
     <h3>Other Content</h3>
@@ -29,4 +32,5 @@
     </ul>
   </div>
 </div>
+<!--endnoindex-->
 {% endblock %}

@@ -17,11 +17,16 @@
 <div class="row">
   <div class="col-md-8">
     <h4>Alphabetical List</h4>
+    <!--noindex-->
+    <ul>
       {% for display_item in site.query('/Honours')|query_to_display %}
       <li><a href="{{ display_item.record|url }}">{{ display_item.display }}</a></li>
       {% endfor %}
+    </ul>
+    <!--endnoindex-->
   </div>
 
+  <!--noindex-->
   <!-- SIDEBAR -->
   {% for category in get_categories_by_type(site, 'honours') %}
   {% if loop.first %}
@@ -38,5 +43,6 @@
   {% endif %}
   {% endfor %}
   <!-- END SIDEBAR -->
+  <!--endnoindex-->
 </div>
 {% endblock %}

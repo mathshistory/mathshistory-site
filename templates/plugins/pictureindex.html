@@ -14,6 +14,7 @@
   </div>
 </div>
 
+<!--noindex-->
 {% for row in this.mathematicians|slice(6) %}
 <div class="row pictureindex-row">
   {% for mathematician in row %}
@@ -31,5 +32,6 @@
   {% endfor %}
 </div>
 {% endfor %}
+<!--endnoindex-->
 
 {% endblock %}

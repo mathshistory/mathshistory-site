@@ -15,6 +15,7 @@
   </div>
 </div>
 
+<!--noindex-->
 <div class="row">
   {% set count = namespace(value=1) %}
   {% for col in site.query('/ICM').order_by('title')|slice(2) %}
@@ -28,6 +29,7 @@
   </div>
   {% endfor %}
 </div>
+<!--endnoindex-->
 
 <div class="row">
   <div class="col-md-12">

@@ -11,11 +11,13 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Some Topics in the History of Mathematical Education</h1>
+    <!--noindex-->
     <ol>
       {% for page in site.query('/Education') %}
       <li><a href="{{ page|url }}">{{ page.title }}</a></li>
       {% endfor %}
     </ol>
+    <!--endnoindex-->
   </div>
 </div>
 {% endblock %}

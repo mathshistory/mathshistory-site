@@ -29,6 +29,7 @@
 
 <hr/>
 
+<!--noindex-->
 <div class="row project-navigation">
   {% set prev = this.parent.children.filter(F._model == 'gazplace').order_by('-_slug').filter(F._slug < this._slug).first() %}
   {% set next = this.parent.children.filter(F._model == 'gazplace').order_by('_slug').filter(F._slug > this._slug).first() %}
@@ -46,6 +47,7 @@
     {% endif %}
   </div>
 </div>
+<!--endnoindex-->
 
 <hr/>
 
