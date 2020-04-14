@@ -126,3 +126,7 @@ img {
 .pictureindex-thumbnail {
   height: 125px;
 }
+
+.search-result-url {
+  margin-top: -3px;
+}
