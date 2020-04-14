@@ -163,5 +163,6 @@ if ($mode === "query") {
 <?php
 }
 ?>
+</div>
 
 {% endblock %}

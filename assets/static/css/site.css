@@ -127,6 +127,8 @@ img {
   height: 125px;
 }
 
-.search-result-url {
-  margin-top: -3px;
+#search-results h4 {
+  margin-bottom: -4px;
+  text-transform: none;
+  letter-spacing: 1px;
 }
