@@ -29,17 +29,16 @@ class MathshistoryXrefsPlugin(Plugin):
 
     def __init__(self, env, id):
         Plugin.__init__(self, env, id)
-        self.con = None
         self.need_rebuild = {}
         self.reporter = NullReporter(env)
 
-    def create_tables(self):
+    def create_tables(self, con):
         can_disable_rowid = ('3', '8') <= tuple(sqlite3.sqlite_version.split('.'))
         if can_disable_rowid:
             without_rowid = 'without rowid'
         else:
             without_rowid = ''
-        self.con.execute('''
+        con.execute('''
             create table if not exists xrefs (
                 path text,
                 mathematician text,
@@ -48,8 +47,8 @@ class MathshistoryXrefsPlugin(Plugin):
         ''' % without_rowid)
 
     def on_before_build_all(self, builder, **extra):
-        self.con = db_connect(builder.meta_path)
-        self.create_tables()
+        con = db_connect(builder.meta_path)
+        self.create_tables(con)
 
         path_cache = PathCache(self.env)
         with self.reporter.build('build', self):
@@ -64,10 +63,10 @@ class MathshistoryXrefsPlugin(Plugin):
                     if not artifact: continue
                     current = artifact.is_current
                     if not current:
-                        self.process_source(source)
+                        self.process_source(source, con)
                 builder.extend_build_queue(to_build, prog)
 
-    def process_source(self, source):
+    def process_source(self, source, con):
         # for now, make it only history topics
         allowed_types = ['historytopic', 'curve', 'honour', 'projectpage', 'society', 'page']
         if type(source) != Page or source['_model'] not in allowed_types:
@@ -88,7 +87,7 @@ class MathshistoryXrefsPlugin(Plugin):
             names.append(name)
 
         # get the list of names we know about already
-        cur = self.con.cursor()
+        cur = con.cursor()
         cur.execute('''
             select distinct mathematician from xrefs where path = ?
         ''', [source.path])
@@ -136,7 +135,8 @@ class MathshistoryXrefsPlugin(Plugin):
             return
 
         # get the xrefs to inject
-        cur = self.con.cursor()
+        con = db_connect(builder.meta_path)
+        cur = con.cursor()
         cur.execute('''
             select distinct path from xrefs where mathematician = ?
         ''', [name])
@@ -203,7 +203,8 @@ class MathshistoryXrefsPlugin(Plugin):
             return
 
         # it's not dirty, the build succeeded. update the database
-        cur = self.con.cursor()
+        con = db_connect(builder.meta_path)
+        cur = con.cursor()
         for path in self.need_rebuild[name]['added']:
             cur.execute('''
                 insert or ignore into xrefs(path, mathematician) values(?,?)
@@ -215,7 +216,7 @@ class MathshistoryXrefsPlugin(Plugin):
             ''', [path, name])
 
         # commit all database updates
-        self.con.commit()
+        con.commit()
 
 
 
