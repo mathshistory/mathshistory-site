@@ -17,11 +17,16 @@
 <div class="row">
   <div class="col-md-8">
     <h4>By Foundation Date</h4>
-    {% for society in this.societies %}
-    <li>{{ society.foundation }} - <a href="{{ society|url }}">{{ society.name }}</a></li>
-    {% endfor %}
+    <!--noindex-->
+    <ul>
+      {% for society in this.societies %}
+      <li>{{ society.foundation }} - <a href="{{ society|url }}">{{ society.name }}</a></li>
+      {% endfor %}
+    </ul>
+    <!--endnoindex-->
   </div>
 
+  <!--noindex-->
   <!-- SIDEBAR -->
   {% for category in get_categories_by_type(site, 'societies') %}
   {% if loop.first %}
@@ -38,5 +43,6 @@
   {% endif %}
   {% endfor %}
   <!-- END SIDEBAR -->
+  <!--endnoindex-->
 </div>
 {% endblock %}

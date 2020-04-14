@@ -14,18 +14,24 @@
   </div>
 </div>
 
+<!--noindex-->
 {% for row in this.mathematicians|slice(6) %}
 <div class="row pictureindex-row">
   {% for mathematician in row %}
   <div class="col-md-2 pictureindex-col">
+    {% if mathematician.has_pictdisplay %}
     <a href="{{ '%s/@pictdisplay'|format(mathematician.page.path)|url }}">
+    {% endif %}
       <img src="{{ mathematician.thumbnail|url }}" class="pictureindex-thumbnail" />
+    {% if mathematician.has_pictdisplay %}
     </a>
+    {% endif %}
     <br/>
     <a href="{{ mathematician.page|url }}">{{ mathematician.page.shortname }}</a>
   </div>
   {% endfor %}
 </div>
 {% endfor %}
+<!--endnoindex-->
 
 {% endblock %}

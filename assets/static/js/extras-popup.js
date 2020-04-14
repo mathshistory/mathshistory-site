@@ -1,7 +1,7 @@
 // adapted from the 'win1' function
 var win = false;
-function extraLinkPopup (location) {
-  var h = 600;
+function extraLinkPopup (location, width) {
+  var h = width;
   var v = 1000;
   if (v > screen.height) v = screen.height
   if (h > screen.width) h = screen.width
@@ -32,11 +32,15 @@ document.body.onfocus = function () {
 var links = document.getElementsByTagName('a')
 for (var i = 0; i < links.length; i++) {
   var link = links[i]
-  if (link.href.indexOf('/Extras/') === -1) continue
-  link.onclick = function (e) {
-    var href = e.target.href
-    extraLinkPopup(href)
+  var isExtraLink = link.href.indexOf('/Extras/') !== -1
+  var isPictdisplayLink = link.href.indexOf('/pictdisplay/') !== -1
+  if (! (isExtraLink || isPictdisplayLink)) continue
+  link.onclick = function (link, isPictdisplay, e) {
+    var width = 600
+    if (isPictdisplay) width = 768
+    var href = link.href
+    extraLinkPopup(href, width)
     e.preventDefault()
     return false
-  }
+  }.bind(this, link, isPictdisplayLink)
 }

@@ -8,10 +8,12 @@
 {% endblock %}
 
 {% block body %}
+
 <div class="row px-5">
   <div class="col">
     <div id="alphabetical-index-jumpbox" class="mb-3">
       <h1>Alphabetical Index</h1>
+      <!--noindex-->
       {% import 'macros/biographyindextable.html' as table %}
       {{ table.biographyindextable() }}
       <a href="{{ '/Biographies/@biographyindexchronological/'|url }}">Chronological List</a>
@@ -51,4 +53,5 @@
 {% endif %}
 {% endfor %}
 
+<!--endnoindex-->
 {% endblock %}

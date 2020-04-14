@@ -10,17 +10,17 @@ lektor-mathshistory-map = 0.2.0
 lektor-mathshistory-jinja = 0.4.0
 lektor-mathshistory-curvesapplet = 0.1.0
 lektor-mathshistory-biographyindex = 1.0.1
-lektor-mathshistory-daily = 0.3.0
+lektor-mathshistory-daily = 0.4.0
 lektor-mathshistory-categoryindex = 4.0.0
 lektor-mathshistory-chronology = 1.1.0
 lektor-mathshistory-chooser = 0.1.0
-lektor-mathshistory-search = 0.1
+lektor-mathshistory-search = 1.0.0
 lektor-mathshistory-publish = 0.1.1
 lektor-mathshistory-countries = 1.0.0
 lektor-mathshistory-posters = 1.0.1
 lektor-mathshistory-renderer = 0.4.1
 lektor-mathshistory-xrefs = 0.1.0
-lektor-mathshistory-otherindexes = 0.4.0
+lektor-mathshistory-otherindexes = 0.4.1
 
 [servers.preview]
 name = Preview

@@ -67,6 +67,7 @@
     {% endif %}
 
     {% if this.summary %}
+    <hr/>
     <dt>Summary</dt>
     <dd>{{ this.summary }}</dd>
     {% endif %}
@@ -78,7 +79,7 @@
     <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
     {% if numbigimages > 0 %}
     <br/>
-    <a href="{{ '%s/@pictdisplay'|format(this.path)|url }}">View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
+    <a href="{{ '%s/@pictdisplay'|format(this.path)|url }}" target="_blank">View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
     {% endif %}
   </div>
   {% endif %}
@@ -95,6 +96,7 @@
 </div>
 
 {% if this.quotations and this.quotations.blocks|length > 0 %}
+<hr/>
 <div class="row mt-2">
   <div class="col-md-12">
     <a href="{{ '%s/@quotations'|format(this.path)|url }}">Quotations by {{ this.shortname }}</a>

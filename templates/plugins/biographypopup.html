@@ -1,3 +1,4 @@
+<!--noindex-->
 <div class="row">
   <div class="col-md-12">
     {% set thumbnail = this.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
@@ -20,3 +21,4 @@
     <a href="{{ this|url }}">View full biography</a>
   </div>
 </div>
+<!--endnoindex-->

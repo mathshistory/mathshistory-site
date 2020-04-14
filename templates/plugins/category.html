@@ -32,6 +32,7 @@
   </div>
 </div>
 
+<!--noindex-->
 <div class="row">
   <div class="col-md-8">
     <ul>
@@ -43,9 +44,9 @@
 
   <!-- SIDEBAR -->
   <aside class="col-md-4">
+    {% for type in get_types_by_category(site, this.category._slug) if type.id != this.type.id %}
+    {% if loop.first %}
     <div class="p-3 mb-3 bg-light rounded">
-      {% for type in get_types_by_category(site, this.category._slug) if type.id != this.type.id %}
-      {% if loop.first %}
       <h4>Other {{ this.category.name }} Pages</h4>
       <ul>
       {% endif %}
@@ -56,11 +57,13 @@
         {% endif %}
       {% if loop.last %}
       </ul>
-      {% endif %}
-      {% endfor %}
+    </div>
+    {% endif %}
+    {% endfor %}
 
-      {% for category in get_categories_by_type(site, this.type.id) if category._slug != this.category._slug %}
-      {% if loop.first %}
+    {% for category in get_categories_by_type(site, this.type.id) if category._slug != this.category._slug %}
+    {% if loop.first %}
+    <div class="p-3 mb-3 bg-light rounded">
       <h4>Other {{ this.type.name }} Categories</h4>
       <ul>
       {% endif %}
@@ -71,9 +74,9 @@
         {% endif %}
       {% if loop.last %}
       </ul>
-      {% endif %}
-      {% endfor %}
     </div>
+    {% endif %}
+    {% endfor %}
 
     {% if this.type.id == 'biographies' %}
     <div class="p-3 mb-3 bg-light rounded">
@@ -117,5 +120,6 @@
   </aside>
   <!-- END SIDEBAR -->
 </div>
+<!--endnoindex-->
 
 {% endblock %}

@@ -26,6 +26,7 @@
   <div class="col">
       <h1>Names starting with {{ this.letter|upper }}</h1>
 
+      <!--noindex-->
       {% if this.jumps|length > 0 %}
       <h4 id="jumps">
         Jump to section:
@@ -47,8 +48,10 @@
         <li><a href="{{ person['person']|url }}">{{ person['display'] }}</a>{% if person['person'].birthyear|format_year %} ({{ person['person'].birthyear|format_year }} - {% if person['person'].deathyear %}{{ person['person'].deathyear|format_year }}{% endif %}){% endif %}</li>
       {% endfor %}
       </ul>
+      <!--endnoindex-->
   </div>
 
+  <!--noindex-->
   <!-- SIDEBAR -->
   <aside class="col-md-4">
     <div id="alphabetical-index-jumpbox" class="p-3 mb-3 bg-light rounded">
@@ -81,6 +84,7 @@
     {% endfor %}
   </aside>
   <!-- END SIDEBAR -->
+  <!--endnoindex-->
 
 </div>
 

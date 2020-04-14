@@ -11,11 +11,13 @@
 <div class="row">
   <div class="col-md-12">
     <h1>EMS Index</h1>
+    <!--noindex-->
     <ul>
     {% for page in site.query('/EMS') %}
       <li><a href="{{ page|url }}">{{ page.title }}</a></li>
     {% endfor %}
     </ul>
+    <!--endnoindex-->
   </div>
 </div>
 {% endblock %}
