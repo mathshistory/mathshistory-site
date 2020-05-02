@@ -354,7 +354,7 @@ def katexrender(match, record):
     if p.returncode != 0:
         return '<span class="math-error">%s</span>' % latex
     html = out.decode('utf-8')
-    return '<span class="math">%s</span>' % html
+    return '<span class="math">%s</span>' % html.strip()
 
 def imgreplace(match, record):
     tag = match.group('tag')
