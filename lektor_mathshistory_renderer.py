@@ -319,19 +319,41 @@ def drender(match, record):
     words = items[0].split(' ')
     name = words[0]
     if len(words) > 1:
-        align = words[1]
+        align = words[1].strip()
     if len(items) > 1:
-        other = items[1]
+        other = items[1].strip()
+
+    # sort out the align
+    style = ''
+    if align in ('left', 'right'):
+        style = 'float: %s;' % align
+    elif align == 'top':
+        style = 'vertial-align: top;'
+    elif align == 'middle':
+        style = 'vertical-align: middle;' # this is not exactly right, but is the best there is
+    elif align == 'bottom':
+        style = 'vertical-align: initial;'
+
+    # sort out the other
+    params = ''
+    if '=' in other:
+        params = other
+    elif ':' in other:
+        style += ' %s' % other
+
+    # put it all together
+    if style.strip() != '':
+        params = ('style="%s" %s' % (style.strip(), params.strip())).strip()
+
+    # sort out the href
     if '.' not in name:
         name = '%s.gif' % name
     href = '/Diagrams/%s' % name
-    href = correct_link(href, record)
-    if align != '':
-        return '<img src="%s" %s />' % (href, other)
-    elif ':' in other:
-        return '<img src="%s" align="%s" style="%s" />' % (href, align, other)
+
+    if params != '':
+        return '<img src="%s" %s />' % (href, params)
     else:
-        return '<img src="%s" align="%s" %s />' % (href, align, other)
+        return '<img src="%s" />' % href
 
 def linkrender(match, record):
     text = match.group('text')
