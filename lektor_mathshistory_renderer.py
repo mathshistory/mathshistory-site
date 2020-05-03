@@ -186,6 +186,10 @@ def render(source, record):
     regex = re.compile(r'<d\s+(?P<content>.+?)>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, lambda match: drender(match, record), source)
 
+    # convert the link location
+    regex = re.compile(r'<a\s+href\s*=\s*[\'"]?(?P<href>.+?)[\'"]?\s*>(?P<text>.*?)<\/a>')
+    source = re.sub(regex, lambda match: linkrender(match, record), source)
+
     # convert [refnum]
     regex = re.compile(r'\[(?P<number>\d+)\]', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, lambda match: referencerender(match, record), source)
@@ -194,10 +198,6 @@ def render(source, record):
     # convert <T num>
     regex = re.compile(r'<T (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, lambda match: trender(match, record), source)
-
-    # convert the link location
-    regex = re.compile(r'<a\s+href\s*=\s*[\'"]?(?P<href>.+?)[\'"]?\s*>(?P<text>.*?)<\/a>')
-    source = re.sub(regex, lambda match: linkrender(match, record), source)
 
     # convert the link location
     regex = re.compile(r'(?P<tag><img\s+.+?>)', re.MULTILINE | re.DOTALL)
@@ -288,8 +288,9 @@ def referencerender(match, record):
     reference = references[0]
     text = reference['reference'].__html__().unescape().strip()
     text = html.escape(text, quote=True)
-    genereated_html = '<span>[<a href="#reference-%s" class="reference" data-popup="%s">%s</a>]</span>' % (number, text, number)
-    return genereated_html
+    generated_html = '<span>[<a href="#reference-%s" class="reference" data-popup="%s">%s</a>]</span>' % (number, text, number)
+    print(generated_html)
+    return generated_html
 
 def trender(match, record):
     number = match.group('number')
@@ -304,8 +305,8 @@ def trender(match, record):
     translation = translation[0]
     text = translation['translation'].__html__().unescape().strip()
     escaped_text = html.escape(text, quote=True)
-    genereated_html = '<span><a data-popup="%s" class="translation nonoscript">&#9417;</a><noscript>(%s)</noscript></span>' % (escaped_text, text)
-    return genereated_html
+    generated_html = '<span><a data-popup="%s" class="translation nonoscript">&#9417;</a><noscript>(%s)</noscript></span>' % (escaped_text, text)
+    return generated_html
 
 def drender(match, record):
     content = match.group('content')
@@ -347,9 +348,9 @@ def drender(match, record):
     href = '/Diagrams/%s' % name
 
     if params != '':
-        return '<img src="%s" %s />' % (href, params)
+        return '<img class="diagram" src="%s" %s />' % (href, params)
     else:
-        return '<img src="%s" />' % href
+        return '<img class="diagram" src="%s" />' % href
 
 def linkrender(match, record):
     text = match.group('text')
@@ -371,8 +372,8 @@ def katexrender(match, record):
     out, err = p.communicate(latex.encode('utf-8'))
     if p.returncode != 0:
         return '<span class="math-error">%s</span>' % latex
-    genereated_html = out.decode('utf-8')
-    return '<span class="math">%s</span>' % genereated_html.strip()
+    generated_html = out.decode('utf-8')
+    return '<span class="math">%s</span>' % generated_html.strip()
 
 def imgreplace(match, record):
     tag = match.group('tag')
@@ -428,8 +429,5 @@ def tags_to_unicode(text, katex=False):
     for tag, unicode in zip(all_tags, all_unicode):
         #unicode = unicode.replace('\\', '\\\\')
         text = text.replace(tag, unicode)
-
-    # sneaky fix - also do html character tags
-    text = html.unescape(text)
 
     return text
