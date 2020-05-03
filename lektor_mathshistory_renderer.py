@@ -286,12 +286,10 @@ def referencerender(match, record):
         print('Reference not found. Skipping.')
         return '[%s]' % number
     reference = references[0]
-    text = reference['reference'].__html__().strip()
-    html = '<span>[<a href="#reference-%s" class="reference" data-popup="">%s</a>]</span>' % (number, number)
-    soup = BeautifulSoup(html, 'html5lib')
-    soup.find('a')['data-popup'] = text
-    html = str(soup.find('span')).strip()
-    return html
+    text = reference['reference'].__html__().unescape().strip()
+    text = html.escape(text, quote=True)
+    genereated_html = '<span>[<a href="#reference-%s" class="reference" data-popup="%s">%s</a>]</span>' % (number, text, number)
+    return genereated_html
 
 def trender(match, record):
     number = match.group('number')
@@ -304,12 +302,10 @@ def trender(match, record):
         print('Translation not found. Skipping.')
         return ''
     translation = translation[0]
-    text = translation['translation'].__html__().strip()
-    html = '<span><a data-popup="" class="translation nonoscript">&#9417;</a><noscript>(%s)</noscript></span>' % (text)
-    soup = BeautifulSoup(html, 'html5lib')
-    soup.find('a')['data-popup'] = text
-    html = str(soup.find('span')).strip()
-    return html
+    text = translation['translation'].__html__().unescape().strip()
+    escaped_text = html.escape(text, quote=True)
+    genereated_html = '<span><a data-popup="%s" class="translation nonoscript">&#9417;</a><noscript>(%s)</noscript></span>' % (escaped_text, text)
+    return genereated_html
 
 def drender(match, record):
     content = match.group('content')
@@ -375,8 +371,8 @@ def katexrender(match, record):
     out, err = p.communicate(latex.encode('utf-8'))
     if p.returncode != 0:
         return '<span class="math-error">%s</span>' % latex
-    html = out.decode('utf-8')
-    return '<span class="math">%s</span>' % html.strip()
+    genereated_html = out.decode('utf-8')
+    return '<span class="math">%s</span>' % genereated_html.strip()
 
 def imgreplace(match, record):
     tag = match.group('tag')
