@@ -118,3 +118,8 @@ table {
 .brown-text {
   color: brown;
 }
+
+.diagram {
+  border: none;
+  margin: 5px 0 5px 10px;
+}
