@@ -289,7 +289,6 @@ def referencerender(match, record):
     text = reference['reference'].__html__().unescape().strip()
     text = html.escape(text, quote=True)
     generated_html = '<span>[<a href="#reference-%s" class="reference" data-popup="%s">%s</a>]</span>' % (number, text, number)
-    print(generated_html)
     return generated_html
 
 def trender(match, record):
