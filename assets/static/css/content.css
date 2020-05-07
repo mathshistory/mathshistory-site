@@ -1,15 +1,9 @@
 /* css rules for the bbcode content that is converted into HTML */
 
 /* numbers, round brackets, square brackets, curly brackets */
-@font-face {
-  font-family: 'Times New Roman Quotation';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Times New Roman');
-  unicode-range: U+30-39, U+28-29, U+5B, U+5D, U+7B, U+7D;
+.non-italic {
+  font-style: normal;
 }
-
 
 /* [quote]...[/quote] */
 blockquote {
@@ -23,7 +17,6 @@ blockquote {
   quotes: "\201C""\201D""\2018""\2019";
   font-style: italic;
   text-align: justify;
-  font-family: 'Times New Roman Quotation', 'Times New Roman';
 }
 blockquote:before {
   color: #ccc;
