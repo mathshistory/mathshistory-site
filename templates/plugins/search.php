@@ -1,33 +1,6 @@
 {% extends "layout.html" %}
 
 {% block head %}
-{{ super() }}
-<meta name="robots" content="nofollow">
-
-<!-- opengraph -->
-<meta property="og:title" content="Search<?php if (isset($query_string)) echo 'results for: ' . $queryString;?> - Maths History">
-<meta property="og:description" content="Search the Maths History site">
-<meta property="og:site_name" content="Maths History">
-<meta property="og:locale" content="en_GB">
-<meta property="og:url" content="{{ this|canonical_url }}">
-
-<!-- twitter card -->
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="Search<?php if (isset($query_string)) echo 'results for: ' . $queryString;?> - Maths History" />
-<meta name="twitter:description" content="Search the Maths History site" />
-{% endblock %}
-
-{% block title %}Search<?php if (isset($query_string)) echo 'results for: ' . $queryString;?>{% endblock %}
-
-{% block body %}
-
-<div class="row">
-  <div class="col-md-12">
-    <h1>Search</h1>
-  </div>
-</div>
-
 {# include the search configuration #}
 {% include "plugins/searchconfig.php" %}
 
@@ -40,15 +13,42 @@
 
   // we need to display results
   if (isset($_GET["query"])) {
-  	$mode = "query";
-    $query_string = trim($_GET["query"]);
+    $mode = "query";
+    $query_string = htmlspecialchars(trim($_GET["query"]));
   }
 
   // not sure what this does either
   if (isset($_GET["serviceID"])) {
-  	$serviceID = $_GET["serviceID"];
+    $serviceID = $_GET["serviceID"];
   }
 ?>
+
+{{ super() }}
+<meta name="robots" content="nofollow">
+
+<!-- opengraph -->
+<meta property="og:title" content="Search<?php if (isset($query_string)) echo 'results for: ' . $query_string;?> - Maths History">
+<meta property="og:description" content="Search the Maths History site">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="Search<?php if (isset($query_string)) echo 'results for: ' . $query_string;?> - Maths History" />
+<meta name="twitter:description" content="Search the Maths History site" />
+{% endblock %}
+
+{% block title %}Search<?php if (isset($query_string)) echo 'results for: ' . $query_string;?>{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Search</h1>
+  </div>
+</div>
 
 <?php
 
@@ -137,7 +137,7 @@ if ($mode === "query") {
       }
 
       // generate the query part
-      $query = urlencode($query_string . " " . $search_sections_query);
+      $query = urlencode($_GET["query"] . " " . $search_sections_query);
 
       // build the basic query
       $query = 'query=' . $query . '&num_ranks=' . $resultsPerPage . '&btnG=Search&collection=' . $collection . '&profile=' . $profile . '&form=' . $form;
