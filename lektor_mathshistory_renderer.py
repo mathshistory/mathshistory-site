@@ -225,6 +225,8 @@ def render(source, record):
 
     source = tags_to_unicode(source)
 
+    source = fix_italics(source)
+
     return source
 
 
@@ -393,7 +395,20 @@ def correct_link(link, record):
     link = escape(link)
     return link
 
-
+# hack function, goes through the entire document and fixes the italics
+# this might be quite slow. but John likes non-italic numbers/brackets, so it has to stay for now
+NON_ITALIC_PATTERN = re.compile(r'([\d\[\]\(\)]+)')
+def fix_italics(x):
+    try:
+        s = BeautifulSoup(x, 'html.parser')
+        for text_node in list(s.strings):
+            if re.search(NON_ITALIC_PATTERN, text_node.string):
+                new_html = re.sub(NON_ITALIC_PATTERN, r'<span class="non-italic">\1</span>', text_node.string)
+                new_soup = BeautifulSoup(new_html, 'html.parser')
+                text_node.replace_with(new_soup)
+        return str(s)
+    except:
+        return x
 
 
 # from symbolreplace.py
