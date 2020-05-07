@@ -113,10 +113,13 @@
   {% if thumbnail %}
   {% set numbigimages = this.quote.person.attachments.images.filter(F._model == 'biographyimage').filter(F.main == False).count() %}
   <div class="col-md-4 biography-thumbnail-container">
+    {% if numbigimages > 0 %}
+    <a href="{{ '%s/@pictdisplay'|format(this.quote.person.path)|url }}">
+    {% endif %}
     <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
     {% if numbigimages > 0 %}
     <br/>
-    <a href="{{ '%s/@pictdisplay'|format(this.quote.person.path)|url }}">View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
+    View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
     {% endif %}
   </div>
   {% endif %}
