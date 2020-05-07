@@ -62,3 +62,9 @@
 {% endfor %}
 
 {% endblock %}
+
+
+{% block scripts %}
+<script src="{{ '/static/js/hide-header-footer.js'|asseturl }}"></script>
+{{ super() }}
+{% endblock %}
