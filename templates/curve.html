@@ -5,7 +5,7 @@
 {% block head %}
 {{ super() }}
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.name }}">
+<meta property="og:title" content="{{ this.name|e }}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
@@ -20,7 +20,7 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.name }}" />
+<meta name="twitter:title" content="{{ this.name|e }}" />
 {% if image %}
 <meta name="twitter:image" content="{{ image|canonical_url }}" />
 {% endif %}
@@ -39,7 +39,7 @@
   <div class="col-md-8">
     {% set image = this.attachments.images.filter(F._model == 'curveimage' and F.main).first() %}
     {% if image %}
-      <img src="{{ image|url }}" alt="{{ image.description }}" />
+      <img src="{{ image|url }}" alt="{{ image.description|striptags|e }}" />
     {% else %}
     <i>Error displaying curve</i>
     {% endif %}

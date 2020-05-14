@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
 
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.name }}">
+<meta property="og:title" content="{{ this.name|e }}">
 <meta property="og:description" content="A list of the mathematicians born in {{ this.name }}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
@@ -16,7 +16,7 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.name }}" />
+<meta name="twitter:title" content="{{ this.name|e }}" />
 <meta name="twitter:description" content="A list of the mathematicians born in {{ this.name }}" />
 {% endblock %}
 
