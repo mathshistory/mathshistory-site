@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_otherindexes'],
     url='https://github.com/mathshistory/mathshistory-otherindexes',
-    version='0.4.1',
+    version='0.5.0',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',

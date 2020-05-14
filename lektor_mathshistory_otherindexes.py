@@ -86,20 +86,6 @@ class GazMapData(VirtualSourceObject):
         return build_url([OUTPUT_PATH, 'gazmap', 'data.json'])
 
 
-class OtherIndexesIndexPage(VirtualSourceObject):
-    def __init__(self, parent):
-        VirtualSourceObject.__init__(self, parent)
-        self.template = 'plugins/otherindexesindex.html'
-
-    @property
-    def path(self):
-        return build_url([self.parent.path, '@%s/other' % VIRTUAL_SOURCE_ID])
-
-    @property
-    def url_path(self):
-        return build_url([OUTPUT_PATH, 'other'])
-
-
 class HistoryTopicsAlphabeticalIndexPage(VirtualSourceObject):
     def __init__(self, parent):
         VirtualSourceObject.__init__(self, parent)
@@ -248,7 +234,6 @@ class MathshistoryOtherindexesPlugin(Plugin):
         self.env.add_build_program(SocietiesFoundationIndexPage, IndexBuildProgram)
         self.env.add_build_program(QuotationsIndexPage, IndexBuildProgram)
         self.env.add_build_program(HistoryTopicsAlphabeticalIndexPage, IndexBuildProgram)
-        self.env.add_build_program(OtherIndexesIndexPage, IndexBuildProgram)
         self.env.add_build_program(GazMapPage, IndexBuildProgram)
         self.env.add_build_program(GazMapData, MapDataBuildProgram)
 
@@ -263,7 +248,6 @@ class MathshistoryOtherindexesPlugin(Plugin):
                 yield SocietiesFoundationIndexPage(record)
                 yield QuotationsIndexPage(record)
                 yield HistoryTopicsAlphabeticalIndexPage(record)
-                yield OtherIndexesIndexPage(record)
                 yield GazMapPage(record)
                 yield GazMapData(record)
 
@@ -279,11 +263,9 @@ class MathshistoryOtherindexesPlugin(Plugin):
                 elif pieces[0] == 'societies':
                     return SocietiesFoundationIndexPage(node)
                 elif pieces[0] == 'quotations':
-                    return SocietiesFoundationIndexPage(node)
+                    return QuotationsIndexPage(node)
                 elif pieces[0] == 'histtopics':
                     return HistoryTopicsAlphabeticalIndexPage(node)
-                elif pieces[0] == 'other':
-                    return OtherIndexesIndexPage(node)
                 elif pieces[0] == 'gazmap':
                     return GazMapPage(node)
                 elif pieces[0] == 'gazmap-data':
