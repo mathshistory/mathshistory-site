@@ -24,15 +24,16 @@ class MapData(VirtualSourceObject):
                 places = {}
                 for place in self.pad.query(SOURCE_PATH).include_undiscoverable(True):
                     id = place['_slug']
-                    gaz_url = ''
+                    gaz_urls = []
                     if place['gaz'] and place['gaz'] != '':
-                        gaz_url = self.parent.url_to('/Gaz/%s' % place['gaz'])
+                        for gaz_place in place['gaz'].split(','):
+                            gaz_urls.append(self.parent.url_to('/Gaz/%s' % gaz_place))
                     places[id] = {
                         'id': id,
                         'name': place['name'],
                         'country': place['country'],
                         'webref': place['webref'].url,
-                        'gaz': gaz_url,
+                        'gaz': gaz_urls,
                         'longitude': place['longitude'],
                         'latitude': place['latitude'],
                         'people': []
