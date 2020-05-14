@@ -55,7 +55,8 @@
 
   <!--noindex-->
   <div class="col-md-12 nonoscript">
-    <p><a href="{{ '%s/@curvesapplet'|format(this.path)|url }}">View the interactive version of this curve.</a></p>
+    <hr/>
+    <p class="mb-0"><a href="{{ '%s/@curvesapplet'|format(this.path)|url }}">View the interactive version of this curve.</a></p>
   </div>
   <!--endnoindex-->
 </div>
@@ -84,7 +85,7 @@
   {% for column in this.attachments.images.filter(F.main == False).filter(F._model == 'curveimage')|sort(attribute='path')|slice(2) -%}
   <div class="col-md-6">
     {% for image in column %}
-    <li><a href="{{ image|url }}" class="associated-curve">{{ image.description }}</a></li>
+    <li><a href="{{ image|url }}" class="tippyPic">{{ image.description }}</a></li>
     {% endfor %}
   </div>
   {% endfor %}

@@ -78,3 +78,31 @@
   max-height: 150px;
   margin: 10px;
 }
+
+.tippy-tooltip.other-theme {
+  background-color: #ffbaf9;
+  color: #000000;
+  padding: 5px;
+}
+.tippy-tooltip.other-theme .row {
+  margin: 0px;
+}
+.tippy-tooltip.other-theme dl dt {
+  float: left;
+  margin-right: 10px;
+}
+.tippy-tooltip.other-theme dl dd {
+  float: left;
+}
+.tippy-tooltip.other-theme[data-placement^='top'] .tippy-arrow {
+  border-top-color: #ffbaf9;
+}
+.tippy-tooltip.other-theme[data-placement^='bottom'] .tippy-arrow {
+  border-bottom-color: #ffbaf9;
+}
+.tippy-tooltip.other-theme[data-placement^='left'] .tippy-arrow {
+  border-left-color: #ffbaf9;
+}
+.tippy-tooltip.other-theme[data-placement^='right'] .tippy-arrow {
+  border-right-color: #ffbaf9;
+}
