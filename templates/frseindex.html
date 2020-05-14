@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="Fellows of the Royal Society of Edinburgh - {% if this.order_by == '_slug' %}Alphabetical{% else %}Chronological{% endif %}">
+<meta property="og:description" content="A list of Fellows of the Royal Society of Edinburgh who were also mathematicians, ordered {% if this.order_by == '_slug' %}alphabetically by name{% else %}chronologically by election year{% endif %}.">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="Fellows of the Royal Society of Edinburgh - {% if this.order_by == '_slug' %}Alphabetical{% else %}Chronological{% endif %}" />
+<meta name="twitter:description" content="A list of Fellows of the Royal Society of Edinburgh who were also mathematicians, ordered {% if this.order_by == '_slug' %}alphabetically by name{% else %}chronologically by election year{% endif %}." />
+{% endblock %}
+
+{% block title %}Fellows of the Royal Society of Edinburgh{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>Fellows of the Royal Society of Edinburgh</h1>
+    <h3>{% if this.order_by == '_slug' %}Alphabetical{% else %}Chronological{% endif %} List</h3>
+    <p>
+      Below is a list of about 330 Fellows of the Royal Society of Edinburgh who were (among other things) mathematicians.
+      <br/>
+      You can find out more about them by clicking the link alongside. For those with a biography in our archive there is also a link to the biography.
+    </p>
+    <hr/>
+    <p>
+      {% if this.order_by == '_slug' %}
+      There is also a <a href="{{ '/Societies/RSE/FRSE/chronological/'|url }}">list ordered by date of election</a>,
+      {% else %}
+      There is also a <a href="{{ '/Societies/RSE/FRSE/'|url }}">list ordered alphabetically</a>,
+      {% endif %}
+      and you can also read about <a href="{{ '/Societies/RSE'|url }}">the history of the RSE</a>.
+    </p>
+    <hr/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Election Year</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for frse in site.query('/Societies/RSE/FRSE/').filter(F._model == 'frse').order_by(this.order_by) %}
+        <tr>
+          <td>{{ frse.name }}</td>
+          <td>{{ frse.elected.strftime('%Y') }}</td>
+          <td><a href="{{ frse|url }}" data-popup="{{ frse|url }}" target="_blank" class="tippyUrl">More info</a></td>
+          <td>
+            {% if site.get('/Biographies/%s'|format(frse._slug)) %}
+            <a href="{{ '/Biographies/%s/'|format(frse._slug)|url }}">View biography</a></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
