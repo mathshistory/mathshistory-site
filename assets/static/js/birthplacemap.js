@@ -119,12 +119,14 @@ function showPlace (name, people, lat, long, country, webref, gaz) {
   }
 
   if (gaz && gaz !== '') {
-    var link = document.createElement('a')
-    link.innerText = 'Gazetteer entry'
-    link.href = gaz
-    link.target = '_blank'
-    wikiHeader.appendChild(document.createElement('br'))
-    wikiHeader.appendChild(link)
+    for (var i = 0; i < gaz.length; i++) {
+      var link = document.createElement('a')
+      link.innerText = i == 0 && gaz.length == 1 ? 'Gazetteer entry' : ('Gazetteer entry ' + (i + 1))
+      link.href = gaz[i]
+      link.target = '_blank'
+      wikiHeader.appendChild(document.createElement('br'))
+      wikiHeader.appendChild(link)
+    }
   }
 
   var peopleList = document.getElementById('location-people')
