@@ -206,12 +206,20 @@ def render(source, record):
 
     # other from the htmlformat function in the stack
 
-    # breaks and paragraphs (this needs to be fixed)
-    source = source.replace('\n', '¶')
-    source = source.replace('<n>¶','\n')
-    source = source.replace('¶¶', '<br><br>')
-    source = source.replace('¶','<br>')
-    source = source.replace('<n>','')
+    # new (improved?) break-adder
+    TAGS_MATCHER = r'</?((?:n)|(?:table)|(?:tr)|(?:td(\s+colspan="?\d"?)?)|(?:figure)|(?:p)|(?:br)|(?:li)|(?:ol)|(?:ul)|(?:div(\s+id))|(?:script)|(?:input)|(?:button)|(?:br ?/?)|(?:p)|(?:blockquote)|(?:code)|(?:h\d))>'
+    regex = re.compile(r'(?<!%s)\s*?\n(?!\s*%s)' % (TAGS_MATCHER, TAGS_MATCHER), re.MULTILINE | re.DOTALL)
+    source = re.sub(regex, '\n<br>\n', source)
+
+    # never more than two <br>s together
+    multiple_br_pattern = re.compile(r'(?:<br\w?/?>\s*){3,}', re.MULTILINE | re.DOTALL)
+    match = re.search(multiple_br_pattern, source)
+    while match:
+        source = re.sub(multiple_br_pattern, '<br>\n<br>', source)
+        match = re.search(multiple_br_pattern, source)
+
+    # remove all the <n>s
+    source = source.replace('<n>', '')
 
     # smart quotes
     source = source.replace('’',"'")
@@ -380,6 +388,8 @@ def imgreplace(match, record):
     tag = match.group('tag')
     soup = BeautifulSoup(tag, 'html5lib')
     img = soup.find('img')
+    if img == None:
+        print('IMAGE ERROR: %s ' % tag)
     src = img['src']
     img['src'] = correct_link(img['src'], record)
     fixed = str(img).strip()
