@@ -61,6 +61,28 @@
   </div>
 </div>
 
+<hr/>
+
+<div class="row project-navigation">
+  <div class="col-md-4">
+    {% if prev %}
+    <a href="{{ prev|url }}">Previous Page</a>
+    <br/>
+    ({{ prev.title }})
+    {% endif %}
+  </div>
+  <div class="col-md-4">
+    <a href="{{ this.parent|url }}">Contents</a>
+  </div>
+  <div class="col-md-4">
+    {% if next %}
+    <a href="{{ next|url }}">Next Page</a>
+    <br/>
+    ({{ next.title }})
+    {% endif %}
+  </div>
+</div>
+
 <!-- END MAIN BODY -->
 
 {% endblock %}
