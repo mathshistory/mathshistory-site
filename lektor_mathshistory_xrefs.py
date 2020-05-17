@@ -50,6 +50,8 @@ class MathshistoryXrefsPlugin(Plugin):
         con = db_connect(builder.meta_path)
         self.create_tables(con)
 
+        self.need_rebuild = {}
+
         path_cache = PathCache(self.env)
         with self.reporter.build('build', self):
             to_build = builder.get_initial_build_queue()
@@ -60,11 +62,41 @@ class MathshistoryXrefsPlugin(Plugin):
                     prog.produce_artifacts()
                     artifact = prog.primary_artifact
                     prog.artifacts = []
+
+                    # go through all the deleted pages
+                    self.process_deleted(build_state, con)
+
+                    # now go through all the modified pages
                     if not artifact: continue
                     current = artifact.is_current
                     if not current:
                         self.process_source(source, con)
                 builder.extend_build_queue(to_build, prog)
+
+
+    def process_deleted(self, build_state, con):
+        # (we do this by going through all pages, and seeing if they still exist)
+        cur = con.cursor()
+        cur.execute('''
+            select distinct path from xrefs
+        ''', [])
+        paths = [v[0] for v in cur.fetchall()]
+        for path in paths:
+            record = pad_get(build_state.pad, path)
+            if record != None:
+                continue
+            print('deltected deletion: %s' % path)
+            # the record has been deleted!
+            # get all mathematicians who reference it
+            cur.execute('''
+                select distinct mathematician from xrefs where path = ?
+            ''', [path])
+            names = [v[0] for v in cur.fetchall()]
+            # and mark them all as dirty
+            for name in names:
+                if name not in self.need_rebuild:
+                    self.need_rebuild[name] = { 'added':[], 'removed':[] }
+                self.need_rebuild[name]['removed'].append(path)
 
     def process_source(self, source, con):
         # for now, make it only history topics
