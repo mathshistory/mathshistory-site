@@ -4,8 +4,8 @@
 {% block head %}
 {{ super() }}
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.parent.name }} - Interactive">
-<meta property="og:description" content="An interactive web page showing the {{ this.parent.name }} curve.">
+<meta property="og:title" content="{{ this.parent.name|e }} - Interactive">
+<meta property="og:description" content="An interactive web page showing the {{ this.parent.name|e }} curve.">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
@@ -20,8 +20,8 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.parent.name }}" />
-<meta name="twitter:description" content="An interactive web page showing the {{ this.parent.name }} curve." />
+<meta name="twitter:title" content="{{ this.parent.name|e }}" />
+<meta name="twitter:description" content="An interactive web page showing the {{ this.parent.name|e }} curve." />
 {% if thumbnail %}
 <meta name="twitter:image" content="{{ thumbnail|canonical_url }}" />
 {% endif %}

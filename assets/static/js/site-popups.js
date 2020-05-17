@@ -1,7 +1,6 @@
 // associated curves
-tippy('.associated-curve',{
+tippy('.tippyPic',{
   content(element) {
-    console.log(arguments)
     var img = document.createElement('img')
     img.src = element.href
     return img
@@ -15,6 +14,7 @@ tippy('.associated-curve',{
   },
   allowHTML: true,
   trigger: 'click',
+  theme: 'other',
   duration: [0,0],
   interactive: true,
   appendTo: document.body
@@ -85,6 +85,28 @@ tippy('.gllink', {
   allowHTML: true,
   trigger: 'click',
   theme: 'gllink',
+  duration: [0,0],
+  interactive: true,
+  appendTo: document.body
+})
+
+// anything else!
+tippy('.tippyUrl', {
+  onCreate(instance) {
+    instance._hasLoaded = false;
+    instance.reference.onclick = function (e) {
+      e.preventDefault();
+      return false;
+    }
+  },
+  onTrigger(instance) {
+    if (!instance._hasLoaded) {
+      return linkPopupTrigger(instance)
+    }
+  },
+  allowHTML: true,
+  trigger: 'click',
+  theme: 'other',
   duration: [0,0],
   interactive: true,
   appendTo: document.body

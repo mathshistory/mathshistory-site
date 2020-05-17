@@ -13,6 +13,12 @@ h1, h2, h3, h4, h5, h6, ol, ul {
 .container {
   background-color: #FFFFFF;
 }
+.site-header-name {
+  text-align: center;
+}
+.nav-bar {
+  margin-bottom: 1em;
+}
 .site-footer {
   padding: 0;
   background-color: initial;
@@ -29,9 +35,8 @@ h1, h2, h3, h4, h5, h6, ol, ul {
 .site-footer img {
   max-width: 100%;
   max-height: 100%;
-  height: 100px;
+  height: 85px;
   padding-top: 15px;
-  padding-bottom: 15px;
 }
 @media (min-width:768px) {
   .cr-footer {
@@ -131,4 +136,23 @@ img {
   margin-bottom: -4px;
   text-transform: none;
   letter-spacing: 1px;
+}
+
+/* give some spacing between the columns when they go vertical */
+.col-md-1:not(:first-child), .col-md-2:not(:first-child), .col-md-3:not(:first-child), .col-md-4:not(:first-child), .col-md-5:not(:first-child), .col-md-6:not(:first-child), .col-md-7:not(:first-child), .col-md-8:not(:first-child), .col-md-9:not(:first-child), .col-md-10:not(:first-child), .col-md-11:not(:first-child) {
+  margin-top: 1em;
+}
+@media (min-width:768px) {
+  .col-md-1:not(:first-child), .col-md-2:not(:first-child), .col-md-3:not(:first-child), .col-md-4:not(:first-child), .col-md-5:not(:first-child), .col-md-6:not(:first-child), .col-md-7:not(:first-child), .col-md-8:not(:first-child), .col-md-9:not(:first-child), .col-md-10:not(:first-child), .col-md-11:not(:first-child) {
+    margin-top: 0;
+  }
+}
+
+.bmc-speaker-name {
+  padding-right: 20px;
+  width: 150px;
+  text-align: right;
+}
+.bmc-speaker-talk {
+  font-style: italic;
 }

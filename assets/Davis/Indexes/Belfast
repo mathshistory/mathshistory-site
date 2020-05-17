@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Graduates of Belfast</title>
+<script language="JavaScript">
+
+<!-- Begin
+windowstatus = 0;
+function win(which)
+{aWindow = window.open("../Names/" + which + ".html","defn",
+"toolbar=0,status=0,scrollbars=1,location=0,resize=0,menubar=0,width=350,height=350");
+windowstatus = 1;
+if (window.focus) {aWindow.focus()}}
+function hidepic()
+{if (windowstatus == 1){if (aWindow.location) {aWindow.close();windowstatus = 0;}}}
+// End -->
+
+</script>
+
+</head>
+<body bgcolor="#ffffff" onFocus="hidepic();">
+<center><font color=red><h1>Davis archive of female mathematicians</h1></font>
+<h2>Alphabetical list of graduates of the Queen's University of Belfast</h2></center><hr>
+<p>
+Click on a name below to see details of that mathematician
+<p>
+<table border=0 cellpadding= 0 width=100%><tr valign=top>
+<tr><td>Date<td colspan=3 align=center>Men<td colspan=3 align=center>Women
+<tr><td><td align=center>I<td><td align=center>II<td><td align=center>III<td><td align=center>I<td><td align=center>II<td><td align=center>III
+
+</table>
+<hr>
+<table width=100%><tr><td>Click <a href="xBelfast">HERE</a> for a chronological list<td align=center><a href=../index.html>Index page</a><td align=right><a href=univindex.html>University index</a></table>
+<hr> AELD/JOC/EFR May 2004
+<p>
+<font color="red" size="-1">
+The URL of this page is:<br>
+<font color="blue">
+https://mathshistory.st-andrews.ac.uk/Davis/Indexes/Belfast
+</font>
+</body>
+</html>

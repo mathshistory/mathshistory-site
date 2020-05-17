@@ -3,7 +3,7 @@
 {% block head %}
 {{ super() }}
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.shortname }}">
+<meta property="og:title" content="{{ this.shortname|e }}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
@@ -11,7 +11,7 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.shortname }}" />
+<meta name="twitter:title" content="{{ this.shortname|e }}" />
 <meta name="twitter:description" content="{{ this.summary }}" />
 {% endblock %}
 

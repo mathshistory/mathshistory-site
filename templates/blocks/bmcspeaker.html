@@ -1,0 +1,12 @@
+<tr>
+  <td class="bmc-speaker-name">
+    {% if this.mlink %}
+    <a class="mlink" data-popup="{{ '/Biographies/%s/@popup'|format(this.mlink)|url }}" href="{{ '/Biographies/%s/'|format(this.mlink)|url }}">
+    {% endif %}
+      {{ this.name }}
+    {% if this.mlink %}
+    </a>
+    {% endif %}
+  </td>
+  <td class="bmc-speaker-talk">{{ this.talk }}</td>
+</tr>

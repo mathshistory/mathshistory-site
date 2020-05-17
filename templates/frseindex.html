@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="Fellows of the Royal Society of Edinburgh - {% if this.order_by == '_slug' %}Alphabetical{% else %}Chronological{% endif %}">
+<meta property="og:description" content="A list of Fellows of the Royal Society of Edinburgh who were also mathematicians, ordered {% if this.order_by == '_slug' %}alphabetically by name{% else %}chronologically by election year{% endif %}.">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="Fellows of the Royal Society of Edinburgh - {% if this.order_by == '_slug' %}Alphabetical{% else %}Chronological{% endif %}" />
+<meta name="twitter:description" content="A list of Fellows of the Royal Society of Edinburgh who were also mathematicians, ordered {% if this.order_by == '_slug' %}alphabetically by name{% else %}chronologically by election year{% endif %}." />
+{% endblock %}
+
+{% block title %}{{ this.title }}{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.title }}</h1>
+    <h3>{% if this.order_by == '_slug' %}Alphabetical{% else %}Chronological{% endif %} List</h3>
+    {% if this.content %}
+    {{ this.content }}
+    {% endif %}
+    <hr/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Election Year</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for frse in site.query('/Societies/RSE/FRSE/').filter(F._model == 'frse').order_by(this.order_by) %}
+        <tr>
+          <td>{{ frse.name }}</td>
+          <td>{{ frse.elected.strftime('%Y') }}</td>
+          <td><a href="{{ frse|url }}" data-popup="{{ frse|url }}" target="_blank" class="tippyUrl">More info</a></td>
+          <td>
+            {% if site.get('/Biographies/%s'|format(frse._slug)) %}
+            <a href="{{ '/Biographies/%s/'|format(frse._slug)|url }}">View biography</a></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

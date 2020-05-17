@@ -7,8 +7,8 @@
 <link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
 
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.title }} - Chronology">
-<meta property="og:description" content="Events in the history of mathematics that occurred between {{ this.title }}">
+<meta property="og:title" content="{{ this.title|e }} - Chronology">
+<meta property="og:description" content="Events in the history of mathematics that occurred between {{ this.title|e }}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
@@ -16,8 +16,8 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.title }} - Chronology" />
-<meta name="twitter:description" content="Events in the history of mathematics that occurred between {{ this.title }}" />
+<meta name="twitter:title" content="{{ this.title|e }} - Chronology" />
+<meta name="twitter:description" content="Events in the history of mathematics that occurred between {{ this.title|e }}" />
 {% endblock %}
 
 {% block body %}
