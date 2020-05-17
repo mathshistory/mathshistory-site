@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}{% if this.type == 'all' %}All{% else %}{{ this.speaker_type|e }}{% endif %} speakers - British Mathematical Colloquium{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="{% if this.type == 'all' %}All{% else %}{{ this.speaker_type|e }}{% endif %} speakers - British Mathematical Colloquium">
+<meta property="og:description" content="A list of the {{ this.speakers|length }} {{ this.speaker_type|e }} British Mathematical Colloquium speakers, along with the year(s) in which they spoke">
+<meta property="og:site_name" content="Maths History">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="{{ this|canonical_url }}">
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{% if this.type == 'all' %}All{% else %}{{ this.speaker_type|e }}{% endif %} speakers - British Mathematical Colloquium" />
+<meta name="twitter:description" content="A list of the {{ this.speakers|length }} {{ this.speaker_type|e }} British Mathematical Colloquium speakers, along with the year(s) in which they spoke" />
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>BMC {{ this.speaker_type }} speakers up to {{ this.max_year }}</h1>
+    <p>
+      A list of
+      {% if this.type == 'all' %}all{% else %}the{% endif %}
+      {{ this.speakers|length }}
+      {% if this.type != 'all' %}{{ this.speaker_type }}{% endif %}
+      speakers is below along with the year(s) in which they spoke.
+    </p>
+    <p>The list is up-to-date as far as {{ this.max_year }}.</p>
+    <p>Click on a linked name to see that biography, or on a linked year to go to the BMC page for that year.</p>
+  </div>
+</div>
+
+<!--noindex-->
+<div class="row">
+  <div class="col-md-12">
+    {% if this.jumps|length > 0 %}
+    <h4 id="jumps">
+      Jump to section:
+      {% for jump in this.jumps %}
+      <a href="#jump-{{ jump }}">{{ jump }}</a>{% if not loop.last %},{% endif %}
+      {% endfor %}
+    </h4>
+    {% endif %}
+  </div>
+</div>
+<!--endnoindex-->
+
+<div class="row">
+  <div class="col-md-12">
+    <ul>
+    {% for speaker in this.speakers %}
+      {% if this.jumps|length > 0 %}
+      {% if speaker['purged'].startswith(this.jumps|first) %}
+    </ul>
+    <!--noindex-->
+    <h4 id="jump-{{ this.jumps|first }}">{{ this.jumps.pop(0) }} (<a href="#jumps">Back to top</a>)</h4>
+    <!--endnoindex-->
+    <ul>
+      {% endif %}
+      {% endif %}
+      <li>
+        {% if speaker.mlink %}<a class="mlink" data-popup="{{ '/Biographies/%s/@popup'|format(speaker.mlink)|url }}" href="{{ '/Biographies/%s/'|format(speaker.mlink)|url }}">{% endif %}{{ speaker.name }}{% if speaker.mlink %}</a>{% endif %}:
+        {% for year in speaker.years %}
+        <a href="{{ '/BMC/%s/'|format(year)|url }}">{{ year }}</a>{% if not loop.last %},{% endif %}
+        {% endfor %}
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<!-- END MAIN BODY -->
+
+{% endblock %}
