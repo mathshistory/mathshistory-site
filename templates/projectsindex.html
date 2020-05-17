@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Projects Index{% endblock %}
+{% block title %}{{ this.title }}{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -10,8 +10,10 @@
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-    <h1>Students' Projects</h1>
-    <h3>Index</h3>
+    <h1>{{ this.title }}</h1>
+    {% if this.content %}
+    {{ this.content }}
+    {% endif %}
   </div>
 </div>
 

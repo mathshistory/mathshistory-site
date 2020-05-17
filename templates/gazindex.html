@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Mathematical Gazetteer of the British Isles{% endblock %}
+{% block title %}{{ this.title }}{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -10,8 +10,10 @@
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-    <h3>Mathematical Gazetteer of the British Isles</h3>
-    <h4>Places</h4>
+    <h3>{{ this.title }}</h3>
+    {% if this.content %}
+    {{ this.content }}
+    {% endif %}
   </div>
 </div>
 
@@ -20,6 +22,7 @@
 <!--noindex-->
 <div class="row">
   <div class="col-md-8">
+    <h4>Places</h4>
     <ul>
       {% for place in this.children.filter(F._model == 'gazplace').order_by('place') %}
       <li><a href="{{ place|url }}">{{ place.place }}</a></li>

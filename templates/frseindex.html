@@ -16,27 +16,16 @@
 <meta name="twitter:description" content="A list of Fellows of the Royal Society of Edinburgh who were also mathematicians, ordered {% if this.order_by == '_slug' %}alphabetically by name{% else %}chronologically by election year{% endif %}." />
 {% endblock %}
 
-{% block title %}Fellows of the Royal Society of Edinburgh{% endblock %}
+{% block title %}{{ this.title }}{% endblock %}
 
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-    <h1>Fellows of the Royal Society of Edinburgh</h1>
+    <h1>{{ this.title }}</h1>
     <h3>{% if this.order_by == '_slug' %}Alphabetical{% else %}Chronological{% endif %} List</h3>
-    <p>
-      Below is a list of about 330 Fellows of the Royal Society of Edinburgh who were (among other things) mathematicians.
-      <br/>
-      You can find out more about them by clicking the link alongside. For those with a biography in our archive there is also a link to the biography.
-    </p>
-    <hr/>
-    <p>
-      {% if this.order_by == '_slug' %}
-      There is also a <a href="{{ '/Societies/RSE/FRSE/chronological/'|url }}">list ordered by date of election</a>,
-      {% else %}
-      There is also a <a href="{{ '/Societies/RSE/FRSE/'|url }}">list ordered alphabetically</a>,
-      {% endif %}
-      and you can also read about <a href="{{ '/Societies/RSE'|url }}">the history of the RSE</a>.
-    </p>
+    {% if this.content %}
+    {{ this.content }}
+    {% endif %}
     <hr/>
   </div>
 </div>

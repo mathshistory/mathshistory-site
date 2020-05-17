@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Mathematicians By Country{% endblock %}
+{% block title %}{{ this.title }}{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -11,7 +11,10 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h2>Mathematicians By Country</h2>
+    <h2>{{ this.title }}</h2>
+    {% if this.content %}
+    {{ this.content }}
+    {% endif %}
   </div>
 </div>
 

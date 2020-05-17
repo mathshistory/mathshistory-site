@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Famous Curves Index{% endblock %}
+{% block title %}{{ this.title }}{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -10,7 +10,10 @@
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-    <h1>Famous Curves Index</h1>
+    <h1>{{ this.title }}</h1>
+    {% if this.content %}
+    {{ this.content }}
+    {% endif %}
   </div>
 </div>
 
