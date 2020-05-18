@@ -410,13 +410,16 @@ def correct_link(link, record):
 NON_ITALIC_PATTERN = re.compile(r'([\d\[\]\(\)]+)')
 def fix_italics(x):
     try:
-        s = BeautifulSoup(x, 'html.parser')
+        s = BeautifulSoup(x, 'html5lib')
         for text_node in list(s.strings):
             if re.search(NON_ITALIC_PATTERN, text_node.string):
                 new_html = re.sub(NON_ITALIC_PATTERN, r'<span class="non-italic">\1</span>', text_node.string)
                 new_soup = BeautifulSoup(new_html, 'html.parser')
                 text_node.replace_with(new_soup)
-        return str(s)
+        out = ''
+        for child in s.body.children:
+            out += '%s\n' % str(child)
+        return out
     except:
         return x
 
