@@ -8,6 +8,7 @@ from urllib.parse import urljoin
 
 import time
 import os
+import datetime
 
 class MathshistoryJinjaPlugin(Plugin):
     name = 'mathshistory-jinja'
@@ -52,9 +53,24 @@ class MathshistoryJinjaPlugin(Plugin):
             absolute = urljoin(base, url_path)
             return absolute
 
+        def tense(year):
+            year_now = datetime.datetime.now().year
+            year = int(year)
+            if year <= year_now:
+                return 'was'
+            else:
+                return 'will be'
+
+        def tense_plural(year):
+            if tense(year) == 'was':
+                return 'were'
+            return tense(year)
+
         self.env.jinja_env.filters['refs_format'] = refs_format
         self.env.jinja_env.filters['basename'] = basename
         self.env.jinja_env.filters['without_ext'] = without_ext
         self.env.jinja_env.filters['format_year'] = format_year
         self.env.jinja_env.filters['any_url'] = any_url
         self.env.jinja_env.filters['canonical_url'] = canonical_url
+        self.env.jinja_env.filters['tense'] = tense
+        self.env.jinja_env.filters['tense_plural'] = tense_plural
