@@ -416,9 +416,7 @@ def fix_italics(x):
                 new_html = re.sub(NON_ITALIC_PATTERN, r'<span class="non-italic">\1</span>', text_node.string)
                 new_soup = BeautifulSoup(new_html, 'html.parser')
                 text_node.replace_with(new_soup)
-        out = ''
-        for child in s.body.children:
-            out += '%s\n' % str(child)
+        out = ''.join((str(child) for child in s.body.children))
         return out
     except:
         return x
