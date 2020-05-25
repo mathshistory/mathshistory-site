@@ -115,3 +115,7 @@ table {
   border: none;
   margin: 5px 0 5px 10px;
 }
+
+pre {
+  margin-top: 1rem;
+}

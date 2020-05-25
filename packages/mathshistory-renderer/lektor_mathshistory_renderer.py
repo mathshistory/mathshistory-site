@@ -5,6 +5,8 @@ from weakref import ref as weakref
 from werkzeug.urls import url_parse
 import traceback
 import html
+import random
+import string
 
 from bs4 import BeautifulSoup
 #import html5lib
@@ -87,6 +89,8 @@ def purge(w):
 
 
 def render(source, record):
+    katexstorage = {}
+
     # convert html character references (ie. &#62;) to unicode
     source = html.unescape(source)
 
@@ -112,7 +116,7 @@ def render(source, record):
 
     # convert latex to katex
     regex = re.compile(r'<latex>\s*(?P<latex>.*?)\s*</latex>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: katexrender(match, record), source)
+    source = re.sub(regex, lambda match: katexrender(match, record, katexstorage), source)
 
     # convert ^superscript
     regex = re.compile(r'\^([^\s{}]+)', re.MULTILINE | re.DOTALL)
@@ -199,7 +203,7 @@ def render(source, record):
     # other from the htmlformat function in the stack
 
     # new (improved?) break-adder
-    TAGS_MATCHER = r'</?((?:n)|(?:table)|(?:tr)|(?:td(\s+colspan="?\d"?)?)|(?:figure)|(?:p)|(?:br)|(?:li)|(?:ol)|(?:ul)|(?:div(\s+id))|(?:script)|(?:input)|(?:button)|(?:br ?/?)|(?:p)|(?:blockquote)|(?:code)|(?:h\d))>'
+    TAGS_MATCHER = r'</?((?:n)|(?:table)|(?:tr)|(?:td(\s+colspan="?\d"?)?)|(?:figure)|(?:p)|(?:br)|(?:li)|(?:ol)|(?:ul)|(?:div(\s+id))|(?:script)|(?:input)|(?:button)|(?:br ?/?)|(?:p)|(?:blockquote)|(?:code)|(?:h\d)|(?:hr ?/?))>'
     regex = re.compile(r'(?<!%s)\s*?\n(?!\s*%s)' % (TAGS_MATCHER, TAGS_MATCHER), re.MULTILINE | re.DOTALL)
     source = re.sub(regex, '\n<br>\n', source)
 
@@ -226,6 +230,10 @@ def render(source, record):
     source = tags_to_unicode(source)
 
     source = fix_italics(source, record)
+
+    # put the katex formulas back in
+    for key, html_formula in katexstorage.items():
+        source = source.replace(key, html_formula)
 
     return source
 
@@ -353,14 +361,19 @@ def drender(match, record):
     else:
         return '<img class="diagram" src="%s" />' % href
 
-def katexrender(match, record):
+def katexrender(match, record, storage):
     latex = match.group('latex')
     p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     out, err = p.communicate(latex.encode('utf-8'))
     if p.returncode != 0:
         return '<span class="math-error">%s</span>' % latex
     generated_html = out.decode('utf-8')
-    return '<span class="math">%s</span>' % generated_html.strip()
+
+    # save the formula to storage
+    random_string = ''.join(random.choices(string.ascii_uppercase, k=10))
+    storage[random_string] = generated_html.strip()
+
+    return '<span class="math">%s</span>' % random_string
 
 def correct_link(link, record):
     url = url_parse(link)
@@ -376,6 +389,7 @@ def correct_link(link, record):
 # hack function, goes through the entire document and fixes the italics
 # this might be quite slow. but John likes non-italic numbers/brackets, so it has to stay for now
 NON_ITALIC_PATTERN = re.compile(r'([\d\[\]\(\)]+)')
+NON_ITALIC_DONT_MATCH_TAG = ('pre','code')
 def fix_italics(x, record):
     try:
         s = BeautifulSoup(x, 'html5lib')
@@ -383,6 +397,17 @@ def fix_italics(x, record):
         # make numbers non-italic
         for text_node in list(s.strings):
             if re.search(NON_ITALIC_PATTERN, text_node.string):
+                # check this isn't in a tag we are supposed to leave alone
+                parent = text_node.parent
+                dontApply = False
+                while parent and parent.name != 'body':
+                    if parent.name in NON_ITALIC_DONT_MATCH_TAG:
+                        dontApply = True
+                        break
+                    parent = parent.parent
+                if dontApply:
+                    continue
+
                 new_html = re.sub(NON_ITALIC_PATTERN, r'<span class="non-italic">\1</span>', text_node.string)
                 new_soup = BeautifulSoup(new_html, 'html.parser')
                 text_node.replace_with(new_soup)
@@ -413,6 +438,7 @@ def fix_italics(x, record):
         out = ''.join((str(child) for child in s.body.children))
         return out
     except:
+        traceback.print_exc()
         return x
 
 
