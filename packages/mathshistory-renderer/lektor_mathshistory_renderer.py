@@ -389,6 +389,7 @@ def correct_link(link, record):
 # hack function, goes through the entire document and fixes the italics
 # this might be quite slow. but John likes non-italic numbers/brackets, so it has to stay for now
 NON_ITALIC_PATTERN = re.compile(r'([\d\[\]\(\)]+)')
+NON_ITALIC_DONT_MATCH_TAG = ('pre','code')
 def fix_italics(x, record):
     try:
         s = BeautifulSoup(x, 'html5lib')
@@ -396,6 +397,17 @@ def fix_italics(x, record):
         # make numbers non-italic
         for text_node in list(s.strings):
             if re.search(NON_ITALIC_PATTERN, text_node.string):
+                # check this isn't in a tag we are supposed to leave alone
+                parent = text_node.parent
+                dontApply = False
+                while parent and parent.name != 'body':
+                    if parent.name in NON_ITALIC_DONT_MATCH_TAG:
+                        dontApply = True
+                        break
+                    parent = parent.parent
+                if dontApply:
+                    continue
+
                 new_html = re.sub(NON_ITALIC_PATTERN, r'<span class="non-italic">\1</span>', text_node.string)
                 new_soup = BeautifulSoup(new_html, 'html.parser')
                 text_node.replace_with(new_soup)
@@ -426,6 +438,7 @@ def fix_italics(x, record):
         out = ''.join((str(child) for child in s.body.children))
         return out
     except:
+        traceback.print_exc()
         return x
 
 
