@@ -13,3 +13,6 @@ name = Production/Live
 target = rsync://df58@l-mathshist-w1.st-andrews.ac.uk/var/www/html
 enabled = yes
 default = no
+
+[packages]
+lektor-limit-dependencies = 0.1a1
