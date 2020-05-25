@@ -38,6 +38,12 @@ tippy('.reference',{
   content(element) {
     return element.getAttribute('data-popup')
   },
+  onCreate(instance) {
+    instance.reference.onclick = function (e) {
+      e.preventDefault();
+      return false;
+    }
+  },
   allowHTML: true,
   trigger: 'click',
   theme: 'reference',
