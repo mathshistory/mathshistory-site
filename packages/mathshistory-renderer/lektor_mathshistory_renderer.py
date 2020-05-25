@@ -186,10 +186,6 @@ def render(source, record):
     regex = re.compile(r'<d\s+(?P<content>.+?)>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, lambda match: drender(match, record), source)
 
-    # convert the link location
-    regex = re.compile(r'<a\s+href\s*=\s*[\'"]?(?P<href>.+?)[\'"]?\s*>(?P<text>.*?)<\/a>')
-    source = re.sub(regex, lambda match: linkrender(match, record), source)
-
     # convert [refnum]
     regex = re.compile(r'\[(?P<number>\d+)\]', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, lambda match: referencerender(match, record), source)
@@ -198,10 +194,6 @@ def render(source, record):
     # convert <T num>
     regex = re.compile(r'<T (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
     source = re.sub(regex, lambda match: trender(match, record), source)
-
-    # convert the link location
-    regex = re.compile(r'(?P<tag><img\s+.+?>)', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: imgreplace(match, record), source)
 
 
     # other from the htmlformat function in the stack
@@ -233,7 +225,7 @@ def render(source, record):
 
     source = tags_to_unicode(source)
 
-    source = fix_italics(source)
+    source = fix_italics(source, record)
 
     return source
 
@@ -361,20 +353,6 @@ def drender(match, record):
     else:
         return '<img class="diagram" src="%s" />' % href
 
-def linkrender(match, record):
-    text = match.group('text')
-    href = match.group('href')
-    # convert biography links into m links
-    if href.startswith('/Biographies/') and '#' not in href:
-        if (href.endswith('/') and href.count('/') == 3) or href.count('/') == 2:
-            name = href[13:]
-            if href.endswith('/'):
-                name = name[:-1]
-
-            return mlink(name, text, record)
-    href = correct_link(href, record)
-    return '<a href="%s">%s</a>' % (href, text)
-
 def katexrender(match, record):
     latex = match.group('latex')
     p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
@@ -384,38 +362,54 @@ def katexrender(match, record):
     generated_html = out.decode('utf-8')
     return '<span class="math">%s</span>' % generated_html.strip()
 
-def imgreplace(match, record):
-    tag = match.group('tag')
-    soup = BeautifulSoup(tag, 'html5lib')
-    img = soup.find('img')
-    if img == None:
-        print('IMAGE ERROR: %s ' % tag)
-    src = img['src']
-    img['src'] = correct_link(img['src'], record)
-    fixed = str(img).strip()
-    return fixed
-
 def correct_link(link, record):
     url = url_parse(link)
     if not url.scheme:
-        context = get_ctx()
-        if context:
-            source = context.source
-            link = source.url_to(link)
+        #context = get_ctx()
+        #if context:
+        #    source = context.source
+        #    link = source.url_to(link)
+        link = record.url_to(link)
     link = escape(link)
     return link
 
 # hack function, goes through the entire document and fixes the italics
 # this might be quite slow. but John likes non-italic numbers/brackets, so it has to stay for now
 NON_ITALIC_PATTERN = re.compile(r'([\d\[\]\(\)]+)')
-def fix_italics(x):
+def fix_italics(x, record):
     try:
         s = BeautifulSoup(x, 'html5lib')
+
+        # make numbers non-italic
         for text_node in list(s.strings):
             if re.search(NON_ITALIC_PATTERN, text_node.string):
                 new_html = re.sub(NON_ITALIC_PATTERN, r'<span class="non-italic">\1</span>', text_node.string)
                 new_soup = BeautifulSoup(new_html, 'html.parser')
                 text_node.replace_with(new_soup)
+
+        # fix the urls in images
+        for img in s.find_all('img'):
+            img['src'] = correct_link(img['src'], record)
+
+        # fix the urls in links
+        for link in s.find_all('a'):
+            if link.has_attr('href') and link['href'].strip() != '':
+                # convert /Biographies/ urls to mlinks
+                href = link['href']
+                if href.startswith('/Biographies/') and '#' not in href:
+                    if (href.endswith('/') and href.count('/') == 3) or href.count('/') == 2:
+                        name = href[13:]
+                        if href.endswith('/'):
+                            name = name[:-1]
+                        mlink_html = mlink(name, link.text, record)
+                        new_soup = BeautifulSoup(mlink_html, 'html.parser')
+                        text_node.replace_with(new_soup)
+                        continue
+
+                # non-urls get standard conversion
+                link['href'] = correct_link(link['href'], record)
+
+        # render it back to a string
         out = ''.join((str(child) for child in s.body.children))
         return out
     except:
