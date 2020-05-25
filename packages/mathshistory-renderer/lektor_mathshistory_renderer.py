@@ -5,6 +5,8 @@ from weakref import ref as weakref
 from werkzeug.urls import url_parse
 import traceback
 import html
+import random
+import string
 
 from bs4 import BeautifulSoup
 #import html5lib
@@ -87,6 +89,8 @@ def purge(w):
 
 
 def render(source, record):
+    katexstorage = {}
+
     # convert html character references (ie. &#62;) to unicode
     source = html.unescape(source)
 
@@ -112,7 +116,7 @@ def render(source, record):
 
     # convert latex to katex
     regex = re.compile(r'<latex>\s*(?P<latex>.*?)\s*</latex>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: katexrender(match, record), source)
+    source = re.sub(regex, lambda match: katexrender(match, record, katexstorage), source)
 
     # convert ^superscript
     regex = re.compile(r'\^([^\s{}]+)', re.MULTILINE | re.DOTALL)
@@ -226,6 +230,10 @@ def render(source, record):
     source = tags_to_unicode(source)
 
     source = fix_italics(source, record)
+
+    # put the katex formulas back in
+    for key, html_formula in katexstorage.items():
+        source = source.replace(key, html_formula)
 
     return source
 
@@ -353,14 +361,19 @@ def drender(match, record):
     else:
         return '<img class="diagram" src="%s" />' % href
 
-def katexrender(match, record):
+def katexrender(match, record, storage):
     latex = match.group('latex')
     p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     out, err = p.communicate(latex.encode('utf-8'))
     if p.returncode != 0:
         return '<span class="math-error">%s</span>' % latex
     generated_html = out.decode('utf-8')
-    return '<span class="math">%s</span>' % generated_html.strip()
+
+    # save the formula to storage
+    random_string = ''.join(random.choices(string.ascii_uppercase, k=10))
+    storage[random_string] = generated_html.strip()
+
+    return '<span class="math">%s</span>' % random_string
 
 def correct_link(link, record):
     url = url_parse(link)
