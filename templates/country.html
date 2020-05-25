@@ -32,7 +32,7 @@
 <div class="row">
   <div class="col-md-8">
     <ul>
-      {% for person in mathematicians_by_country(site, this._slug) -%}
+      {% for person in site.query('/Biographies/').filter(F.country == this._slug).order_by('_slug')|limit_dependencies %}
       <li><a href="{{ person|url }}">{{ person.shortname }}</a>{% if person.birthyear %} ({{ person.birthyear|format_year }} - {% if person.deathyear %}{{ person.deathyear|format_year }}{% endif %}){% endif %}</li>
       {% endfor %}
     </ul>
@@ -42,8 +42,8 @@
   <aside class="col-md-4">
     <div class="p-3 mb-3 bg-light rounded">
       <h4>Countries</h4>
-      {% for country in all_countries(site) %}
-      <li><a href="{{ '/Countries/%s'|format(country['slug'])|url }}">{{ country['name'] }}</a> ({{ country['number'] }})</li>
+      {% for country in site.query('/Countries') %}
+      <li><a href="{{ country|url }}">{{ country.name }}</a></li>
       {% endfor %}
     </div>
   </aside>
