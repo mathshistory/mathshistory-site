@@ -25,6 +25,12 @@ OUTPUT_PATH = '/OfTheDay'
 _born_cache = None
 _died_cache = None
 
+# thanks to https://stackoverflow.com/a/5891598/2370460
+def suffix(d):
+    return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
+def custom_strftime(format, t):
+    return t.strftime(format).replace('{S}', '%s%s' % (t.day, suffix(t.day)))
+
 
 def random_int(day):
     # setup the random seed
@@ -158,6 +164,11 @@ class OfTheDayPage(VirtualSourceObject):
         for record in records:
             path = self.pad.db.to_fs_path(record.path)
             ctx.record_dependency(path)
+
+    @property
+    def pretty_day(self):
+        thisday_datetime = datetime.datetime.fromtimestamp(time.mktime(time.strptime(self.day, '%m-%d')))
+        return custom_strftime('{S} %B', thisday_datetime)
 
     @property
     def born(self):

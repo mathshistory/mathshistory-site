@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ this.day }} - Mathematicians Of The Day{% endblock %}
+{% block title %}{{ this.pretty_day }} - Mathematicians Of The Day{% endblock %}
 
 {% block head %}
 {{ super() }}
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.day }}">
-<meta property="og:description" content="Mathematicians that were born or died on {{ this.day }}{% if this.quote %}, including a quote from {{ this.quote.person.shortname|e }}{% endif %}">
+<meta property="og:title" content="{{ this.pretty_day }}">
+<meta property="og:description" content="Mathematicians that were born or died on {{ this.pretty_day }}{% if this.quote %}, including a quote from {{ this.quote.person.shortname|e }}{% endif %}">
 <meta property="og:site_name" content="Maths History">
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="{{ this|canonical_url }}">
@@ -23,8 +23,8 @@
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
-<meta name="twitter:title" content="{{ this.day }}" />
-<meta name="twitter:description" content="Mathematicians that were born or died on {{ this.day }}{% if this.quote %}, including a quote from {{ this.quote.person.shortname|e }}{% endif %}" />
+<meta name="twitter:title" content="{{ this.pretty_day }}" />
+<meta name="twitter:description" content="Mathematicians that were born or died on {{ this.pretty_day }}{% if this.quote %}, including a quote from {{ this.quote.person.shortname|e }}{% endif %}" />
 {% if this.quote and thumbnail %}
 <meta name="twitter:image" content="{{ thumbnail|canonical_url }}" />
 {% endif %}
@@ -35,7 +35,7 @@
 <div class="row">
   <div class="col-md-12">
     <h2>Mathematicians Of The Day</h2>
-    <h3>{{ this.day }}</h3>
+    <h3>{{ this.pretty_day }}</h3>
   </div>
 </div>
 
