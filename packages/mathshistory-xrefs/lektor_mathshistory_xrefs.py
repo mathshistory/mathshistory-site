@@ -193,7 +193,7 @@ class MathshistoryXrefsPlugin(Plugin):
                 title = 'Famous Curves: %s' % record['name']
                 sort = 2
             elif model == 'projectpage':
-                title = 'Student Projects: %s: Chapter %s' % record.parent['title'] % record['chapter']
+                title = 'Student Projects: %s: Chapter %s' % (record.parent['title'], record['chapter'])
                 sort = 5
             elif model == 'society':
                 title = 'Societies: %s' % record['name']
