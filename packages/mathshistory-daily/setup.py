@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_daily'],
     url='https://github.com/mathshistory/mathshistory-daily',
-    version='0.4.0',
+    version='0.4.1',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
