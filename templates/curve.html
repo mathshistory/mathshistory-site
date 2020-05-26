@@ -53,12 +53,14 @@
     {% endif %}
   </div>
 
+  {% if this.appletoptions %}
   <!--noindex-->
   <div class="col-md-12 nonoscript">
     <hr/>
     <p class="mb-0"><a href="{{ '%s/@curvesapplet'|format(this.path)|url }}">View the interactive version of this curve.</a></p>
   </div>
   <!--endnoindex-->
+  {% endif %}
 </div>
 
 <hr/>
