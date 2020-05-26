@@ -100,7 +100,7 @@ class MathshistoryXrefsPlugin(Plugin):
 
     def process_source(self, source, con):
         # for now, make it only history topics
-        allowed_types = ['historytopic', 'curve', 'honour', 'projectpage', 'society', 'page']
+        allowed_types = ['historytopic', 'curve', 'projectpage', 'society', 'page']
         if type(source) != Page or source['_model'] not in allowed_types:
             return
 
@@ -192,11 +192,8 @@ class MathshistoryXrefsPlugin(Plugin):
             elif model == 'curve':
                 title = 'Famous Curves: %s' % record['name']
                 sort = 2
-            elif model == 'honour':
-                title = 'Honours: %s' % record['title']
-                sort = 3
             elif model == 'projectpage':
-                title = 'Student Projects: %s' % record.parent['title']
+                title = 'Student Projects: %s: Chapter %s' % record.parent['title'] % record['chapter']
                 sort = 5
             elif model == 'society':
                 title = 'Societies: %s' % record['name']
