@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_curvesapplet'],
     url='https://github.com/mathshistory/mathshistory-curvesapplet',
-    version='0.1.0',
+    version='0.1.1',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
