@@ -203,7 +203,7 @@ def render(source, record):
     # other from the htmlformat function in the stack
 
     # new (improved?) break-adder
-    TAGS_MATCHER = r'</?((?:n)|(?:table)|(?:tr)|(?:td(\s+colspan="?\d"?)?)|(?:figure)|(?:p)|(?:br)|(?:li)|(?:ol)|(?:ul)|(?:div(\s+id))|(?:script)|(?:input)|(?:button)|(?:br ?/?)|(?:p)|(?:blockquote)|(?:code)|(?:h\d)|(?:hr ?/?))>'
+    TAGS_MATCHER = r'</?((?:n)|(?:table)|(?:tr)|(?:td(\s+colspan="?\d"?)?)|(?:figure)|(?:p)|(?:br)|(?:li)|(?:ol)|(?:ul)|(?:div(\s+id))|(?:script)|(?:input)|(?:button)|(?:br ?/?)|(?:p)|(?:blockquote)|(?:code)|(?:h\d)|(?:hr ?/?)|(?:area)|(?:map))>'
     regex = re.compile(r'(?<!%s)\s*?\n(?!\s*%s)' % (TAGS_MATCHER, TAGS_MATCHER), re.MULTILINE | re.DOTALL)
     source = re.sub(regex, '\n<br>\n', source)
 

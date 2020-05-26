@@ -120,6 +120,8 @@
   {% if not this.path.startswith('/Extras/') %}
   <script src="{{ '/static/js/extras-popup.js'|asseturl }}"></script>
   {% endif %}
+  <script src="{{ '/static/js/imageMapResizer.min.js'|asseturl }}"></script>
+  <script>imageMapResize();</script>
   {% endblock %}
 </body>
 
