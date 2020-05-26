@@ -46,10 +46,10 @@ class MathshistoryCurvesappletPlugin(Plugin):
             if not isinstance(record, Page):
                 return
 
-            if record['_model'] == 'curve':
+            if record['_model'] == 'curve' and record['appletoptions'].strip() != '':
                 yield CurvesApplet(record)
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
         def curvesapplet_virtual_path_resolver(node, pieces):
-            if len(pieces) == 0:
+            if len(pieces) == 0 and node['appletoptions'].strip() != '':
                 return CurvesApplet(node)
