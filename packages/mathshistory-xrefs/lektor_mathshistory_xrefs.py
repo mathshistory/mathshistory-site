@@ -196,7 +196,7 @@ class MathshistoryXrefsPlugin(Plugin):
                 title = 'Honours: %s' % record['title']
                 sort = 3
             elif model == 'projectpage':
-                title = 'Student Projects: %s' % record.parent['title']
+                title = 'Student Projects: %s: Chapter %s' % record.parent['title'] % record['chapter']
                 sort = 5
             elif model == 'society':
                 title = 'Societies: %s' % record['name']
