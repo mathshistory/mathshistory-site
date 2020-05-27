@@ -1,6 +1,6 @@
 // config properties for the openlayer maps
 var ATTRIBUTIONS = 'All maps © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.'
-var TILE_URL = 'https://l-mathshist-w1.st-andrews.ac.uk/mapimages/{z}/{x}/{y}.png'
+var TILE_URL = 'https://mathshistory.st-andrews.ac.uk/mapimages/{z}/{x}/{y}.png'
 var MIN_ZOOM = 1
 var MAX_ZOOM = 9
 
