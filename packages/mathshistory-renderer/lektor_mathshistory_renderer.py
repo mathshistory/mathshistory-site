@@ -314,7 +314,7 @@ def trender(match, record):
     translation = translation[0]
     text = translation['translation'].__html__().unescape().strip()
     escaped_text = html.escape(text, quote=True)
-    generated_html = '<span><a data-popup="%s" class="translation nonoscript">&#9417;</a><noscript>(%s)</noscript></span>' % (escaped_text, text)
+    generated_html = '<span><a data-popup="%s" class="translation nonoscript non-italic">&#9417;</a><noscript>(%s)</noscript></span>' % (escaped_text, text)
     return generated_html
 
 def drender(match, record):
