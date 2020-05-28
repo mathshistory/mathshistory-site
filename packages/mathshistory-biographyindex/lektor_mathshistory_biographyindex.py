@@ -47,10 +47,26 @@ class ChronologicalIndexPage(VirtualSourceObject):
             found.append({
                 'person': person,
                 'purged': purged,
-                'birthyear': person['birthyear']
+                'display': person['shortname'],
+                'birthyear': person['birthyear'],
+                'deathyear': person['birthyear']
             })
+
+        # also add in the entries in biographyindex
+        for link in self.pad.get('/Biographies')['otherlinks'].blocks:
+            if not link['birthyear'] or not link['deathyear']:
+                continue
+            text = link['text']
+            purged = purge_mlink(text).lower()
+            found.append({
+                'person': link['page'],
+                'display': text,
+                'purged': purged,
+                'birthyear': link['birthyear'],
+                'deathyear': link['deathyear']
+            })
+
         found = sorted(found, key=lambda p: (p['birthyear'], p['purged']))
-        found = [p['person'] for p in found]
         return found
 
     @property
@@ -83,20 +99,23 @@ class BiographyIndexPage(VirtualSourceObject):
                     found.append({
                         'person': person,
                         'display': display,
-                        'purged': purged
+                        'purged': purged,
+                        'birthyear': person['birthyear'],
+                        'deathyear': person['deathyear']
                     })
 
         # also add in the entries in biographyindex
-        for link in pad.get('/Biographies')['otherlinks'].blocks:
+        for link in self.pad.get('/Biographies')['otherlinks'].blocks:
             text = link['text']
-            page = link['page']
             purged = purge_mlink(text).lower()
             letter = purged[0]
             if letter == self.letter:
                 found.append({
                     'person': text,
-                    'display': text,
-                    'purged': purged
+                    'display': link['page'],
+                    'purged': purged,
+                    'birthyear': link['birthyear'],
+                    'deathyear': link['deathyear']
                 })
 
         found = sorted(found, key=lambda p: p['purged'])
