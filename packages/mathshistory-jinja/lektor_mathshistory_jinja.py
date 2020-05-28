@@ -33,9 +33,12 @@ class MathshistoryJinjaPlugin(Plugin):
             return os.path.splitext(name)[0]
 
         def format_year(year):
-            if year < 0:
-                year = '%s BC' % (year * -1)
-            return year
+            try:
+                if year < 0:
+                    year = '%s BC' % (year * -1)
+                return year
+            except:
+                return False
 
         def any_url(link):
             ctx = get_ctx()

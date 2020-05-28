@@ -45,7 +45,7 @@
       <ul>
         {% endif %}
         {% endif %}
-        <li><a href="{{ person['person']|url }}">{{ person['display'] }}</a>{% if person['person'].birthyear|format_year %} ({{ person['person'].birthyear|format_year }} - {% if person['person'].deathyear %}{{ person['person'].deathyear|format_year }}{% endif %}){% endif %}</li>
+        <li><a href="{{ person['person']|url }}">{{ person['display'] }}</a>{% if person['birthyear']|format_year %} ({{ person['birthyear']|format_year }} - {% if person['deathyear'] %}{{ person['deathyear']|format_year }}{% endif %}){% endif %}</li>
       {% endfor %}
       </ul>
       <!--endnoindex-->
