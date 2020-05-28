@@ -85,6 +85,20 @@ class BiographyIndexPage(VirtualSourceObject):
                         'display': display,
                         'purged': purged
                     })
+
+        # also add in the entries in biographyindex
+        for link in pad.get('/Biographies')['otherlinks'].blocks:
+            text = link['text']
+            page = link['page']
+            purged = purge_mlink(text).lower()
+            letter = purged[0]
+            if letter == self.letter:
+                found.append({
+                    'person': text,
+                    'display': text,
+                    'purged': purged
+                })
+
         found = sorted(found, key=lambda p: p['purged'])
         return found
 
