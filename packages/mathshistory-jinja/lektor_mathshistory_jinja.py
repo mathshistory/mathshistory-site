@@ -5,6 +5,7 @@ from lektor.context import get_ctx
 from markupsafe import escape
 from werkzeug.urls import url_parse
 from urllib.parse import urljoin
+from num2words import num2words
 
 import time
 import os
@@ -74,3 +75,4 @@ class MathshistoryJinjaPlugin(Plugin):
         self.env.jinja_env.filters['canonical_url'] = canonical_url
         self.env.jinja_env.filters['tense'] = tense
         self.env.jinja_env.filters['tense_plural'] = tense_plural
+        self.env.jinja_env.filters['num2words'] = num2words
