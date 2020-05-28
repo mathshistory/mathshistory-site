@@ -118,6 +118,7 @@ class MathshistoryPostersPlugin(Plugin):
 
     def on_setup_env(self, **extra):
         self.env.add_build_program(BiographyPoster, BiographyPosterBuildProgram)
+        self.env.add_build_program(BiographyLivedPoster, BiographyPosterBuildProgram)
 
         self.env.jinja_env.filters['has_born_poster'] = has_born_poster
         self.env.jinja_env.filters['has_died_poster'] = has_died_poster
