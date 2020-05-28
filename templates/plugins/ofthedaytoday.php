@@ -12,6 +12,15 @@
 
     // get the location, and echo it out
     $location = sprintf('../oftheday-%02d-%02d/index.html', $month, $day);
-    readfile($location);
+    //readfile($location);
+
+    // create the theorem
+    $theorem = "<hr/>\n<div class=\"row\">\n  <div class=\"col-md-12\">\n    <a href=\"https://www.theoremoftheday.org/\">Theorem of the day</a> from Robin Whitty\n  </div>\n</div>";
+
+    // need to modify it for theorem of the day
+    $contents = file_get_contents($location);
+    $contents = str_replace("<!-- insert theorem here -->", $theorem, $contents);
+
+    echo $contents;
 
 ?>

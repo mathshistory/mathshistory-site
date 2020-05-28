@@ -119,11 +119,14 @@
     <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
     {% if numbigimages > 0 %}
     <br/>
-    View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
+    View {{ numbigimages|num2words }} larger picture{% if numbigimages > 1 %}s{% endif %}</a>
     {% endif %}
   </div>
   {% endif %}
 </div>
 {% endif %}
+
+{# do not change the line below! it is used by ofthedaytoday.php to add the theorem in #}
+<!-- insert theorem here -->
 
 {% endblock %}

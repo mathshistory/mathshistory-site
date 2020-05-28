@@ -23,9 +23,10 @@ setup(
     long_description_content_type='text/markdown',
     name='lektor-mathshistory-jinja',
     packages=find_packages(),
+    install_requires=['num2words'],
     py_modules=['lektor_mathshistory_jinja'],
     url='https://github.com/mathshistory/mathshistory-jinja',
-    version='0.5.0',
+    version='0.6.0',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',

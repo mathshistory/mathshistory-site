@@ -82,7 +82,7 @@
     <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
     {% if numbigimages > 0 %}
     <br/>
-    View {{ numbigimages }} More Image{% if numbigimages > 1 %}s{% endif %}</a>
+    View {{ numbigimages|num2words }} larger picture{% if numbigimages > 1 %}s{% endif %}</a>
     {% endif %}
   </div>
   {% endif %}
@@ -98,11 +98,19 @@
   </div>
 </div>
 
-{% if this.quotations and this.quotations.blocks|length > 0 %}
+{% set hasquotations = this.quotations and this.quotations.blocks|length > 0 %}
+{% set hascountry = this.country %}
+{% set hasposter = this|has_lived_poster %}
+
+{% if hasquotations or hascountry or hasposter %}
 <hr/>
 <div class="row mt-2">
   <div class="col-md-12">
-    <a href="{{ '%s/@quotations'|format(this.path)|url }}">Quotations by {{ this.shortname }}</a>
+    {% if hasquotations %}<a href="{{ '%s/@quotations'|format(this.path)|url }}">Quotations by {{ this.shortname }}</a>{% endif %}
+    {% if hasquotations and (hascountry or hasposter) %}<br/>{% endif %}
+    {% if hascountry %}<a href="{{ '/Countries/%s/'|format(this.country)|url }}">Other Mathematicians born in {{ this.country }}</a>{% endif %}
+    {% if hasposter and hascountry %}<br/>{% endif %}
+    {% if hasposter %}<a href="{{ '%s/@poster/lived'|format(this.path)|url }}">A Poster of {{ this.shortname }}</a>{% endif %}
   </div>
 </div>
 {% endif %}

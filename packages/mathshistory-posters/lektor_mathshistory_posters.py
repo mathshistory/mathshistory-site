@@ -17,6 +17,7 @@ class BiographyPoster(VirtualSourceObject):
     def __init__(self, parent, type):
         VirtualSourceObject.__init__(self, parent)
         self.type = type
+        self.template = 'plugins/biographyposter.html'
 
     @property
     def borndied(self):
@@ -51,6 +52,20 @@ class BiographyPoster(VirtualSourceObject):
         return build_url([self.parent.url_path, 'poster', self.type])
 
 
+class BiographyLivedPoster(VirtualSourceObject):
+    def __init__(self, parent):
+        VirtualSourceObject.__init__(self, parent)
+        self.template = 'plugins/biographylivedposter.html'
+
+    @property
+    def path(self):
+        return build_url([self.parent.path, '@%s/' % VIRTUAL_SOURCE_ID, 'lived'])
+
+    @property
+    def url_path(self):
+        return build_url([self.parent.url_path, 'poster', 'lived'])
+
+
 class BiographyPosterBuildProgram(BuildProgram):
     def produce_artifacts(self):
         self.declare_artifact(
@@ -59,17 +74,24 @@ class BiographyPosterBuildProgram(BuildProgram):
         )
 
     def build_artifact(self, artifact):
-        artifact.render_template_into('plugins/biographyposter.html', this=self.source)
+        artifact.render_template_into(self.source.template, this=self.source)
 
+def record_has_big_image(record):
+    # does it have a big image
+    return record.attachments.filter(F.main == False).count()
+
+def record_has_summary(record):
+    # does it have a summary?
+    return record['summary'].source.strip() != ''
 
 def can_generate(record, field):
     # does it have a big image
-    has_image = record.attachments.filter(F.main == False).count()
+    has_image = record_has_big_image(record)
     if not has_image:
         return False
 
     # does it have a summary?
-    has_summary = record['summary'].source.strip() != ''
+    has_summary = record_has_summary(record)
     if not has_summary:
         return False
 
@@ -86,6 +108,9 @@ def has_born_poster(record):
     return can_generate(record, 'birthdate')
 def has_died_poster(record):
     return can_generate(record, 'deathdate')
+def has_lived_poster(record):
+    return record_has_big_image(record) and record_has_summary(record)
+
 
 class MathshistoryPostersPlugin(Plugin):
     name = 'mathshistory-posters'
@@ -96,6 +121,7 @@ class MathshistoryPostersPlugin(Plugin):
 
         self.env.jinja_env.filters['has_born_poster'] = has_born_poster
         self.env.jinja_env.filters['has_died_poster'] = has_died_poster
+        self.env.jinja_env.filters['has_lived_poster'] = has_lived_poster
 
         @self.env.generator
         def searchdata_generator(record):
@@ -107,6 +133,8 @@ class MathshistoryPostersPlugin(Plugin):
                     yield BiographyPoster(record, 'born')
                 if has_died_poster(record):
                     yield BiographyPoster(record, 'died')
+                if has_lived_poster(record):
+                    yield BiographyLivedPoster(record)
 
         @self.env.virtualpathresolver('%s' % VIRTUAL_SOURCE_ID)
         def poster_virtual_path_resolver(node, pieces):
@@ -115,3 +143,5 @@ class MathshistoryPostersPlugin(Plugin):
                     return BiographyPoster(node, 'born')
                 if pieces[0] == 'died' and has_died_poster(node):
                     return BiographyPoster(node, 'died')
+                if pieces[0] == 'lived' and has_lived_poster(node):
+                    return BiographyLivedPoster(node)
