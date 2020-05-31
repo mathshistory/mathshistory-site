@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ this.title }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
+<link rel="stylesheet" href="{{ '/static/css/ol.css'|asseturl }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.title }}</h1>
+    {% if this.content %}
+    {{ this.content }}
+    {% endif %}
+  </div>
+</div>
+
+<hr/>
+
+<div class="row">
+  <div class="col-md-12">
+    <div id="map">
+      <noscript>
+        The Paris street map requires JavaScript enabled in your browser to work.
+      </noscript>
+    </div>
+  </div>
+</div>
+
+<script>
+  var mapDataLocation = "{{ '/Parismaps/@parismapdata'|url }}";
+  var parisMapRoot = "{{ '/Parismaps/'|url }}";
+  var selectedPlace = false;
+</script>
+<script src="{{ '/static/js/ol.js'|asseturl }}"></script>
+<script src="{{ '/static/js/interactivemap.js'|asseturl }}"></script>
+<script src="{{ '/static/js/parismap.js'|asseturl }}"></script>
+
+{% endblock %}
