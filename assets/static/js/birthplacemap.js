@@ -11,6 +11,27 @@ request.onreadystatechange = function () {
 request.open('GET', './data.json', true)
 request.send()
 
+function format_latlong(lat, long) {
+  var formatted_lat = ''
+  var formatted_long = ''
+
+  // do lat (north, south)
+  if (lat < 0) {
+    formatted_lat = (lat*-1).toString().replace(',','°') + "'S"
+  } else {
+    formatted_lat = lat.toString().replace(',','°') + "'N"
+  }
+
+  // do long (east, west)
+  if (long < 0) {
+    formatted_long = (long*-1).toString().replace(',','°') + "'W"
+  } else {
+    formatted_long = long.toString().replace(',','°') + "'E"
+  }
+
+  return formatted_lat + ' ' + formatted_long
+}
+
 function loadMap (places) {
 
   // currently selected feature
@@ -27,8 +48,8 @@ function loadMap (places) {
       geometry: new ol.geom.Point(ol.proj.fromLonLat([place.longitude, place.latitude])),
       people: place.people,
       name: place.name,
-      lat: place.longitude,
-      long: place.latitude,
+      lat: place.latitude,
+      long: place.longitude,
       country: place.country,
       links: place.links,
       gaz: place.gaz
@@ -103,7 +124,7 @@ function showPlace (name, people, lat, long, country, links, gaz) {
 
   var latLongHeader = document.getElementById('location-latlong')
   if (lat && long) {
-    latLongHeader.innerText = lat + ', ' + long
+    latLongHeader.innerText = format_latlong(lat, long)
   } else {
     latLongHeader.innerText = ''
   }
