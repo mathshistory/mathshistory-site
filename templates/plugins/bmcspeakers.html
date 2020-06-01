@@ -42,7 +42,7 @@
     <h4 id="jumps">
       Jump to section:
       {% for jump in this.jumps %}
-      <a href="#jump-{{ jump }}">{{ jump }}</a>{% if not loop.last %},{% endif %}
+      <a href="#jump-{{ jump }}" class="jump-label">{{ jump }}</a>{% if not loop.last %},{% endif %}
       {% endfor %}
     </h4>
     {% endif %}
@@ -58,7 +58,7 @@
       {% if speaker['purged'].startswith(this.jumps|first) %}
     </ul>
     <!--noindex-->
-    <h4 id="jump-{{ this.jumps|first }}">{{ this.jumps.pop(0) }} (<a href="#jumps">Back to top</a>)</h4>
+    <h4 id="jump-{{ this.jumps|first }}" class="jump-label">{{ this.jumps.pop(0) }} (<a href="#jumps">Back to top</a>)</h4>
     <!--endnoindex-->
     <ul>
       {% endif %}
