@@ -7,6 +7,7 @@ import traceback
 import html
 import random
 import string
+import requests
 
 from bs4 import BeautifulSoup
 #import html5lib
@@ -16,6 +17,8 @@ from lektor._compat import PY2
 from lektor.context import get_ctx
 from lektor.pluginsystem import Plugin
 from lektor.types import Type
+
+KATEX_SERVER_URL = 'http://127.0.0.1:5002/'
 
 # precompile the regex
 CP_REGEX = re.compile(r'<cp>\s*(.*?)\s*</cp>', re.MULTILINE | re.DOTALL)
@@ -34,7 +37,7 @@ FPLUS_REGEX = re.compile(r'<f\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
 FP_REGEX = re.compile(r'<fp>(.*?)</fp>', re.MULTILINE | re.DOTALL)
 FPLUSPLUS_REGEX = re.compile(r'<f\+\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
 FMINUS_REGEX = re.compile(r'<f->(.*?)</f>', re.MULTILINE | re.DOTALL)
-FMREGEX = re.compile(r'<fm>(.*?)</fm>', re.MULTILINE | re.DOTALL)
+FM_REGEX = re.compile(r'<fm>(.*?)</fm>', re.MULTILINE | re.DOTALL)
 DIAGRAM_REGEX = re.compile(r'<d\s+(?P<content>.+?)>', re.MULTILINE | re.DOTALL)
 REF_REGEX = re.compile(r'\[(?P<number>\d+)\]', re.MULTILINE | re.DOTALL)
 TRANS_REGEX = re.compile(r'<T (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
@@ -133,7 +136,7 @@ def render(source, record):
     source = re.sub(IND_REGEX, r'<div class="indent-paragraph">\1</div>', source)
 
     # convert latex to katex
-    source = re.sub(LATEX_REGEX, lambda match: katexrender(match, record, katexstorage), source)
+    source = re.sub(LATEX_REGEX, lambda match: katexprerender(match, katexstorage), source)
 
     # convert ^superscript
     source = re.sub(SUPERSCRIPT_REGEX, r'<span class="superscript">\1</span>', source)
@@ -173,10 +176,10 @@ def render(source, record):
     source = re.sub(FPLUS_REGEX, r'<span class="bigger">\1</span>', source)
 
     # convert <fp>...</fp>
-    source = re.sub(FPREGEX, r'<span class="bigger">\1</span>', source)
+    source = re.sub(FP_REGEX, r'<span class="bigger">\1</span>', source)
 
     # convert <f++>...</f++>
-    source = re.sub(FPLUSPLUS, r'<span class="bigger"><span class="bigger">\1</span></span>', source)
+    source = re.sub(FPLUSPLUS_REGEX, r'<span class="bigger"><span class="bigger">\1</span></span>', source)
 
     # convert <f->...</f->
     source = re.sub(FMINUS_REGEX, r'<span class="smaller">\1</span>', source)
@@ -234,7 +237,10 @@ def render(source, record):
     source = fix_italics(source, record)
 
     # put the katex formulas back in
-    for key, html_formula in katexstorage.items():
+    latex_array = list(katexstorage.values())
+    html_array = katexrender(latex_array)
+    for idx, key in enumerate(katexstorage.keys()):
+        html_formula = html_array[idx]
         source = source.replace(key, html_formula)
 
     return source
@@ -363,19 +369,46 @@ def drender(match, record):
     else:
         return '<img class="diagram" src="%s" />' % href
 
-def katexrender(match, record, storage):
+
+def katexprerender(match, storage):
     latex = match.group('latex')
-    p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    out, err = p.communicate(latex.encode('utf-8'))
-    if p.returncode != 0:
-        return '<span class="math-error">%s</span>' % latex
-    generated_html = out.decode('utf-8')
 
     # save the formula to storage
     random_string = ''.join(random.choices(string.ascii_uppercase, k=10))
-    storage[random_string] = generated_html.strip()
+    storage[random_string] = latex
 
     return '<span class="math">%s</span>' % random_string
+
+
+def katexrender(latex_array):
+    # special case for empty array
+    if len(latex_array) == 0:
+        return []
+    # try the server first
+    try:
+        return katexrender_server(latex_array)
+    except:
+        # if server error, use stdio
+        return katexrender_stdio(latex_array)
+
+
+def katexrender_server(latex_array):
+    r = requests.post(KATEX_SERVER_URL, json=latex_array)
+    output_array = r.json()
+    return output_array
+
+
+def katexrender_stdio(latex_array):
+    output_array = []
+    for latex in latex_array:
+        p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        out, err = p.communicate(latex.encode('utf-8'))
+        if p.returncode != 0:
+            return '<span class="math-error">%s</span>' % latex
+        generated_html = out.decode('utf-8')
+        output_array.append(generated_html)
+    return output_array
+
 
 def correct_link(link, record):
     url = url_parse(link)
