@@ -2,6 +2,7 @@
 import posixpath
 import json
 import traceback
+from werkzeug.urls import url_parse
 
 from lektor.build_programs import BuildProgram
 from lektor.pluginsystem import Plugin
@@ -11,6 +12,16 @@ from lektor.db import Page
 
 VIRTUAL_SOURCE_ID = 'mapdata'
 SOURCE_PATH = '/Map'
+
+def correct_link(link, record):
+    url = url_parse(link)
+    if not url.scheme:
+        #context = get_ctx()
+        #if context:
+        #    source = context.source
+        #    link = source.url_to(link)
+        link = record.url_to(link)
+    return link
 
 class MapData(VirtualSourceObject):
     def __init__(self, parent):
@@ -22,6 +33,7 @@ class MapData(VirtualSourceObject):
             if self._cache == None:
                 # find the places
                 places = {}
+                map = self.pad.get('/Map')
                 for place in self.pad.query(SOURCE_PATH).include_undiscoverable(True):
                     id = place['_slug']
                     gaz_urls = []
@@ -32,7 +44,7 @@ class MapData(VirtualSourceObject):
                         'id': id,
                         'name': place['name'],
                         'country': place['country'],
-                        'webref': place['webref'].url,
+                        'links': [{'text':p['text'],'url':correct_link(p['url'],map)} for p in place['links'].blocks],
                         'gaz': gaz_urls,
                         'longitude': place['longitude'],
                         'latitude': place['latitude'],
@@ -40,12 +52,13 @@ class MapData(VirtualSourceObject):
                     }
 
                 # populate the places with people
-                for person in self.pad.query('/Biographies'):
+                for person in self.pad.query('/Biographies').order_by('shortname'):
                     place_id = person['maplocation']
                     if place_id and place_id.strip() != '' and place_id in places:
                         data = {
                             'name': person['shortname'],
-                            'url': self.parent.url_to(person)
+                            'url': self.parent.url_to(person),
+                            'near': person['nearplace']
                         }
                         places[place_id]['people'].append(data)
 
