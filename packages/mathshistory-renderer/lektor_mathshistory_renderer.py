@@ -387,6 +387,7 @@ def katexrender(latex_array):
         return katexrender_server(latex_array)
     except:
         # if server error, use stdio
+        print('katex-server failure, falling back to stdio')
         return katexrender_stdio(latex_array)
 
 
@@ -399,12 +400,14 @@ def katexrender_server(latex_array):
 def katexrender_stdio(latex_array):
     output_array = []
     for latex in latex_array:
+        print(latex)
         p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         out, err = p.communicate(latex.encode('utf-8'))
         if p.returncode != 0:
             print('%skatex error: %s' % (RENDERER_ERROR_PREFIX, err))
-            return '<span class="math-error">%s</span>' % latex
-        generated_html = out.decode('utf-8')
+            generated_html = '<span class="math-error">%s</span>' % latex
+        else:
+            generated_html = out.decode('utf-8')
         output_array.append(generated_html)
     return output_array
 
