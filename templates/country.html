@@ -32,8 +32,8 @@
 <div class="row">
   <div class="col-md-8">
     <ul>
-      {% for person in site.query('/Biographies/').filter(F.country == this._slug).order_by('shortname')|limit_dependencies %}
-      <li><a href="{{ person|url }}">{{ person.shortname }}</a>{% if person.birthyear %} ({{ person.birthyear|format_year }} - {% if person.deathyear %}{{ person.deathyear|format_year }}{% endif %}){% endif %}</li>
+      {% for display_item in site.query('/Biographies/').filter(F.country == this._slug).order_by('shortname')|limit_dependencies|query_to_display %}
+      <li><a href="{{ display_item.record|url }}">{{ display_item.display }}</a>{% if display_item.record.birthyear %} ({{ display_item.record.birthyear|format_year }} - {% if display_item.record.deathyear %}{{ display_item.record.deathyear|format_year }}{% endif %}){% endif %}</li>
       {% endfor %}
     </ul>
   </div>
