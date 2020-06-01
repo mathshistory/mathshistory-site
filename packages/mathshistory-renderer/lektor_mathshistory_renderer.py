@@ -17,6 +17,29 @@ from lektor.context import get_ctx
 from lektor.pluginsystem import Plugin
 from lektor.types import Type
 
+# precompile the regex
+CP_REGEX = re.compile(r'<cp>\s*(.*?)\s*</cp>', re.MULTILINE | re.DOTALL)
+CPB_REGEX = re.compile(r'<cpb>\s*(.*?)\s*</cpb>', re.MULTILINE | re.DOTALL)
+Q_REGEX = re.compile(r'<[Qq]>\s*(?P<quote>.*?)\s*</[Qq]>', re.MULTILINE | re.DOTALL)
+K_REGEX = re.compile(r'<k>\s*(.*?)\s*</k>', re.MULTILINE | re.DOTALL)
+IND_REGEX = re.compile(r'<ind>\s*(.*?)\s*</ind>', re.MULTILINE | re.DOTALL)
+LATEX_REGEX = re.compile(r'<latex>\s*(?P<latex>.*?)\s*</latex>', re.MULTILINE | re.DOTALL)
+SUPERSCRIPT_REGEX = re.compile(r'\^([^\s{}]+)', re.MULTILINE | re.DOTALL)
+SUBSCRIPT_REGEX = re.compile(r'¬(\S+)', re.MULTILINE | re.DOTALL)
+MLINK_REGEX = re.compile(r'<m(?:\s+(?P<name>.+?))?>(?P<text>.*?)\<\/m\>', re.MULTILINE | re.DOTALL)
+GLINK_REGEX = re.compile(r'<g\s+(?P<glossary>.+?)>(?P<text>.*?)\<\/g\>', re.MULTILINE | re.DOTALL)
+ACLINK_REGEX = re.compile(r'<ac\s+(?P<society>.+?)>(?P<text>.*?)\<\/ac\>', re.MULTILINE | re.DOTALL)
+ELINK_REGEX = re.compile(r'<E (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
+FPLUS_REGEX = re.compile(r'<f\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
+FP_REGEX = re.compile(r'<fp>(.*?)</fp>', re.MULTILINE | re.DOTALL)
+FPLUSPLUS_REGEX = re.compile(r'<f\+\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
+FMINUS_REGEX = re.compile(r'<f->(.*?)</f>', re.MULTILINE | re.DOTALL)
+FMREGEX = re.compile(r'<fm>(.*?)</fm>', re.MULTILINE | re.DOTALL)
+DIAGRAM_REGEX = re.compile(r'<d\s+(?P<content>.+?)>', re.MULTILINE | re.DOTALL)
+REF_REGEX = re.compile(r'\[(?P<number>\d+)\]', re.MULTILINE | re.DOTALL)
+TRANS_REGEX = re.compile(r'<T (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
+BR_REGEX = re.compile(r'(?:<br\w?/?>\s*){3,}', re.MULTILINE | re.DOTALL)
+
 STDIO_CMD = ['/usr/bin/env', 'katex']
 
 class HTML(object):
@@ -95,52 +118,40 @@ def render(source, record):
     source = html.unescape(source)
 
     # convert <cp>...</cp>
-    regex = re.compile(r'<cp>\s*(.*?)\s*</cp>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<div class="grey-block">\1</div>', source)
+    source = re.sub(CP_REGEX, r'<div class="grey-block">\1</div>', source)
 
     # convert <cpb>...</cpb>
-    regex = re.compile(r'<cpb>\s*(.*?)\s*</cpb>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<div class="blue-block">\1</div>', source)
+    source = re.sub(CPB_REGEX, r'<div class="blue-block">\1</div>', source)
 
     # convert <Q>...</Q>
-    regex = re.compile(r'<[Qq]>\s*(?P<quote>.*?)\s*</[Qq]>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<blockquote>\1</blockquote>', source)
+    source = re.sub(Q_REGEX, r'<blockquote>\1</blockquote>', source)
 
     # convert <k>...</k>
-    regex = re.compile(r'<k>\s*(.*?)\s*</k>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<div class="center-paragraph">\1</div>', source)
+    source = re.sub(K_REGEX, r'<div class="center-paragraph">\1</div>', source)
 
     # convert <ind>...</ind>
-    regex = re.compile(r'<ind>\s*(.*?)\s*</ind>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<div class="indent-paragraph">\1</div>', source)
+    source = re.sub(IND_REGEX, r'<div class="indent-paragraph">\1</div>', source)
 
     # convert latex to katex
-    regex = re.compile(r'<latex>\s*(?P<latex>.*?)\s*</latex>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: katexrender(match, record, katexstorage), source)
+    source = re.sub(LATEX_REGEX, lambda match: katexrender(match, record, katexstorage), source)
 
     # convert ^superscript
-    regex = re.compile(r'\^([^\s{}]+)', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="superscript">\1</span>', source)
+    source = re.sub(SUPERSCRIPT_REGEX, r'<span class="superscript">\1</span>', source)
 
     # convert ¬subscript
-    regex = re.compile(r'¬(\S+)', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="subscript">\1</span>', source)
+    source = re.sub(SUBSCRIPT_REGEX, r'<span class="subscript">\1</span>', source)
 
     # convert <m>...</m> and <m name>...</m>
-    regex = re.compile(r'<m(?:\s+(?P<name>.+?))?>(?P<text>.*?)\<\/m\>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: mrender(match, record), source)
+    source = re.sub(MLINK_REGEX, lambda match: mrender(match, record), source)
 
     # convert <g glossary>...</g>
-    regex = re.compile(r'<g\s+(?P<glossary>.+?)>(?P<text>.*?)\<\/g\>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: glrender(match, record), source)
+    source = re.sub(GLINK_REGEX, lambda match: glrender(match, record), source)
 
     # convert <ac academy>...</ac>
-    regex = re.compile(r'<ac\s+(?P<society>.+?)>(?P<text>.*?)\<\/ac\>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: societyrender(match, record), source)
+    source = re.sub(ACLINK_REGEX, lambda match: societyrender(match, record), source)
 
     # convert <E num>
-    regex = re.compile(r'<E (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: extrarender(match, record), source)
+    source = re.sub(ELINK_REGEX, lambda match: extrarender(match, record), source)
 
     # convert <r>...</r>
     source = source.replace('<r>','<span class="red-text">')
@@ -159,24 +170,19 @@ def render(source, record):
     source = source.replace('</bro>','</span>')
 
     # convert <f+>...</f+>
-    regex = re.compile(r'<f\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="bigger">\1</span>', source)
+    source = re.sub(FPLUS_REGEX, r'<span class="bigger">\1</span>', source)
 
     # convert <fp>...</fp>
-    regex = re.compile(r'<fp>(.*?)</fp>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="bigger">\1</span>', source)
+    source = re.sub(FPREGEX, r'<span class="bigger">\1</span>', source)
 
     # convert <f++>...</f++>
-    regex = re.compile(r'<f\+\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="bigger"><span class="bigger">\1</span></span>', source)
+    source = re.sub(FPLUSPLUS, r'<span class="bigger"><span class="bigger">\1</span></span>', source)
 
     # convert <f->...</f->
-    regex = re.compile(r'<f->(.*?)</f>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="smaller">\1</span>', source)
+    source = re.sub(FMINUS_REGEX, r'<span class="smaller">\1</span>', source)
 
     # convert <fm>...</fm>
-    regex = re.compile(r'<fm>(.*?)</fm>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="smaller">\1</span>', source)
+    source = re.sub(FM_REGEX, r'<span class="smaller">\1</span>', source)
 
     # convert <c>...</c>
     source = source.replace('<c>','<code>')
@@ -187,17 +193,14 @@ def render(source, record):
     source = source.replace('</ovl>','</span>')
 
     # convert <d ...>
-    regex = re.compile(r'<d\s+(?P<content>.+?)>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: drender(match, record), source)
+    source = re.sub(DIAGRAM_REGEX, lambda match: drender(match, record), source)
 
     # convert [refnum]
-    regex = re.compile(r'\[(?P<number>\d+)\]', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: referencerender(match, record), source)
+    source = re.sub(REF_REGEX, lambda match: referencerender(match, record), source)
     #source = re.sub(regex, r'<span>[<a href="#reference-\1" class="reference reference-\1">\1</a>]</span>', source)
 
     # convert <T num>
-    regex = re.compile(r'<T (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: trender(match, record), source)
+    source = re.sub(TRANS_REGEX, lambda match: trender(match, record), source)
 
 
     # other from the htmlformat function in the stack
@@ -208,11 +211,10 @@ def render(source, record):
     source = re.sub(regex, '\n<br>\n', source)
 
     # never more than two <br>s together
-    multiple_br_pattern = re.compile(r'(?:<br\w?/?>\s*){3,}', re.MULTILINE | re.DOTALL)
-    match = re.search(multiple_br_pattern, source)
+    match = re.search(BR_REGEX, source)
     while match:
-        source = re.sub(multiple_br_pattern, '<br>\n<br>', source)
-        match = re.search(multiple_br_pattern, source)
+        source = re.sub(BR_REGEX, '<br>\n<br>', source)
+        match = re.search(BR_REGEX, source)
 
     # remove all the <n>s
     source = source.replace('<n>', '')
