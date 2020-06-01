@@ -120,89 +120,63 @@ def render(source, record):
 
     # convert html character references (ie. &#62;) to unicode
     source = html.unescape(source)
-
     # convert <cp>...</cp>
     source = re.sub(CP_REGEX, r'<div class="grey-block">\1</div>', source)
-
     # convert <cpb>...</cpb>
     source = re.sub(CPB_REGEX, r'<div class="blue-block">\1</div>', source)
-
     # convert <Q>...</Q>
     source = re.sub(Q_REGEX, r'<blockquote>\1</blockquote>', source)
-
     # convert <k>...</k>
     source = re.sub(K_REGEX, r'<div class="center-paragraph">\1</div>', source)
-
     # convert <ind>...</ind>
     source = re.sub(IND_REGEX, r'<div class="indent-paragraph">\1</div>', source)
-
     # convert latex to katex
     source = re.sub(LATEX_REGEX, lambda match: katexprerender(match, katexstorage), source)
-
     # convert ^superscript
     source = re.sub(SUPERSCRIPT_REGEX, r'<span class="superscript">\1</span>', source)
-
     # convert ¬subscript
     source = re.sub(SUBSCRIPT_REGEX, r'<span class="subscript">\1</span>', source)
-
     # convert <m>...</m> and <m name>...</m>
     source = re.sub(MLINK_REGEX, lambda match: mrender(match, record), source)
-
     # convert <g glossary>...</g>
     source = re.sub(GLINK_REGEX, lambda match: glrender(match, record), source)
-
     # convert <ac academy>...</ac>
     source = re.sub(ACLINK_REGEX, lambda match: societyrender(match, record), source)
-
     # convert <E num>
     source = re.sub(ELINK_REGEX, lambda match: extrarender(match, record), source)
-
     # convert <r>...</r>
     source = source.replace('<r>','<span class="red-text">')
     source = source.replace('</r>','</span>')
-
     # convert <bl>...</bl>
     source = source.replace('<bl>','<span class="blue-text">')
     source = source.replace('</bl>','</span>')
-
     # convert <gr>...</gr>
     source = source.replace('<gr>','<span class="green-text">')
     source = source.replace('</gr>','</span>')
-
     # convert <bro>...</bro>
     source = source.replace('<bro>','<span class="brown-text">')
     source = source.replace('</bro>','</span>')
-
     # convert <f+>...</f+>
     source = re.sub(FPLUS_REGEX, r'<span class="bigger">\1</span>', source)
-
     # convert <fp>...</fp>
     source = re.sub(FP_REGEX, r'<span class="bigger">\1</span>', source)
-
     # convert <f++>...</f++>
     source = re.sub(FPLUSPLUS_REGEX, r'<span class="bigger"><span class="bigger">\1</span></span>', source)
-
     # convert <f->...</f->
     source = re.sub(FMINUS_REGEX, r'<span class="smaller">\1</span>', source)
-
     # convert <fm>...</fm>
     source = re.sub(FM_REGEX, r'<span class="smaller">\1</span>', source)
-
     # convert <c>...</c>
     source = source.replace('<c>','<code>')
     source = source.replace('</c>','</code>')
-
     # convert <ovl>...</ovl>
     source = source.replace('<ovl>','<span class="overline">')
     source = source.replace('</ovl>','</span>')
-
     # convert <d ...>
     source = re.sub(DIAGRAM_REGEX, lambda match: drender(match, record), source)
-
     # convert [refnum]
     source = re.sub(REF_REGEX, lambda match: referencerender(match, record), source)
     #source = re.sub(regex, r'<span>[<a href="#reference-\1" class="reference reference-\1">\1</a>]</span>', source)
-
     # convert <T num>
     source = re.sub(TRANS_REGEX, lambda match: trender(match, record), source)
 
@@ -415,10 +389,8 @@ def katexrender_stdio(latex_array):
 def correct_link(link, record):
     url = url_parse(link)
     if not url.scheme:
-        #context = get_ctx()
-        #if context:
-        #    source = context.source
-        #    link = source.url_to(link)
+        # if you do it the markdown way, then it doesn't resolve virtual source paths
+        # so we do it this way instead
         link = record.url_to(link)
     link = escape(link)
     return link
@@ -510,7 +482,6 @@ def tags_to_unicode(text, katex=False):
         all_unicode = [' %s ' % s for s in all_unicode]
 
     for tag, unicode in zip(all_tags, all_unicode):
-        #unicode = unicode.replace('\\', '\\\\')
         text = text.replace(tag, unicode)
 
     return text
