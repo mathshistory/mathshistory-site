@@ -159,6 +159,6 @@ img {
   font-style: italic;
 }
 
-#jumps > a {
+.jump-label {
   text-transform: capitalize;
 }
