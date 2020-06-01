@@ -42,12 +42,12 @@ class MapData(VirtualSourceObject):
                             gaz_urls.append(self.parent.url_to('/Gaz/%s' % gaz_place))
                     places[id] = {
                         'id': id,
-                        'name': place['name'],
-                        'country': place['country'],
-                        'links': [{'text':p['text'],'url':correct_link(p['url'],map)} for p in place['links'].blocks],
+                        'name': place['name'] or '',
+                        'country': place['country'] or '',
+                        'links': [{'text':(p['text'] or ''),'url':correct_link((p['url'] or ''),map)} for p in place['links'].blocks],
                         'gaz': gaz_urls,
-                        'longitude': place['longitude'],
-                        'latitude': place['latitude'],
+                        'longitude': place['longitude'] or '',
+                        'latitude': place['latitude'] or '',
                         'people': []
                     }
 
@@ -56,9 +56,9 @@ class MapData(VirtualSourceObject):
                     place_id = person['maplocation']
                     if place_id and place_id.strip() != '' and place_id in places:
                         data = {
-                            'name': person['shortname'],
+                            'name': person['shortname'] or '',
                             'url': self.parent.url_to(person),
-                            'near': person['nearplace']
+                            'near': person['nearplace'] or ''
                         }
                         places[place_id]['people'].append(data)
 
