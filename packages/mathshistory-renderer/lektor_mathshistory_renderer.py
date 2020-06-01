@@ -7,6 +7,7 @@ import traceback
 import html
 import random
 import string
+import requests
 
 from bs4 import BeautifulSoup
 #import html5lib
@@ -16,6 +17,32 @@ from lektor._compat import PY2
 from lektor.context import get_ctx
 from lektor.pluginsystem import Plugin
 from lektor.types import Type
+
+RENDERER_ERROR_PREFIX = 'Renderer error: '
+KATEX_SERVER_URL = 'http://127.0.0.1:5002/'
+
+# precompile the regex
+CP_REGEX = re.compile(r'<cp>\s*(.*?)\s*</cp>', re.MULTILINE | re.DOTALL)
+CPB_REGEX = re.compile(r'<cpb>\s*(.*?)\s*</cpb>', re.MULTILINE | re.DOTALL)
+Q_REGEX = re.compile(r'<[Qq]>\s*(?P<quote>.*?)\s*</[Qq]>', re.MULTILINE | re.DOTALL)
+K_REGEX = re.compile(r'<k>\s*(.*?)\s*</k>', re.MULTILINE | re.DOTALL)
+IND_REGEX = re.compile(r'<ind>\s*(.*?)\s*</ind>', re.MULTILINE | re.DOTALL)
+LATEX_REGEX = re.compile(r'<latex>\s*(?P<latex>.*?)\s*</latex>', re.MULTILINE | re.DOTALL)
+SUPERSCRIPT_REGEX = re.compile(r'\^([^\s{}]+)', re.MULTILINE | re.DOTALL)
+SUBSCRIPT_REGEX = re.compile(r'¬(\S+)', re.MULTILINE | re.DOTALL)
+MLINK_REGEX = re.compile(r'<m(?:\s+(?P<name>.+?))?>(?P<text>.*?)\<\/m\>', re.MULTILINE | re.DOTALL)
+GLINK_REGEX = re.compile(r'<g\s+(?P<glossary>.+?)>(?P<text>.*?)\<\/g\>', re.MULTILINE | re.DOTALL)
+ACLINK_REGEX = re.compile(r'<ac\s+(?P<society>.+?)>(?P<text>.*?)\<\/ac\>', re.MULTILINE | re.DOTALL)
+ELINK_REGEX = re.compile(r'<E (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
+FPLUS_REGEX = re.compile(r'<f\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
+FP_REGEX = re.compile(r'<fp>(.*?)</fp>', re.MULTILINE | re.DOTALL)
+FPLUSPLUS_REGEX = re.compile(r'<f\+\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
+FMINUS_REGEX = re.compile(r'<f->(.*?)</f>', re.MULTILINE | re.DOTALL)
+FM_REGEX = re.compile(r'<fm>(.*?)</fm>', re.MULTILINE | re.DOTALL)
+DIAGRAM_REGEX = re.compile(r'<d\s+(?P<content>.+?)>', re.MULTILINE | re.DOTALL)
+REF_REGEX = re.compile(r'\[(?P<number>\d+)\]', re.MULTILINE | re.DOTALL)
+TRANS_REGEX = re.compile(r'<T (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
+BR_REGEX = re.compile(r'(?:<br\w?/?>\s*){3,}', re.MULTILINE | re.DOTALL)
 
 STDIO_CMD = ['/usr/bin/env', 'katex']
 
@@ -33,7 +60,7 @@ class HTML(object):
                 self.__html = render(self.source, self.__record())
                 self.__cached_for_ctx = context
         except:
-            print('render error: ')
+            print(RENDERER_ERROR_PREFIX)
             traceback.print_exc()
             raise
 
@@ -93,111 +120,65 @@ def render(source, record):
 
     # convert html character references (ie. &#62;) to unicode
     source = html.unescape(source)
-
     # convert <cp>...</cp>
-    regex = re.compile(r'<cp>\s*(.*?)\s*</cp>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<div class="grey-block">\1</div>', source)
-
+    source = re.sub(CP_REGEX, r'<div class="grey-block">\1</div>', source)
     # convert <cpb>...</cpb>
-    regex = re.compile(r'<cpb>\s*(.*?)\s*</cpb>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<div class="blue-block">\1</div>', source)
-
+    source = re.sub(CPB_REGEX, r'<div class="blue-block">\1</div>', source)
     # convert <Q>...</Q>
-    regex = re.compile(r'<[Qq]>\s*(?P<quote>.*?)\s*</[Qq]>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<blockquote>\1</blockquote>', source)
-
+    source = re.sub(Q_REGEX, r'<blockquote>\1</blockquote>', source)
     # convert <k>...</k>
-    regex = re.compile(r'<k>\s*(.*?)\s*</k>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<div class="center-paragraph">\1</div>', source)
-
+    source = re.sub(K_REGEX, r'<div class="center-paragraph">\1</div>', source)
     # convert <ind>...</ind>
-    regex = re.compile(r'<ind>\s*(.*?)\s*</ind>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<div class="indent-paragraph">\1</div>', source)
-
+    source = re.sub(IND_REGEX, r'<div class="indent-paragraph">\1</div>', source)
     # convert latex to katex
-    regex = re.compile(r'<latex>\s*(?P<latex>.*?)\s*</latex>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: katexrender(match, record, katexstorage), source)
-
+    source = re.sub(LATEX_REGEX, lambda match: katexprerender(match, katexstorage), source)
     # convert ^superscript
-    regex = re.compile(r'\^([^\s{}]+)', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="superscript">\1</span>', source)
-
+    source = re.sub(SUPERSCRIPT_REGEX, r'<span class="superscript">\1</span>', source)
     # convert ¬subscript
-    regex = re.compile(r'¬(\S+)', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="subscript">\1</span>', source)
-
+    source = re.sub(SUBSCRIPT_REGEX, r'<span class="subscript">\1</span>', source)
     # convert <m>...</m> and <m name>...</m>
-    regex = re.compile(r'<m(?:\s+(?P<name>.+?))?>(?P<text>.*?)\<\/m\>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: mrender(match, record), source)
-
+    source = re.sub(MLINK_REGEX, lambda match: mrender(match, record), source)
     # convert <g glossary>...</g>
-    regex = re.compile(r'<g\s+(?P<glossary>.+?)>(?P<text>.*?)\<\/g\>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: glrender(match, record), source)
-
+    source = re.sub(GLINK_REGEX, lambda match: glrender(match, record), source)
     # convert <ac academy>...</ac>
-    regex = re.compile(r'<ac\s+(?P<society>.+?)>(?P<text>.*?)\<\/ac\>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: societyrender(match, record), source)
-
+    source = re.sub(ACLINK_REGEX, lambda match: societyrender(match, record), source)
     # convert <E num>
-    regex = re.compile(r'<E (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: extrarender(match, record), source)
-
+    source = re.sub(ELINK_REGEX, lambda match: extrarender(match, record), source)
     # convert <r>...</r>
     source = source.replace('<r>','<span class="red-text">')
     source = source.replace('</r>','</span>')
-
     # convert <bl>...</bl>
     source = source.replace('<bl>','<span class="blue-text">')
     source = source.replace('</bl>','</span>')
-
     # convert <gr>...</gr>
     source = source.replace('<gr>','<span class="green-text">')
     source = source.replace('</gr>','</span>')
-
     # convert <bro>...</bro>
     source = source.replace('<bro>','<span class="brown-text">')
     source = source.replace('</bro>','</span>')
-
     # convert <f+>...</f+>
-    regex = re.compile(r'<f\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="bigger">\1</span>', source)
-
+    source = re.sub(FPLUS_REGEX, r'<span class="bigger">\1</span>', source)
     # convert <fp>...</fp>
-    regex = re.compile(r'<fp>(.*?)</fp>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="bigger">\1</span>', source)
-
+    source = re.sub(FP_REGEX, r'<span class="bigger">\1</span>', source)
     # convert <f++>...</f++>
-    regex = re.compile(r'<f\+\+>(.*?)</f>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="bigger"><span class="bigger">\1</span></span>', source)
-
+    source = re.sub(FPLUSPLUS_REGEX, r'<span class="bigger"><span class="bigger">\1</span></span>', source)
     # convert <f->...</f->
-    regex = re.compile(r'<f->(.*?)</f>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="smaller">\1</span>', source)
-
+    source = re.sub(FMINUS_REGEX, r'<span class="smaller">\1</span>', source)
     # convert <fm>...</fm>
-    regex = re.compile(r'<fm>(.*?)</fm>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, r'<span class="smaller">\1</span>', source)
-
+    source = re.sub(FM_REGEX, r'<span class="smaller">\1</span>', source)
     # convert <c>...</c>
     source = source.replace('<c>','<code>')
     source = source.replace('</c>','</code>')
-
     # convert <ovl>...</ovl>
     source = source.replace('<ovl>','<span class="overline">')
     source = source.replace('</ovl>','</span>')
-
     # convert <d ...>
-    regex = re.compile(r'<d\s+(?P<content>.+?)>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: drender(match, record), source)
-
+    source = re.sub(DIAGRAM_REGEX, lambda match: drender(match, record), source)
     # convert [refnum]
-    regex = re.compile(r'\[(?P<number>\d+)\]', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: referencerender(match, record), source)
+    source = re.sub(REF_REGEX, lambda match: referencerender(match, record), source)
     #source = re.sub(regex, r'<span>[<a href="#reference-\1" class="reference reference-\1">\1</a>]</span>', source)
-
     # convert <T num>
-    regex = re.compile(r'<T (?P<number>\d+)>', re.MULTILINE | re.DOTALL)
-    source = re.sub(regex, lambda match: trender(match, record), source)
+    source = re.sub(TRANS_REGEX, lambda match: trender(match, record), source)
 
 
     # other from the htmlformat function in the stack
@@ -208,11 +189,10 @@ def render(source, record):
     source = re.sub(regex, '\n<br>\n', source)
 
     # never more than two <br>s together
-    multiple_br_pattern = re.compile(r'(?:<br\w?/?>\s*){3,}', re.MULTILINE | re.DOTALL)
-    match = re.search(multiple_br_pattern, source)
+    match = re.search(BR_REGEX, source)
     while match:
-        source = re.sub(multiple_br_pattern, '<br>\n<br>', source)
-        match = re.search(multiple_br_pattern, source)
+        source = re.sub(BR_REGEX, '<br>\n<br>', source)
+        match = re.search(BR_REGEX, source)
 
     # remove all the <n>s
     source = source.replace('<n>', '')
@@ -232,7 +212,10 @@ def render(source, record):
     source = fix_italics(source, record)
 
     # put the katex formulas back in
-    for key, html_formula in katexstorage.items():
+    latex_array = list(katexstorage.values())
+    html_array = katexrender(latex_array)
+    for idx, key in enumerate(katexstorage.keys()):
+        html_formula = html_array[idx]
         source = source.replace(key, html_formula)
 
     return source
@@ -272,30 +255,18 @@ def societyrender(match, record):
 
 def extrarender(match, record):
     number = match.group('number')
-    if 'additional' not in record:
-        print('Extra not found. Skipping.')
+    extra = get_flowblock(record, 'additional', number)
+    if extra == False:
         return ''
-    extras = record['additional'].blocks
-    extra = list(filter(lambda extra: int(extra['number']) == int(number), extras))
-    if len(extra) != 1:
-        print('Extra not found. Skipping.')
-        return ''
-    extra = extra[0]
     href = extra['link'].strip()
     href = correct_link(href, record)
     return '<a class="elink" href="%s" target="_blank">THIS LINK</a>' % href
 
 def referencerender(match, record):
     number = match.group('number')
-    if 'references' not in record:
-        print('Reference not found. Skipping.')
+    reference = get_flowblock(record, 'references', number)
+    if reference == False:
         return '[%s]' % number
-    references = record['references'].blocks
-    references = list(filter(lambda t: int(t['number']) == int(number), references))
-    if len(references) != 1:
-        print('Reference not found. Skipping.')
-        return '[%s]' % number
-    reference = references[0]
     text = reference['reference'].__html__().unescape().strip()
     text = html.escape(text, quote=True)
     generated_html = '<span>[<a href="#reference-%s" class="reference" data-popup="%s">%s</a>]</span>' % (number, text, number)
@@ -303,19 +274,28 @@ def referencerender(match, record):
 
 def trender(match, record):
     number = match.group('number')
-    if 'translations' not in record:
-        print('Translation not found. Skipping.')
+    translation = get_flowblock(record, 'translations', number)
+    if translation == False:
         return ''
-    translations = record['translations'].blocks
-    translation = list(filter(lambda t: int(t['number']) == int(number), translations))
-    if len(translation) != 1:
-        print('Translation not found. Skipping.')
-        return ''
-    translation = translation[0]
     text = translation['translation'].__html__().unescape().strip()
     escaped_text = html.escape(text, quote=True)
     generated_html = '<span><a data-popup="%s" class="translation nonoscript non-italic">&#9417;</a><noscript>(%s)</noscript></span>' % (escaped_text, text)
     return generated_html
+
+def get_flowblock(record, blockkey, number):
+    if blockkey not in record:
+        print('%srecord %s does not have field %s' % (RENDERER_ERROR_PREFIX, record, blockkey))
+        return False
+    for block in record[blockkey].blocks:
+        try:
+            if int(block['number']) == int(number):
+                return block
+        except:
+            print('%sexception when getting flow block number. Continuing anyway...' % RENDERER_ERROR_PREFIX)
+            traceback.print_exc()
+            continue
+    print('%srecord %s does not have block type %s of number %s' % (RENDERER_ERROR_PREFIX, record, blockkey, number))
+    return False
 
 def drender(match, record):
     content = match.group('content')
@@ -361,27 +341,56 @@ def drender(match, record):
     else:
         return '<img class="diagram" src="%s" />' % href
 
-def katexrender(match, record, storage):
+
+def katexprerender(match, storage):
     latex = match.group('latex')
-    p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    out, err = p.communicate(latex.encode('utf-8'))
-    if p.returncode != 0:
-        return '<span class="math-error">%s</span>' % latex
-    generated_html = out.decode('utf-8')
 
     # save the formula to storage
     random_string = ''.join(random.choices(string.ascii_uppercase, k=10))
-    storage[random_string] = generated_html.strip()
+    storage[random_string] = latex
 
     return '<span class="math">%s</span>' % random_string
+
+
+def katexrender(latex_array):
+    # special case for empty array
+    if len(latex_array) == 0:
+        return []
+    # try the server first
+    try:
+        return katexrender_server(latex_array)
+    except:
+        # if server error, use stdio
+        print('katex-server failure, falling back to stdio')
+        return katexrender_stdio(latex_array)
+
+
+def katexrender_server(latex_array):
+    r = requests.post(KATEX_SERVER_URL, json=latex_array)
+    output_array = r.json()
+    return output_array
+
+
+def katexrender_stdio(latex_array):
+    output_array = []
+    for latex in latex_array:
+        print(latex)
+        p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        out, err = p.communicate(latex.encode('utf-8'))
+        if p.returncode != 0:
+            print('%skatex error: %s' % (RENDERER_ERROR_PREFIX, err))
+            generated_html = '<span class="math-error">%s</span>' % latex
+        else:
+            generated_html = out.decode('utf-8')
+        output_array.append(generated_html)
+    return output_array
+
 
 def correct_link(link, record):
     url = url_parse(link)
     if not url.scheme:
-        #context = get_ctx()
-        #if context:
-        #    source = context.source
-        #    link = source.url_to(link)
+        # if you do it the markdown way, then it doesn't resolve virtual source paths
+        # so we do it this way instead
         link = record.url_to(link)
     link = escape(link)
     return link
@@ -438,6 +447,7 @@ def fix_italics(x, record):
         out = ''.join((str(child) for child in s.body.children))
         return out
     except:
+        print('%sException thrown when fixing italics:' % RENDERER_ERROR_PREFIX)
         traceback.print_exc()
         return x
 
@@ -472,7 +482,6 @@ def tags_to_unicode(text, katex=False):
         all_unicode = [' %s ' % s for s in all_unicode]
 
     for tag, unicode in zip(all_tags, all_unicode):
-        #unicode = unicode.replace('\\', '\\\\')
         text = text.replace(tag, unicode)
 
     return text
