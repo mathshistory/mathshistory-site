@@ -18,6 +18,7 @@ from lektor.context import get_ctx
 from lektor.pluginsystem import Plugin
 from lektor.types import Type
 
+RENDERER_ERROR_PREFIX = 'Renderer error: '
 KATEX_SERVER_URL = 'http://127.0.0.1:5002/'
 
 # precompile the regex
@@ -59,7 +60,7 @@ class HTML(object):
                 self.__html = render(self.source, self.__record())
                 self.__cached_for_ctx = context
         except:
-            print('render error: ')
+            print(RENDERER_ERROR_PREFIX)
             traceback.print_exc()
             raise
 
@@ -280,30 +281,18 @@ def societyrender(match, record):
 
 def extrarender(match, record):
     number = match.group('number')
-    if 'additional' not in record:
-        print('Extra not found. Skipping.')
+    extra = get_flowblock(record, 'additional', number)
+    if extra == False:
         return ''
-    extras = record['additional'].blocks
-    extra = list(filter(lambda extra: int(extra['number']) == int(number), extras))
-    if len(extra) != 1:
-        print('Extra not found. Skipping.')
-        return ''
-    extra = extra[0]
     href = extra['link'].strip()
     href = correct_link(href, record)
     return '<a class="elink" href="%s" target="_blank">THIS LINK</a>' % href
 
 def referencerender(match, record):
     number = match.group('number')
-    if 'references' not in record:
-        print('Reference not found. Skipping.')
+    reference = get_flowblock(record, 'references', number)
+    if reference == False:
         return '[%s]' % number
-    references = record['references'].blocks
-    references = list(filter(lambda t: int(t['number']) == int(number), references))
-    if len(references) != 1:
-        print('Reference not found. Skipping.')
-        return '[%s]' % number
-    reference = references[0]
     text = reference['reference'].__html__().unescape().strip()
     text = html.escape(text, quote=True)
     generated_html = '<span>[<a href="#reference-%s" class="reference" data-popup="%s">%s</a>]</span>' % (number, text, number)
@@ -311,19 +300,28 @@ def referencerender(match, record):
 
 def trender(match, record):
     number = match.group('number')
-    if 'translations' not in record:
-        print('Translation not found. Skipping.')
+    translation = get_flowblock(record, 'translations', number)
+    if translation == False:
         return ''
-    translations = record['translations'].blocks
-    translation = list(filter(lambda t: int(t['number']) == int(number), translations))
-    if len(translation) != 1:
-        print('Translation not found. Skipping.')
-        return ''
-    translation = translation[0]
     text = translation['translation'].__html__().unescape().strip()
     escaped_text = html.escape(text, quote=True)
     generated_html = '<span><a data-popup="%s" class="translation nonoscript non-italic">&#9417;</a><noscript>(%s)</noscript></span>' % (escaped_text, text)
     return generated_html
+
+def get_flowblock(record, blockkey, number):
+    if blockkey not in record:
+        print('%srecord %s does not have field %s' % (RENDERER_ERROR_PREFIX, record, blockkey))
+        return False
+    for block in record[blockkey].blocks:
+        try:
+            if int(block['number']) == int(number):
+                return block
+        except:
+            print('%sexception when getting flow block number. Continuing anyway...' % RENDERER_ERROR_PREFIX)
+            traceback.print_exc()
+            continue
+    print('%srecord %s does not have block type %s of number %s' % (RENDERER_ERROR_PREFIX, record, blockkey, number))
+    return False
 
 def drender(match, record):
     content = match.group('content')
@@ -404,6 +402,7 @@ def katexrender_stdio(latex_array):
         p = Popen(STDIO_CMD, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         out, err = p.communicate(latex.encode('utf-8'))
         if p.returncode != 0:
+            print('%skatex error: %s' % (RENDERER_ERROR_PREFIX, err))
             return '<span class="math-error">%s</span>' % latex
         generated_html = out.decode('utf-8')
         output_array.append(generated_html)
@@ -473,6 +472,7 @@ def fix_italics(x, record):
         out = ''.join((str(child) for child in s.body.children))
         return out
     except:
+        print('%sException thrown when fixing italics:' % RENDERER_ERROR_PREFIX)
         traceback.print_exc()
         return x
 
