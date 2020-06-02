@@ -6,13 +6,11 @@
     ),
   );
 
-  //$baseUrl = "https://l-funadmin.st-andrews.ac.uk/s/search.html?";
-  $baseUrl = "https://t-funadmin.st-andrews.ac.uk/s/search.html?";
+  $baseUrl = "https://l-funadmin.st-andrews.ac.uk/s/search.html?";
   $mode = "";
   $query = "";
   $collection = "uofsa-web-maths-history";
-  //$profile = "_default";
-  $profile = "_default_preview";
+  $profile = "_default";
   $form = "resultsonly";
   $theme = "";
   $browse = "theme";
