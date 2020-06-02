@@ -56,14 +56,11 @@
 if ($mode === "") {
 ?>
 <div class="row">
-  <!--<div class="col-md-12 col-md-offset-3 text-center">
+  <div class="col-md-12 col-md-offset-3 text-center">
     <form action="?" method="GET">
       <input required name="query" type="text" accesskey="q" placeholder="Search">
       <button type="submit">Search</button>
     </form>
-  </div>-->
-  <div class="col-md-12">
-    The search engine is currently indexing the new site, so search isn't available right now. Please try again later.
   </div>
 </div>
 <?php
