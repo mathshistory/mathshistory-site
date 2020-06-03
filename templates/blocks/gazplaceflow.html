@@ -1,4 +1,4 @@
 {% set place = site.get('/Gaz/%s'|format(this.place)) %}
 <li>
-  <a href="{{ place|url }}{% if this.fragment %}#{{ record._slug }}{% endif %}">{{ place.place }}</a>
+  <a href="{{ place|url }}{% if this.fragment %}#{{ record._slug }}{% endif %}">{% if place.place %}{{ place.place }}{% else %}{{ place.title }}{% endif %}</a>
 </li>
