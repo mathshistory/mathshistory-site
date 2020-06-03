@@ -49,7 +49,7 @@ class ChronologicalIndexPage(VirtualSourceObject):
                 'purged': purged,
                 'display': person['shortname'],
                 'birthyear': person['birthyear'],
-                'deathyear': person['birthyear']
+                'deathyear': person['deathyear']
             })
 
         # also add in the entries in biographyindex

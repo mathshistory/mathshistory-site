@@ -28,7 +28,7 @@
       {% for person in this.people %}
 
         {% if this.jumps|length > 0 %}
-        {% if person['birthyear'] > this.jumps|first %}
+        {% if person['birthyear'] >= this.jumps|first %}
       </ul>
       <h4 id="jump-{{ this.jumps|first }}" class="jump-label">{{ this.jumps.pop(0) }} (<a href="#jumps">Back to top</a>)</h4>
       <ul>
