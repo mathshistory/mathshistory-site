@@ -17,16 +17,16 @@ function format_latlong(lat, long) {
 
   // do lat (north, south)
   if (lat < 0) {
-    formatted_lat = (lat*-1).toString().replace(',','°') + "'S"
+    formatted_lat = (lat*-1).toString().replace('.','°') + "'S"
   } else {
-    formatted_lat = lat.toString().replace(',','°') + "'N"
+    formatted_lat = lat.toString().replace('.','°') + "'N"
   }
 
   // do long (east, west)
   if (long < 0) {
-    formatted_long = (long*-1).toString().replace(',','°') + "'W"
+    formatted_long = (long*-1).toString().replace('.','°') + "'W"
   } else {
-    formatted_long = long.toString().replace(',','°') + "'E"
+    formatted_long = long.toString().replace('.','°') + "'E"
   }
 
   return formatted_lat + ' ' + formatted_long
