@@ -6,10 +6,10 @@ tippy('.tippyPic',{
     return img
   },
   onCreate(instance) {
-    instance._hasLoaded = false;
+    instance._hasLoaded = false
     instance.reference.onclick = function (e) {
-      e.preventDefault();
-      return false;
+      e.preventDefault()
+      return false
     }
   },
   allowHTML: true,
@@ -40,8 +40,8 @@ tippy('.reference',{
   },
   onCreate(instance) {
     instance.reference.onclick = function (e) {
-      e.preventDefault();
-      return false;
+      e.preventDefault()
+      return false
     }
   },
   allowHTML: true,
@@ -55,15 +55,15 @@ tippy('.reference',{
 // mlinks
 tippy('.mlink', {
   onCreate(instance) {
-    instance._hasLoaded = false;
+    instance._hasLoaded = false
     instance.reference.onclick = function (e) {
-      e.preventDefault();
-      return false;
+      e.preventDefault()
+      return false
     }
   },
   onTrigger(instance) {
     if (!instance._hasLoaded) {
-      return linkPopupTrigger(instance)
+      return linkPopupTrigger(instance, false)
     }
   },
   allowHTML: true,
@@ -77,15 +77,16 @@ tippy('.mlink', {
 // mlinks
 tippy('.gllink', {
   onCreate(instance) {
-    instance._hasLoaded = false;
+    instance._hasLoaded = false
     instance.reference.onclick = function (e) {
-      e.preventDefault();
-      return false;
+      e.preventDefault()
+      return false
     }
   },
   onTrigger(instance) {
+    instance.setContent(instance._initialContent)
     if (!instance._hasLoaded) {
-      return linkPopupTrigger(instance)
+      return linkPopupTrigger(instance, true)
     }
   },
   allowHTML: true,
@@ -99,15 +100,15 @@ tippy('.gllink', {
 // anything else!
 tippy('.tippyUrl', {
   onCreate(instance) {
-    instance._hasLoaded = false;
+    instance._hasLoaded = false
     instance.reference.onclick = function (e) {
-      e.preventDefault();
-      return false;
+      e.preventDefault()
+      return false
     }
   },
   onTrigger(instance) {
     if (!instance._hasLoaded) {
-      return linkPopupTrigger(instance)
+      return linkPopupTrigger(instance, false)
     }
   },
   allowHTML: true,
@@ -118,34 +119,47 @@ tippy('.tippyUrl', {
   appendTo: document.body
 })
 
-function linkPopupTrigger(instance) {
-  var url = instance.reference.getAttribute('data-popup')
+function getData(url, cb) {
   var request = new XMLHttpRequest()
   request.onreadystatechange = function () {
     if (this.readyState !== 4) return
     if (this.status !== 200) {
+      cb(true)
+    }
+
+    // we have the response
+    var response = this.responseText
+    cb(null, response)
+  }
+  request.open('GET', url, true)
+  request.send()
+}
+
+function linkPopupTrigger(instance, isGllink) {
+  var url = instance.reference.getAttribute('data-popup')
+
+  getData(url, function (err, response) {
+    if (err) {
       // on error, just go to the link as normal
       window.location.href = instance.reference.href
       return false
     }
 
-    // we have the response
-    var response = this.responseText
-
     // fix all the links in it
-    response = fixLinks(response, url, instance)
+    response = fixLinks(response, url, instance, isGllink)
 
     // set the popup content to it, and show it
     instance.setContent(response)
     instance.show()
-    instance._hasLoaded = true;
-  }
-  request.open('GET', url, true)
-  request.send()
+    instance._hasLoaded = true
+    instance._initialContent = response
+  })
+
+  // return false to disable the normal link
   return false
 }
 
-function fixLinks(content, urlContext, instance) {
+function fixLinks(content, urlContext, instance, isGllink) {
   // convert to fragment
   var fragment = document.createElement('div')
   fragment.innerHTML = content
@@ -171,5 +185,28 @@ function fixLinks(content, urlContext, instance) {
     }
   }
 
-  return fragment.innerHTML
+  // for gllinks, these should change the contents of the popup
+  if (isGllink) {
+    links = fragment.getElementsByClassName('gllink')
+    for (var i = 0; i < links.length; i++) {
+      var link = links[i]
+      link.onclick = function (e) {
+        e.preventDefault()
+        var href = e.target.getAttribute('data-popup')
+        var actualLocation = new URL(href, absoluteUrl)
+        getData(actualLocation, function (err, data) {
+          if (err) {
+            // on error, just go to the link as normal
+            window.location.href = href
+          }
+
+          var response = fixLinks(data, urlContext, instance, isGllink)
+          instance.setContent(response)
+        })
+        return false
+      }
+    }
+  }
+
+  return fragment
 }
