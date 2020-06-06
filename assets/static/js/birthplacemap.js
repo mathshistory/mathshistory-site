@@ -91,7 +91,7 @@ function loadMap (places) {
   // when marker clicked, show relevent info
   map.on('click', function(e) {
     var features = map.getFeaturesAtPixel(e.pixel)
-    if (features) {
+    if (features.length !== 0) {
       // reset styling of old feature
       if (currentFeature) currentFeature.setStyle(null)
 

@@ -57,7 +57,7 @@ function loadMap (places) {
   // when marker clicked, go to that entry
   map.on('click', function(e) {
     var features = map.getFeaturesAtPixel(e.pixel)
-    if (features) {
+    if (features.length !== 0) {
       var feature = features[0]
       feature.setStyle(SELECTED_STYLE)
       var url = gazRoot + feature.get('id')
