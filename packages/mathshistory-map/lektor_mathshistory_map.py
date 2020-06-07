@@ -44,14 +44,24 @@ class MapData(VirtualSourceObject):
                 map = self.pad.get('/Map')
                 for place in self.pad.query(SOURCE_PATH).include_undiscoverable(True):
                     id = place['_slug']
+
+                    # get the gaz urls
                     gaz_urls = []
                     if place['gaz'] and place['gaz'] != '':
                         for gaz_place in place['gaz'].split(','):
                             gaz_urls.append(self.parent.url_to('/Gaz/%s' % gaz_place))
+
+                    # get the country name
+                    country = self.pad.get('/Countries/%s' % place['country'])
+                    countryName = False
+                    if country:
+                        countryName = country['name']
+
+                    # fill out the json
                     places[id] = {
                         'id': id,
                         'name': place['name'],
-                        'country': place['country'],
+                        'country': countryName,
                         'links': [{'text':(p['text']),'url':self.parent.url_to(p['url'])} for p in place['links'].blocks],
                         'gaz': gaz_urls,
                         'longitude': place['longitude'],
