@@ -37,11 +37,12 @@
       </p>
 
       <h1>{{ this.parent.shortname }}</h1>
-      <h2>lived from {{ this.parent.birthyear }} to {{ this.parent.deathyear }}</h2>
+      <h2>lived from {{ this.parent.birthyear|format_year }} to {{ this.parent.deathyear|format_year }}</h2>
     </div>
 
     <div class="poster-description">
       <p>{{ this.parent.summary }}</p>
+    </div>
 
     <div class="poster-moreinfo">
       <p>
