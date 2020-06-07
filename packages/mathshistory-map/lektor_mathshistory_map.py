@@ -13,15 +13,23 @@ from lektor.db import Page
 VIRTUAL_SOURCE_ID = 'mapdata'
 SOURCE_PATH = '/Map'
 
-def correct_link(link, record):
-    url = url_parse(link)
-    if not url.scheme:
-        #context = get_ctx()
-        #if context:
-        #    source = context.source
-        #    link = source.url_to(link)
-        link = record.url_to(link)
-    return link
+# thanks to https://stackoverflow.com/a/2580236/2370460
+def format_latlon(dd_lat, dd_lon):
+    # do lat
+    mnt,sec = divmod(abs(dd_lat) * 3600, 60)
+    deg,mnt = divmod(mnt, 60)
+    lat_deg = int(deg)
+    lat_min = int(mnt) if sec < 30 else int(mnt) + 1
+    lat_direction = 'S' if dd_lat < 0 else 'N'
+
+    # do lon
+    mnt,sec = divmod(abs(dd_lon) * 3600, 60)
+    deg,mnt = divmod(mnt, 60)
+    lon_deg = int(deg)
+    lon_min = int(mnt) if sec < 30 else int(mnt) + 1
+    lon_direction = 'W' if dd_lon < 0 else 'E'
+
+    return "%s°%s'%s %s°%s'%s" % (lat_deg, lat_min, lat_direction, lon_deg, lon_min, lon_direction)
 
 class MapData(VirtualSourceObject):
     def __init__(self, parent):
@@ -42,12 +50,13 @@ class MapData(VirtualSourceObject):
                             gaz_urls.append(self.parent.url_to('/Gaz/%s' % gaz_place))
                     places[id] = {
                         'id': id,
-                        'name': place['name'] or '',
-                        'country': place['country'] or '',
-                        'links': [{'text':(p['text'] or ''),'url':correct_link((p['url'] or ''),map)} for p in place['links'].blocks],
+                        'name': place['name'],
+                        'country': place['country'],
+                        'links': [{'text':(p['text']),'url':self.parent.url_to(p['url'])} for p in place['links'].blocks],
                         'gaz': gaz_urls,
-                        'longitude': place['longitude'] or '',
-                        'latitude': place['latitude'] or '',
+                        'longitude': place['longitude'],
+                        'latitude': place['latitude'],
+                        'formatted': format_latlon(place['latitude'], place['longitude']),
                         'people': []
                     }
 
@@ -56,9 +65,9 @@ class MapData(VirtualSourceObject):
                     place_id = person['maplocation']
                     if place_id and place_id.strip() != '' and place_id in places:
                         data = {
-                            'name': person['shortname'] or '',
+                            'name': person['shortname'],
                             'url': self.parent.url_to(person),
-                            'near': person['nearplace'] or ''
+                            'near': person['nearplace']
                         }
                         places[place_id]['people'].append(data)
 
