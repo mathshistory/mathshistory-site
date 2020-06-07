@@ -11,27 +11,6 @@ request.onreadystatechange = function () {
 request.open('GET', './data.json', true)
 request.send()
 
-function format_latlong(lat, long) {
-  var formatted_lat = ''
-  var formatted_long = ''
-
-  // do lat (north, south)
-  if (lat < 0) {
-    formatted_lat = (lat*-1).toString().replace('.','°') + "'S"
-  } else {
-    formatted_lat = lat.toString().replace('.','°') + "'N"
-  }
-
-  // do long (east, west)
-  if (long < 0) {
-    formatted_long = (long*-1).toString().replace('.','°') + "'W"
-  } else {
-    formatted_long = long.toString().replace('.','°') + "'E"
-  }
-
-  return formatted_lat + ' ' + formatted_long
-}
-
 function loadMap (places) {
 
   // currently selected feature
@@ -41,7 +20,7 @@ function loadMap (places) {
   var fragment = location.hash.substr(1).trim().toLowerCase()
 
   // build up the markers
-  var vectorSource = new ol.source.Vector({});
+  var vectorSource = new ol.source.Vector({})
   for (var i = 0; i < places.length; i++) {
     var place = places[i]
     var feature = new ol.Feature({
@@ -50,6 +29,7 @@ function loadMap (places) {
       name: place.name,
       lat: place.latitude,
       long: place.longitude,
+      formatted: place.formatted,
       country: place.country,
       links: place.links,
       gaz: place.gaz
@@ -60,7 +40,7 @@ function loadMap (places) {
       currentFeature = feature
       startCenter = [place.longitude, place.latitude]
       startZoom = 7
-      showPlace(place.name, place.people, place.latitude, place.longitude, place.country, place.links, place.gaz)
+      showPlace(place.name, place.people, place.latitude, place.longitude, place.formatted, place.country, place.links, place.gaz)
     }
 
     vectorSource.addFeature(feature)
@@ -86,7 +66,7 @@ function loadMap (places) {
       minZoom: MIN_ZOOM,
       maxZoom: MAX_ZOOM
     })
-  });
+  })
 
   // when marker clicked, show relevent info
   map.on('click', function(e) {
@@ -97,7 +77,7 @@ function loadMap (places) {
 
       currentFeature = features[0]
       currentFeature.setStyle(SELECTED_STYLE)
-      showPlace(currentFeature.get('name'), currentFeature.get('people'), currentFeature.get('lat'), currentFeature.get('long'), currentFeature.get('country'), currentFeature.get('links'), currentFeature.get('gaz'))
+      showPlace(currentFeature.get('name'), currentFeature.get('people'), currentFeature.get('lat'), currentFeature.get('long'), currentFeature.get('formatted'), currentFeature.get('country'), currentFeature.get('links'), currentFeature.get('gaz'))
       e.preventDefault()
     }
   })
@@ -111,7 +91,7 @@ function loadMap (places) {
 }
 
 
-function showPlace (name, people, lat, long, country, links, gaz) {
+function showPlace (name, people, lat, long, formatted, country, links, gaz) {
   var locationHeader = document.getElementById('location-name')
   locationHeader.innerText = name
 
@@ -123,15 +103,26 @@ function showPlace (name, people, lat, long, country, links, gaz) {
   }
 
   var latLongHeader = document.getElementById('location-latlong')
-  if (lat && long) {
-    latLongHeader.innerText = format_latlong(lat, long)
+  if (formatted) {
+    latLongHeader.innerText = formatted
   } else {
     latLongHeader.innerText = ''
   }
 
   var locationLinks = document.getElementById('location-links')
   while (locationLinks.firstChild) locationLinks.removeChild(locationLinks.firstChild)
-  if (links && links.length != 0) {
+  if (links && links.length == 1) {
+    // special case when there's only one info link
+    var span = document.createElement('span')
+    span.appendChild(document.createTextNode('More information about '))
+    var link = document.createElement('a')
+    link.innerText = links[0].text
+    link.href = links[0].url
+    link.target = '_blank'
+    span.appendChild(link)
+    span.appendChild(document.createTextNode('.'))
+  } else if (links && links.length != 0) {
+    // all other cases where there's more than one link
     var span = document.createElement('span')
     span.innerText = 'More information about:'
     locationLinks.appendChild(span)
