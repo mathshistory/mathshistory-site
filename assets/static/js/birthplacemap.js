@@ -111,18 +111,7 @@ function showPlace (name, people, lat, long, formatted, country, links, gaz) {
 
   var locationLinks = document.getElementById('location-links')
   while (locationLinks.firstChild) locationLinks.removeChild(locationLinks.firstChild)
-  if (links && links.length == 1) {
-    // special case when there's only one info link
-    var span = document.createElement('span')
-    span.appendChild(document.createTextNode('More information about '))
-    var link = document.createElement('a')
-    link.innerText = links[0].text
-    link.href = links[0].url
-    link.target = '_blank'
-    span.appendChild(link)
-    span.appendChild(document.createTextNode('.'))
-  } else if (links && links.length != 0) {
-    // all other cases where there's more than one link
+  if (links && links.length != 0) {
     var span = document.createElement('span')
     span.innerText = 'More information about:'
     locationLinks.appendChild(span)
@@ -149,6 +138,9 @@ function showPlace (name, people, lat, long, formatted, country, links, gaz) {
       link.href = gaz[i]
       link.target = '_blank'
       gazLink.appendChild(link)
+      if (gaz.length !== 1 && i !== gaz.length - 1) {
+        gazLink.appendChild(document.createElement('br'))
+      }
     }
   }
 

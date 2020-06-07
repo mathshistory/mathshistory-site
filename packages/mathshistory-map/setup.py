@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_map'],
     url='https://github.com/mathshistory/mathshistory-map',
-    version='1.2.0',
+    version='1.2.1',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
