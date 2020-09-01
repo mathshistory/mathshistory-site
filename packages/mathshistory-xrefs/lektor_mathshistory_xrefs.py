@@ -146,7 +146,7 @@ class MathshistoryXrefsPlugin(Plugin):
 
     def on_before_build(self, builder, build_state, source, prog, **extra):
         # restrict xrefs to biographies for the moment
-        if type(source) != Page or source['_model'] != 'biography':
+        if type(source) != Page or source['_model'] != 'biography' or source.path == '/EMS/ems_lecturers':
             return
 
         # get the artifact from the source
