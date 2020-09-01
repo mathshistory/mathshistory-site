@@ -47,10 +47,12 @@ class MathshistoryPreviewPublisher(Publisher):
 
         # git add/commit/push the source repo
         for line in yield_git_commands(GIT_SOURCE_DIRECTORY, commit_message):
+            print("preview publish: %s" % line)
             yield line
 
         # git add/commit/push the build output repo
         for line in yield_git_commands(build_out_directory, commit_message):
+            print("preview publish: %s" % line)
             yield line
 
         # rsync it to the deploy target directory
@@ -58,6 +60,7 @@ class MathshistoryPreviewPublisher(Publisher):
         rsync_command = Command(rsync, env={})
         with rsync_command:
             for line in rsync_command:
+                print("preview publish: %s" % line)
                 yield line
 
 
@@ -69,14 +72,17 @@ class MathshistoryProductionPublisher(RsyncPublisher):
 
         # git add/commit/push the source repo
         for line in yield_git_commands(GIT_SOURCE_DIRECTORY, commit_message):
+            print("production publish: %s" % line)
             yield line
 
         # git add/commit/push the build output repo
         for line in yield_git_commands(build_out_directory, commit_message):
+            print("production publish: %s" % line)
             yield line
 
         # now run the rsync as normal
         for line in super().publish(target_url, credentials):
+            print("production publish: %" % line)
             yield line
 
 
