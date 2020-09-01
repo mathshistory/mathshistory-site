@@ -37,7 +37,11 @@
       </p>
 
       <h1>{{ this.parent.shortname }}</h1>
+      {% if this.parent.deathyear == 0 %}
+      <h2>was born in {{ this.parent.birthyear|format_year }}</h2>
+      {% else %}
       <h2>lived from {{ this.parent.birthyear|format_year }} to {{ this.parent.deathyear|format_year }}</h2>
+      {% endif %}
     </div>
 
     <div class="poster-description">
