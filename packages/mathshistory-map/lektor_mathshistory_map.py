@@ -52,17 +52,23 @@ class MapData(VirtualSourceObject):
                             gaz_urls.append(self.parent.url_to('/Gaz/%s' % gaz_place))
 
                     # get the country name
-                    country = self.pad.get('/Countries/%s' % place['country'])
-                    countryName = False
-                    if country:
-                        countryName = country['name']
+                    if place['country'] and place['country'] != '':
+                        country = self.pad.get('/Countries/%s' % place['country'])
+                        countryName = False
+                        if country:
+                            countryName = country['name']
+                        else:
+                            print('Place %s has an invalid country' % place['name'])
+                    else:
+                        countryName = ''
+                        print('Place %s is missing a country' % place['name'])
 
                     # fill out the json
                     places[id] = {
                         'id': id,
                         'name': place['name'],
                         'country': countryName,
-                        'links': [{'text':(p['text']),'url':self.parent.url_to(p['url'])} for p in place['links'].blocks],
+                        'links': [{'text':(p['text']),'url':p['url']} for p in place['links'].blocks],
                         'gaz': gaz_urls,
                         'longitude': place['longitude'],
                         'latitude': place['latitude'],
