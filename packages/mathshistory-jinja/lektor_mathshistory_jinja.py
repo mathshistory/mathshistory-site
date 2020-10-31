@@ -70,6 +70,9 @@ class MathshistoryJinjaPlugin(Plugin):
                 return 'were'
             return tense(year)
 
+        def actual_safe(text):
+            return text.__html__().unescape()
+
         self.env.jinja_env.filters['refs_format'] = refs_format
         self.env.jinja_env.filters['basename'] = basename
         self.env.jinja_env.filters['without_ext'] = without_ext
@@ -79,3 +82,4 @@ class MathshistoryJinjaPlugin(Plugin):
         self.env.jinja_env.filters['tense'] = tense
         self.env.jinja_env.filters['tense_plural'] = tense_plural
         self.env.jinja_env.filters['num2words'] = num2words
+        self.env.jinja_env.filters['actual_safe'] = actual_safe
