@@ -32,7 +32,7 @@
   <body class="poster">
     <div class="poster-main">
       <p>
-        {% set bigimages = this.parent.attachments.images.filter(F._model == 'biographyimage').filter(F.main == False) %}
+        {% set bigimages = this.parent.attachments.images.filter(F._model == 'biographyimage').filter(F.main == False).order_by('order') %}
         <img src="{{ bigimages.first()|url }}" />
       </p>
 
