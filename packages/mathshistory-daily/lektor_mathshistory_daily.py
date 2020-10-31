@@ -1,29 +1,20 @@
 # -*- coding: utf-8 -*-
 import posixpath
-import json
-import os
 import time
-import traceback
 import random
 import math
 import datetime
 
 from lektor.build_programs import BuildProgram
-from lektor.environment import Expression, FormatExpression
 from lektor.pluginsystem import Plugin
 from lektor.sourceobj import VirtualSourceObject
-from lektor.utils import build_url, bool_from_string
+from lektor.utils import build_url
 from lektor.context import get_ctx
-from lektor.db import Page
-from lektor.environment import PRIMARY_ALT
-from lektor.utils import cleanup_path
+from lektor.db import Page, F
 
 VIRTUAL_SOURCE_ID = 'oftheday'
 SOURCE_PATH = '/Biographies'
 OUTPUT_PATH = '/OfTheDay'
-
-_born_cache = None
-_died_cache = None
 
 # thanks to https://stackoverflow.com/a/5891598/2370460
 def suffix(d):
@@ -45,60 +36,6 @@ def random_int(day):
         random_num = random.randint(0,10000)
 
     return random_num
-
-def get_born_cache(pad):
-    get_page_cache(pad)
-    return _born_cache
-def get_died_cache(pad):
-    get_page_cache(pad)
-    return _died_cache
-
-def get_page_cache(pad):
-    global _born_cache, _died_cache
-    if _born_cache != None and _died_cache != None:
-        return
-    _born_cache = {}
-    _died_cache = {}
-
-    # populate them
-    for name, _, is_attachment in pad.db.iter_items('/Biographies'):
-        if is_attachment:
-            continue
-
-        # use special pad_get which doesn't auto add dependencies
-        record = pad_get(pad, '%s/%s' % ('/Biographies', name))
-
-        # born
-        born = record['birthdate']
-        if born:
-            try:
-                born = time.strptime(born, '%d %B %Y')
-                day = born.tm_mday
-                month = born.tm_mon
-                born = format_day(day, month)
-                if born not in _born_cache:
-                    _born_cache[born] = []
-                _born_cache[born].append(record)
-            except ValueError:
-                pass
-            except:
-                traceback.print_exc()
-
-        # died
-        died = record['deathdate']
-        if died:
-            try:
-                died = time.strptime(died, '%d %B %Y')
-                day = died.tm_mday
-                month = died.tm_mon
-                died = format_day(day, month)
-                if died not in _died_cache:
-                    _died_cache[died] = []
-                _died_cache[died].append(record)
-            except ValueError:
-                pass
-            except:
-                traceback.print_exc()
 
 def month_days(month):
     res = []
@@ -158,6 +95,8 @@ class OfTheDayPage(VirtualSourceObject):
         self.day = day
         self._quote = None
         self.template = 'plugins/oftheday.html'
+        self._born_cache = None
+        self._died_cache = None
 
     def record_dependencies(self, records):
         ctx = get_ctx()
@@ -172,15 +111,19 @@ class OfTheDayPage(VirtualSourceObject):
 
     @property
     def born(self):
-        cache = get_born_cache(self.pad)
-        self.record_dependencies(cache[self.day])
-        return cache[self.day]
+        if self._born_cache == None:
+            start_of_date = datetime.datetime.strptime(self.day, '%m-%d').strftime('%d %B')
+            query = self.pad.query(SOURCE_PATH).filter(F.birthdate.startswith(start_of_date)).order_by('birthyear')
+            self._born_cache = query.all()
+        return self._born_cache
 
     @property
     def died(self):
-        cache = get_died_cache(self.pad)
-        self.record_dependencies(cache[self.day])
-        return cache[self.day]
+        if self._died_cache == None:
+            start_of_date = datetime.datetime.strptime(self.day, '%m-%d').strftime('%d %B')
+            query = self.pad.query(SOURCE_PATH).filter(F.deathdate.startswith(start_of_date)).order_by('deathyear')
+            self._died_cache = query.all()
+        return self._died_cache
 
     @property
     def quote(self):
@@ -314,61 +257,3 @@ class MathshistoryDailyPlugin(Plugin):
 
             yield OfTheDayIndexPage(record)
             yield OfTheDayTodayPage(record)
-
-
-
-
-##### PAD GET #####
-
-# re-implementation of pad.get without dependency tracking
-def pad_get(pad, path, alt=PRIMARY_ALT, page_num=None, persist=True,
-        allow_virtual=True):
-    virt_markers = path.count('@')
-
-    # If the virtual marker is included, we also want to look up the
-    # virtual path below an item.  Special case: if virtual paths are
-    # not allowed but one was passed, we just return `None`.
-    if virt_markers == 1:
-        if page_num is not None:
-            raise RuntimeError('Cannot use both virtual paths and '
-                               'explicit page number lookups.  You '
-                               'need to one or the other.')
-        if not allow_virtual:
-            return None
-        path, virtual_path = path.split('@', 1)
-        rv = pad_get(pad, path, alt=alt, page_num=page_num,
-                      persist=persist)
-        if rv is None:
-            return None
-        return pad.get_virtual(rv, virtual_path)
-
-    # Sanity check: there must only be one or things will get weird.
-    elif virt_markers > 1:
-        return None
-
-    path = cleanup_path(path)
-    virtual_path = None
-    if page_num is not None:
-        virtual_path = str(page_num)
-
-    rv = pad.cache.get(path, alt, virtual_path)
-    if rv is not Ellipsis:
-        if rv is not None:
-            #pad.db.track_record_dependency(rv)
-            pass
-        return rv
-
-    raw_data = pad.db.load_raw_data(path, alt=alt)
-    if raw_data is None:
-        pad.cache.remember_as_missing(path, alt, virtual_path)
-        return None
-
-    rv = pad.instance_from_data(raw_data, page_num=page_num)
-
-    if persist:
-        pad.cache.persist(rv)
-    else:
-        pad.cache.remember(rv)
-
-    #return self.db.track_record_dependency(rv)
-    return rv
