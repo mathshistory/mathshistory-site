@@ -152,7 +152,7 @@
   <div class="col-md-12">
     <ol name="xrefs">
       {% for xref in this.xrefs %}
-      <li><a href="{{ xref.record|url }}">{{ xref.title|actual_safe|safe }}</a></li>
+      <li><a href="{{ xref.record|url }}">{{ xref.title|safe }}</a></li>
       {% endfor %}
     </ol>
   </div>
