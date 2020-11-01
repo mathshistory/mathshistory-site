@@ -110,9 +110,14 @@ class OfTheDayPage(VirtualSourceObject):
         return custom_strftime('{S} %B', thisday_datetime)
 
     @property
+    def start_of_date(self):
+        # the 2020 is because it was a leap year, and is needed for the 29th feb to work
+        return datetime.datetime.strptime('%s-2020' % self.day, '%m-%d-%Y').strftime('%d %B').lstrip('0')
+
+    @property
     def born(self):
         if self._born_cache == None:
-            start_of_date = datetime.datetime.strptime(self.day, '%m-%d').strftime('%d %B').lstrip('0')
+            start_of_date = self.start_of_date()
             query = self.pad.query(SOURCE_PATH).filter(F.birthdate.startswith(start_of_date)).order_by('birthyear')
             self._born_cache = query.all()
         return self._born_cache
@@ -120,7 +125,7 @@ class OfTheDayPage(VirtualSourceObject):
     @property
     def died(self):
         if self._died_cache == None:
-            start_of_date = datetime.datetime.strptime(self.day, '%m-%d').strftime('%d %B').lstrip('0')
+            start_of_date = self.start_of_date()
             query = self.pad.query(SOURCE_PATH).filter(F.deathdate.startswith(start_of_date)).order_by('deathyear')
             self._died_cache = query.all()
         return self._died_cache
