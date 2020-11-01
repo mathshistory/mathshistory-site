@@ -117,7 +117,7 @@ class OfTheDayPage(VirtualSourceObject):
     @property
     def born(self):
         if self._born_cache == None:
-            start_of_date = self.start_of_date()
+            start_of_date = self.start_of_date
             query = self.pad.query(SOURCE_PATH).filter(F.birthdate.startswith(start_of_date)).order_by('birthyear')
             self._born_cache = query.all()
         return self._born_cache
@@ -125,7 +125,7 @@ class OfTheDayPage(VirtualSourceObject):
     @property
     def died(self):
         if self._died_cache == None:
-            start_of_date = self.start_of_date()
+            start_of_date = self.start_of_date
             query = self.pad.query(SOURCE_PATH).filter(F.deathdate.startswith(start_of_date)).order_by('deathyear')
             self._died_cache = query.all()
         return self._died_cache
