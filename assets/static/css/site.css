@@ -100,7 +100,7 @@ img {
   text-align: center;
 }
 .pictdisplay.row img {
-  padding: 10px;
+  margin: 10px;
 }
 
 #_Loader-status {
