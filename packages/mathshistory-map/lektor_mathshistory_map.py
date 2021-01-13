@@ -31,6 +31,30 @@ def format_latlon(dd_lat, dd_lon):
 
     return "%s°%s'%s %s°%s'%s" % (lat_deg, lat_min, lat_direction, lon_deg, lon_min, lon_direction)
 
+def purge_mlink(s):
+    #The below code is modified from the original htmlformat function to ensure compatibility
+    rawch   = ['á','à','â','ä','ã','Á','Â','Ä','é','è','ê','ë','É','î','í','ó','ô','ö','ò','õ','Ö','û','ú','ü','ù','Ü','ç','ï','ø','Ø','ñ','ł','Ł','ś','Ś','ț','Ț']
+    transch = ['a','a','a','a','a','A','A','A','e','e','e','e','E','i','i','o','o','o','o','o','O','u','u','u','u','U','c','i','o','O','n','l','L','s','S','t','T']
+    for idx, raw in enumerate(rawch):
+        trans = transch[idx]
+        s = s.replace(raw, trans)
+    return s
+
+def query_to_display(query):
+    display_records = []
+    for record in query:
+        alphabetical = record['alphabetical']
+        for display in alphabetical:
+            purged = purge_mlink(display).lower()
+            data = {
+                'record': record,
+                'display': display,
+                'purged': purged
+            }
+            display_records.append(data)
+    display_records_sorted = sorted(display_records, key=lambda p: p['purged'])
+    return display_records_sorted
+
 class MapData(VirtualSourceObject):
     def __init__(self, parent):
         VirtualSourceObject.__init__(self, parent)
@@ -77,11 +101,12 @@ class MapData(VirtualSourceObject):
                     }
 
                 # populate the places with people
-                for person in self.pad.query('/Biographies').order_by('shortname'):
+                for display_person in query_to_display(self.pad.query('/Biographies')):
+                    person = display_person['record']
                     place_id = person['maplocation']
                     if place_id and place_id.strip() != '' and place_id in places:
                         data = {
-                            'name': person['shortname'],
+                            'name': display_person['display'],
                             'url': self.parent.url_to(person),
                             'near': person['nearplace']
                         }
