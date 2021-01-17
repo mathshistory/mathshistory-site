@@ -17,6 +17,7 @@ from lektor._compat import PY2
 from lektor.context import get_ctx
 from lektor.pluginsystem import Plugin
 from lektor.types import Type
+from lektor.sourceobj import VirtualSourceObject
 
 RENDERER_ERROR_PREFIX = 'Renderer error: '
 KATEX_SERVER_URL = 'http://127.0.0.1:5002/'
@@ -284,6 +285,9 @@ def trender(match, record):
     return generated_html
 
 def get_flowblock(record, blockkey, number):
+    # for a virtual source object, look in the parent's fields
+    if issubclass(type(record), VirtualSourceObject):
+        record = record.parent
     if blockkey not in record:
         print('%srecord %s does not have field %s' % (RENDERER_ERROR_PREFIX, record, blockkey))
         return False
