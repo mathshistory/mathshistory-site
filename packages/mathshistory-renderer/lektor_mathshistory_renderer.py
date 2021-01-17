@@ -56,8 +56,9 @@ class HTML(object):
     def __render(self):
         try:
             context = get_ctx()
+            source = context.source if context is not None else self.__record
             if self.__html is None or self.__cached_for_ctx != context:
-                self.__html = render(self.source, self.__record())
+                self.__html = render(self.source, source)
                 self.__cached_for_ctx = context
         except:
             print(RENDERER_ERROR_PREFIX)
