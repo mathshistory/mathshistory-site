@@ -52,7 +52,7 @@ blockquote:before {
 
 /* [gl]...[/gl] */
 .gllink {
-  color: green;
+  color: #008000;
 }
 
 /* [ac]...[/ac] */
@@ -72,7 +72,7 @@ blockquote:before {
 
 /* [t]...[/t] */
 .translation {
-  color: red !important;
+  color: #EB0000 !important;
   cursor: pointer;
 }
 
@@ -95,17 +95,17 @@ table {
 }
 
 .math-error {
-  color: red;
+  color: #EB0000;
 }
 
 .red-text {
-  color: red;
+  color: #EB0000;
 }
 .blue-text {
   color: blue;
 }
 .green-text {
-  color: green;
+  color: #008000;
 }
 .brown-text {
   color: brown;
