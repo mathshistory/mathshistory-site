@@ -87,7 +87,7 @@
         {{ page.deathyear|format_year }}:
         <a href="{{ page|url }}">{{ page.shortname }}</a>
         {% if page|has_died_poster %}
-        (<a href="{{ '%s/@poster/died'|format(page.path)|url }}">poster</a>)
+        (<a href="{{ '%s/@poster/died'|format(page.path)|url }}" aria-label="Poster of {{ page.shortname|e }}">poster</a>)
         {% endif %}
       </li>
     {% endfor %}
