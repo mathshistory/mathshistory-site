@@ -58,7 +58,7 @@ if ($mode === "") {
 <div class="row">
   <div class="col-md-12 col-md-offset-3 text-center">
     <form action="?" method="GET">
-      <input required name="query" type="text" accesskey="q" placeholder="Search">
+      <input required name="query" type="text" accesskey="q" placeholder="Search Query">
       <button type="submit">Search</button>
     </form>
   </div>
@@ -105,7 +105,7 @@ if ($mode === "query") {
 
       <!-- have the search box again -->
       <h6>Search Query</h6>
-      <input required name="query" type="text" accesskey="q" placeholder="Search" value="<?php echo $query_string; ?>" />
+      <input required name="query" type="text" accesskey="q" placeholder="Search" value="<?php echo $query_string; ?>" placeholder="Search Query" />
 
       <!-- allow choosing of what sections of the site to search -->
       <h6>Site Sections</h6>
