@@ -44,13 +44,16 @@
 </head>
 
 <body>
-  <main role="main" class="container">
+  <div class="container">
 
     {#  tell funnelback not to index the header #}
     <!--noindex-->
 
     <!-- HEADER -->
     <header class="site-header py-3">
+      <!-- skip link for accessibility -->
+      <a class="skip-link" href="#main">Skip to content</a>
+
       <div class="row flex-nowrap justify-content-between align-items-center">
         <div class="col pt-1">
           <a class="site-header-name" href="{{ '/'|url }}">
@@ -80,7 +83,9 @@
 
     <!--endnoindex-->
 
-    {% block body %}{% endblock %}
+    <main id="main">
+      {% block body %}{% endblock %}
+    </main>
 
     {#  tell funnelback not to index the footer #}
     <!--noindex-->
@@ -110,7 +115,7 @@
 
     <!--endnoindex-->
 
-  </main>
+  </div>
 
   {% block scripts %}
   <script src="{{ '/static/js/popper.min.js'|asseturl }}"></script>

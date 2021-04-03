@@ -162,3 +162,17 @@ img {
 .jump-label {
   text-transform: capitalize;
 }
+
+/* for the "jump to content" link on all pages */
+.skip-link {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  font-weight: 700;
+  padding: 4px;
+  position: absolute;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0%);
+}
