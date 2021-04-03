@@ -404,6 +404,7 @@ def correct_link(link, record):
 # this might be quite slow. but John likes non-italic numbers/brackets, so it has to stay for now
 NON_ITALIC_PATTERN = re.compile(r'([\d\[\]\(\)]+)')
 NON_ITALIC_DONT_MATCH_TAG = ('pre','code')
+TAG_REPLACEMENTS = [('b', 'strong'), ('i', 'em')]
 def fix_italics(x, record):
     try:
         s = BeautifulSoup(x, 'html5lib')
@@ -447,6 +448,11 @@ def fix_italics(x, record):
 
                 # non-urls get standard conversion
                 link['href'] = correct_link(link['href'], record)
+        
+        # replace <b> with <strong> and <i> with <em>
+        for tag, new_tag in TAG_REPLACEMENTS:
+            for node in s.find_all(tag, {}):
+                node.name = new_tag
 
         # render it back to a string
         out = ''.join((str(child) for child in s.body.children))
