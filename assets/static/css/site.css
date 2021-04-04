@@ -177,3 +177,8 @@ img {
 .skip-link:focus {
   transform: translateY(0%);
 }
+
+main a, footer a {
+  text-decoration: underline;
+  text-decoration-color: lightgrey;
+}
