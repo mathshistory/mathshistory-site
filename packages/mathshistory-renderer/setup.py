@@ -26,7 +26,7 @@ setup(
     install_requires=['beautifulsoup4','html5lib','regex'],
     py_modules=['lektor_mathshistory_renderer'],
     url='https://github.com/mathshistory/mathshistory-renderer',
-    version='0.4.13',
+    version='0.4.14',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',

@@ -341,10 +341,26 @@ def drender(match, record):
         name = '%s.gif' % name
     href = '/Diagrams/%s' % name
 
-    if params != '':
-        return '<img class="diagram" src="%s" %s />' % (href, params)
+    # get the alt text
+    try:
+        pad = get_ctx().pad
+        diagram = pad.get(href)
+        alttext = diagram['alttext']
+        alttext = html.escape(alttext, quote=True)
+    except:
+        print('Error getting alt text for diagram "%s"' % href)
+        traceback.print_exc()
+        alttext = False
+
+    if alttext:
+        alttag = ' alt="%s"' % alttext
     else:
-        return '<img class="diagram" src="%s" />' % href
+        alttag = ''
+
+    if params != '':
+        return '<img class="diagram"%s src="%s" %s />' % (alttag, href, params)
+    else:
+        return '<img class="diagram"%s src="%s" />' % (alttag, href)
 
 
 def katexprerender(match, storage):
