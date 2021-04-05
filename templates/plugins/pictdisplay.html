@@ -48,7 +48,7 @@
   <div class="col-md-6">
   {% endif %}
 
-  <img src="{{ image|url }}"{% if image['height'] %} style="height: {{ image['height'] }}px"{% endif %} {% if image.description %}alt="{{ image.description|e }}" {% endif %}/>
+  <img src="{{ image|url }}"{% if image['height'] %} style="height: {{ image['height'] }}px"{% endif %} {% if image.alttext %}alt="{{ image.alttext|e }}" {% endif %}/>
   {% if image.description %}
   <p>{{ image.description }}</p>
   {% endif %}
