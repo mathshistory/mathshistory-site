@@ -341,10 +341,26 @@ def drender(match, record):
         name = '%s.gif' % name
     href = '/Diagrams/%s' % name
 
-    if params != '':
-        return '<img class="diagram" src="%s" %s />' % (href, params)
+    # get the alt text
+    try:
+        pad = get_ctx().pad
+        diagram = pad.get(href)
+        alttext = diagram['alttext']
+        alttext = html.escape(alttext, quote=True)
+    except:
+        print('Error getting alt text for diagram "%s"' % href)
+        traceback.print_exc()
+        alttext = False
+
+    if alttext:
+        alttag = ' alt="%s"' % alttext
     else:
-        return '<img class="diagram" src="%s" />' % href
+        alttag = ''
+
+    if params != '':
+        return '<img class="diagram"%s src="%s" %s />' % (alttag, href, params)
+    else:
+        return '<img class="diagram"%s src="%s" />' % (alttag, href)
 
 
 def katexprerender(match, storage):
@@ -404,6 +420,7 @@ def correct_link(link, record):
 # this might be quite slow. but John likes non-italic numbers/brackets, so it has to stay for now
 NON_ITALIC_PATTERN = re.compile(r'([\d\[\]\(\)]+)')
 NON_ITALIC_DONT_MATCH_TAG = ('pre','code')
+TAG_REPLACEMENTS = [('b', 'strong'), ('i', 'em')]
 def fix_italics(x, record):
     try:
         s = BeautifulSoup(x, 'html5lib')
@@ -447,6 +464,11 @@ def fix_italics(x, record):
 
                 # non-urls get standard conversion
                 link['href'] = correct_link(link['href'], record)
+        
+        # replace <b> with <strong> and <i> with <em>
+        for tag, new_tag in TAG_REPLACEMENTS:
+            for node in s.find_all(tag, {}):
+                node.name = new_tag
 
         # render it back to a string
         out = ''.join((str(child) for child in s.body.children))

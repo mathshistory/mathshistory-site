@@ -44,17 +44,20 @@
 </head>
 
 <body>
-  <main role="main" class="container">
+  <div class="container">
 
     {#  tell funnelback not to index the header #}
     <!--noindex-->
 
     <!-- HEADER -->
     <header class="site-header py-3">
+      <!-- skip link for accessibility -->
+      <a class="skip-link" href="#main">Skip to content</a>
+
       <div class="row flex-nowrap justify-content-between align-items-center">
         <div class="col pt-1">
           <a class="site-header-name" href="{{ '/'|url }}">
-            <h1 class="site-header-name"><img height="48" src="{{ '/static/img/logo.png'|url }}" />&nbsp;MacTutor</h1>
+            <h1 class="site-header-name"><img height="48" src="{{ '/static/img/logo.png'|url }}" alt="MacTutor logo" />&nbsp;MacTutor</h1>
           </a>
         </div>
       </div>
@@ -80,7 +83,9 @@
 
     <!--endnoindex-->
 
-    {% block body %}{% endblock %}
+    <main id="main">
+      {% block body %}{% endblock %}
+    </main>
 
     {#  tell funnelback not to index the footer #}
     <!--noindex-->
@@ -92,12 +97,12 @@
           <a href="{{ '/Miscellaneous/copyright/'|url }}">Copyright information</a>
         </div>
         <div class="links-footer col-md-6">
-          <a href="http://www.st-andrews.ac.uk/maths/" target="_blank">School of Mathematics and Statistics</a>
+          <a href="https://www.st-andrews.ac.uk/mathematics-statistics/" target="_blank">School of Mathematics and Statistics</a>
           <br/>
           <a href="http://www.st-andrews.ac.uk/" target="_blank">University of St Andrews, Scotland</a>
         </div>
         <div class="col-md-2">
-          <img src="{{ '/static/img/st-andrews-logo.png'|asseturl }}" alt="University of St Andrews logo">
+          <img src="{{ '/static/img/st-andrews-logo.png'|asseturl }}" alt="University of St. Andrews logo">
         </div>
       </div>
       <hr/>
@@ -110,7 +115,7 @@
 
     <!--endnoindex-->
 
-  </main>
+  </div>
 
   {% block scripts %}
   <script src="{{ '/static/js/popper.min.js'|asseturl }}"></script>

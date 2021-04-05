@@ -79,7 +79,7 @@
     {% if numbigimages > 0 %}
     <a href="{{ '%s/@pictdisplay'|format(this.path)|url }}" target="_blank">
     {% endif %}
-    <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
+    <img class="biography-thumbnail" src="{{ thumbnail|url }}" alt="Thumbnail of {{ this.shortname|e }}" />
     {% if numbigimages > 0 %}
     <br/>
     View {{ numbigimages|num2words }} larger picture{% if numbigimages > 1 %}s{% endif %}</a>
@@ -137,7 +137,6 @@
       {% endfor %}
     </ol>
   </div>
-  </div>
 </div>
 {% endif %}
 
@@ -155,7 +154,6 @@
       <li><a href="{{ xref.record|url }}">{{ xref.title|safe }}</a></li>
       {% endfor %}
     </ol>
-  </div>
   </div>
 </div>
 {% endif %}

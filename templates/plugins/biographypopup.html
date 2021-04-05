@@ -4,7 +4,7 @@
     {% set thumbnail = this.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
     {% if thumbnail %}
     <div class="float-right">
-      <img class="biography-thumbnail" src="{{ thumbnail|url }}" />
+      <img class="biography-thumbnail" src="{{ thumbnail|url }}" alt="Thumbnail of {{ this.shortname|e }}" />
     </div>
     {% endif %}
     <div>

@@ -23,7 +23,7 @@
     {% if mathematician.has_pictdisplay %}
     <a href="{{ '%s/@pictdisplay'|format(mathematician.page.path)|url }}">
     {% endif %}
-      <img src="{{ mathematician.thumbnail|url }}" class="pictureindex-thumbnail" />
+      <img src="{{ mathematician.thumbnail|url }}" class="pictureindex-thumbnail" alt="Thumbnail of {{ mathematician.page.shortname|e }}" />
     {% if mathematician.has_pictdisplay %}
     </a>
     {% endif %}

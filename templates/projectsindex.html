@@ -27,7 +27,7 @@
     {% for page in site.query('/Projects') %}
       <li>
         <p>
-          <b><a href="{{ page|url }}">{{ page.title }}</a></b>
+          <strong><a href="{{ page|url }}">{{ page.title }}</strong></b>
           <br/>
           by {{ page.author }}
         </p>
@@ -35,7 +35,7 @@
     {% endfor %}
     <ul>
     {% else %}
-    <i>No projects found</i>
+    <em>No projects found</em>
     {% endif %}
   </div>
 </div>

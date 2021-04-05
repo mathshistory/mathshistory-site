@@ -22,7 +22,7 @@
 
 <div class="row px-5">
   <div class="col">
-    <div id="alphabetical-index-jumpbox" class="mb-3">
+    <div class="mb-3">
       <h1>Other Indexes</h1>
     </div>
     <ul>
@@ -31,14 +31,13 @@
       <li><a href="{{ '/@otherindexes/pictures'|url }}">Pictures</a></li>
       <li><a href="{{ '/Miscellaneous/recent_changes'|url }}">Recent Changes</a></li>
     </ul>
-    </div>
   </div>
 </div>
 
 {% for column in get_categories_by_type(site, 'biographies')|slice(2) %}
 {% if loop.first %}
 <div class="row px-5 mt-3">
-  <div id="alphabetical-index-jumpbox" class="col-md-12">
+  <div class="col-md-12">
     <h1>Categories</h1>
   </div>
 {% endif %}
