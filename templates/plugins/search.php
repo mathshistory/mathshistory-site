@@ -160,9 +160,9 @@ if ($mode === "query") {
       echo $content;
     ?>
   </div>
+</div>
 <?php
 }
 ?>
-</div>
 
 {% endblock %}
