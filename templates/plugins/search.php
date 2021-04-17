@@ -104,12 +104,12 @@ if ($mode === "query") {
     <form action="?" method="GET">
 
       <!-- have the search box again -->
-      <h6>Search Query</h6>
-      <input required name="query" type="text" accesskey="q" placeholder="Search" value="<?php echo $query_string; ?>" placeholder="Search Query" />
+      <label for="query" class="h5">Search Query</label>
+      <input required id="query" name="query" type="text" accesskey="q" placeholder="Search" value="<?php echo $query_string; ?>" placeholder="Search Query" />
 
       <!-- allow choosing of what sections of the site to search -->
-      <h6>Site Sections</h6>
-      <fieldset>
+      <fieldset class="mt-3">
+        <legend class="h5">Site Sections</legend>
         <label><input type="checkbox" name="section_biographies" <?php if (isset($section_biographies)) echo "checked"; ?> /> Biographies</label>
         <br/>
         <label><input type="checkbox" name="sections_histtopics" <?php if (isset($sections_histtopics)) echo "checked"; ?> /> History Topics</label>
