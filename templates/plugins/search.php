@@ -99,7 +99,7 @@ if ($mode === "query") {
 ?>
 <div class="row">
   <div class="col-md-3">
-    <h4>Filter</h4>
+    <h3>Filter</h3>
 
     <form action="?" method="GET">
 
@@ -128,7 +128,7 @@ if ($mode === "query") {
 
   </div>
   <div class="col-md-9">
-    <h4>Results</h4>
+    <h3>Results</h3>
 
     <?php
       // get where to begin displaying the results at
