@@ -37,7 +37,7 @@ for (var i = 0; i < links.length; i++) {
   if (! (isExtraLink || isPictdisplayLink)) continue
   link.onclick = function (link, isPictdisplay, e) {
     var width = 600
-    if (isPictdisplay) width = 768
+    if (isPictdisplay) width = 868
     var href = link.href
     extraLinkPopup(href, width)
     e.preventDefault()
