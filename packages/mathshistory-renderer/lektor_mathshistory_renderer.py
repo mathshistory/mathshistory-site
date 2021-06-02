@@ -262,7 +262,9 @@ def extrarender(match, record):
         return ''
     href = extra['link'].strip()
     href = correct_link(href, record)
-    return '<a class="elink" href="%s" target="_blank">THIS LINK</a>' % href
+    aria_label = extra['text'].__html__().unescape().strip()
+    aria_label = html.escape(aria_label, quote=True)
+    return '<a class="elink" href="%s" target="_blank" aria-label="%s">THIS LINK</a>' % (href, aria_label)
 
 def referencerender(match, record):
     number = match.group('number')
