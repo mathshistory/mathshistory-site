@@ -1,12 +1,16 @@
 /* css rules for the bbcode content that is converted into HTML */
 
+.markup h2, .markup h3, .markup h4, .markup h5, .markup h6 {
+  margin-top: 1rem;
+}
+
 /* numbers, round brackets, square brackets, curly brackets */
-.non-italic {
+.markup .non-italic {
   font-style: normal;
 }
 
 /* [quote]...[/quote] */
-blockquote {
+.markup blockquote {
   background: #f9f9f9;
   border-left: 10px solid #ccc;
   margin-top: 0.7em;
@@ -17,7 +21,7 @@ blockquote {
   font-style: italic;
   text-align: justify;
 }
-blockquote:before {
+.markup blockquote:before {
   color: #ccc;
   font-size: 4em;
   line-height: 0.1em;
@@ -25,97 +29,97 @@ blockquote:before {
 }
 
 /* [center]...[/center] */
-.center-paragraph {
+.markup .center-paragraph {
   text-align: center;
 }
 
 /* [ind]...[/ind] */
-.indent-paragraph {
+.markup .indent-paragraph {
   /* directly from hypercard */
   margin: 1em 0 1em 40px;
 }
 
 /* [ovl]...[/ovl] */
-.overline {
+.markup .overline {
   text-decoration: overline;
 }
 
 /* [sub]...[/sub] */
-.subscript {
+.markup .subscript {
   vertical-align: sub;
 }
 
 /* [sup]...[/sup] */
-.superscript {
+.markup .superscript {
   vertical-align: super;
 }
 
 /* [gl]...[/gl] */
-.gllink {
+.markup .gllink {
   color: #008000;
 }
 
 /* [ac]...[/ac] */
-.aclink {
+.markup .aclink {
   color: brown;
 }
 
 /* [big]...[/big] */
-.bigger {
+.markup .bigger {
   font-size: larger;
 }
 
 /* [small]...[/small] */
-.smaller {
+.markup .smaller {
   font-size: smaller;
 }
 
 /* [t]...[/t] */
-.translation {
+.markup .translation {
   color: #EB0000 !important;
   cursor: pointer;
 }
 
-.katex {
+.markup .katex {
   font-size: 1em !important;
 }
 
-.blue-block {
+.markup .blue-block {
   background-color: #ccffff;
   padding: 10px;
 }
 
-.grey-block {
+.markup .grey-block {
   background-color: #cccccc;
   padding: 10px;
 }
 
-table {
+.markup table {
   width: 100%;
 }
 
-.math-error {
+.markup .math-error {
   color: #EB0000;
 }
 
-.red-text {
+.markup .red-text {
   color: #EB0000;
 }
-.blue-text {
+.markup .blue-text {
   color: blue;
 }
-.green-text {
+.markup .green-text {
   color: #008000;
 }
-.brown-text {
+.markup .brown-text {
   color: brown;
 }
 
-.diagram {
+.markup .diagram {
   border: none;
   margin: 5px 0 5px 10px;
 }
 
-pre {
+.markup pre {
   margin-top: 1rem;
 }
