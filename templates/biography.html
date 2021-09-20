@@ -99,7 +99,7 @@
 </div>
 
 {% set hasquotations = this.quotations and this.quotations.blocks|length > 0 %}
-{% set hascountry = this.country %}
+{% set hascountry = this.country and site.get('/Countries/%s'|format(this.country)) %}
 {% set hasposter = this|has_lived_poster %}
 
 {% if hasquotations or hascountry or hasposter %}
@@ -108,7 +108,7 @@
   <div class="col-md-12">
     {% if hasquotations %}<a href="{{ '%s/@quotations'|format(this.path)|url }}">Quotations by {{ this.shortname }}</a>{% endif %}
     {% if hasquotations and (hascountry or hasposter) %}<br/>{% endif %}
-    {% if hascountry %}<a href="{{ '/Countries/%s/'|format(this.country)|url }}">Other Mathematicians born in {{ this.country }}</a>{% endif %}
+    {% if hascountry %}<a href="{{ '/Countries/%s/'|format(this.country)|url }}">Other Mathematicians born in {{ hascountry.name }}</a>{% endif %}
     {% if hasposter and hascountry %}<br/>{% endif %}
     {% if hasposter %}<a href="{{ '%s/@poster/lived'|format(this.path)|url }}">A Poster of {{ this.shortname }}</a>{% endif %}
   </div>
