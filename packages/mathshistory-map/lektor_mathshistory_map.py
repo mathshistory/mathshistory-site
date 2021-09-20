@@ -41,10 +41,12 @@ def purge_mlink(s):
     return s
 
 def query_to_display(query):
+    # this is a modified version that only returns the first alphabetical listing for each record, not them all
     display_records = []
     for record in query:
         alphabetical = record['alphabetical']
-        for display in alphabetical:
+        if len(alphabetical) > 0:
+            display = alphabetical[0]
             purged = purge_mlink(display).lower()
             data = {
                 'record': record,
