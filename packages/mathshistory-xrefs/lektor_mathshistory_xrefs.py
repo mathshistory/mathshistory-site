@@ -183,6 +183,10 @@ class MathshistoryXrefsPlugin(Plugin):
         res = None
         for path in current_paths:
             record = pad_get(build_state.pad, path)
+            # if the path leads to a deleted object, we can ignore it
+            # this is okay, as on the next entire site build, it will be picked up and the db will resync
+            if record == None:
+                continue
             model = record['_model']
             title = ''
             sort = 0
