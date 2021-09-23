@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_xrefs'],
     url='https://github.com/mathshistory/mathshistory-xrefs',
-    version='0.1.4',
+    version='0.1.5',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
