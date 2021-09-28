@@ -220,7 +220,7 @@ def render(source, record):
         html_formula = html_array[idx]
         source = source.replace(key, html_formula)
 
-    return '<span class="markup">\n%s\n</span>' % source
+    return '<span class="markup">%s</span>' % source
 
 
 
