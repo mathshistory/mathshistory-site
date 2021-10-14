@@ -9,7 +9,7 @@
   $baseUrl = "https://l-funadmin.st-andrews.ac.uk/s/search.html?";
   $mode = "";
   $query = "";
-  $collection = "uofsa-web-maths-history";
+  $collection = "uosa-web-maths-history";
   $profile = "_default";
   $form = "resultsonly";
   $theme = "";
