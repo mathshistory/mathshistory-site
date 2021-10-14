@@ -6,7 +6,7 @@
     ),
   );
 
-  $baseUrl = "https://l-funadmin.st-andrews.ac.uk/s/search.html?";
+  $baseUrl = "https://st-andrews-search.clients.uk.funnelback.com/s/search.html?";
   $mode = "";
   $query = "";
   $collection = "uosa-web-maths-history";
