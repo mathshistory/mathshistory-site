@@ -15,6 +15,7 @@ from lektor.db import Page, F
 VIRTUAL_SOURCE_ID = 'oftheday'
 SOURCE_PATH = '/Biographies'
 OUTPUT_PATH = '/OfTheDay'
+MESSAGE_PATH = '/Miscellaneous/messages'
 
 # thanks to https://stackoverflow.com/a/5891598/2370460
 def suffix(d):
@@ -97,6 +98,7 @@ class OfTheDayPage(VirtualSourceObject):
         self.template = 'plugins/oftheday.html'
         self._born_cache = None
         self._died_cache = None
+        self._message_cache = None
 
     def record_dependencies(self, records):
         ctx = get_ctx()
@@ -113,6 +115,15 @@ class OfTheDayPage(VirtualSourceObject):
     def start_of_date(self):
         # the 2020 is because it was a leap year, and is needed for the 29th feb to work
         return datetime.datetime.strptime('%s-2020' % self.day, '%m-%d-%Y').strftime('%d %B').lstrip('0')
+
+    @property
+    def message(self):
+        if self._message_cache == None:
+            start_of_date = self.start_of_date
+            query = self.pad.query(MESSAGE_PATH).filter(datetime.datetime.strptime(F, '%m-%d').strftime('%d %B').startswith(start_of_date))
+            if query.count() > 0:
+                self._message_cache = query.first().content
+        return self._message_cache
 
     @property
     def born(self):
