@@ -57,6 +57,9 @@
   <!--endnoindex-->
 </div>
 
+{% import 'macros/references.html' as references %}
+{{ references.references(this.references) }}
+
 {% if this.authors %}
 <hr/>
 <div class="row">
