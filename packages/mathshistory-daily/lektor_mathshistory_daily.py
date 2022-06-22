@@ -98,7 +98,7 @@ class OfTheDayPage(VirtualSourceObject):
         self.template = 'plugins/oftheday.html'
         self._born_cache = None
         self._died_cache = None
-        self._message_cache = None
+        self._message_cache = None 
 
     def record_dependencies(self, records):
         ctx = get_ctx()
@@ -120,9 +120,10 @@ class OfTheDayPage(VirtualSourceObject):
     def message(self):
         if self._message_cache == None:
             start_of_date = self.start_of_date
-            query = self.pad.query(MESSAGE_PATH).filter(datetime.datetime.strptime(F, '%m-%d').strftime('%d %B').startswith(start_of_date))
-            if query.count() > 0:
-                self._message_cache = query.first().content
+            # query = self.pad.query(MESSAGE_PATH).filter(datetime.datetime.strptime(F, '%m-%d').strftime('%d %B').startswith(start_of_date))
+            query = self.pad.query(MESSAGE_PATH).first()
+            # if query.count() > 0:
+            self._message_cache = query
         return self._message_cache
 
     @property
