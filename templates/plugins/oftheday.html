@@ -61,104 +61,107 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
-{% if this.message %}
-<div class="row">
-  <h5>{{this.message.content}}</h5>
-</div>
-{% endif %}
-
-<div class="row">
-  <div class="col-md-6 markup">
-    Click on <span class="blue-text"> &#x24C5; </span> for a poster.
-  </div>
-</div>
-
-<hr />
-
-<div class="row">
-  <div class="col-md-6">
-    <h5>Born:</h5>
-    <ul>
-      {% for page in this.born|sort(attribute='birthyear') %}
-      <li>
-        {{ page.birthyear|format_year }}:
-        <a href="{{ page|url }}">{{ page.shortname }}</a>
-        {% if page|has_born_poster %}
-        <a
-          href="{{ '%s/@poster/born'|format(page.path)|url }}"
-          aria-label="Poster of {{ page.shortname|e }}"
-          >&#x24C5;</a
-        >
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class="col-md-6">
-    <h5>Died:</h5>
-    <ul>
-      {% for page in this.died|sort(attribute='deathyear') %}
-      <li>
-        {{ page.deathyear|format_year }}:
-        <a href="{{ page|url }}">{{ page.shortname }}</a>
-        {% if page|has_died_poster %}
-        <a
-          href="{{ '%s/@poster/died'|format(page.path)|url }}"
-          aria-label="Poster of {{ page.shortname|e }}"
-          >&#x24C5;</a
-        >
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-
-{% if this.quote %} {% set thumbnail =
-this.quote.person.attachments.images.filter(F._model ==
-'biographyimage').filter(F.main == True).first() %}
-<hr />
-<div class="row">
-  <div class="col-md-12">
-    <h4>Quotation of the day</h4>
-    <h5>
-      From
-      <a href="{{ this.quote.person|url }}"
-        >{{ this.quote.person.shortname }}</a
-      >
-    </h5>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-{% if thumbnail %}8{% else %}12{% endif %}">
-    {{ this.quote.quote }}
-  </div>
-
-  {% if thumbnail %} {% set numbigimages =
-  this.quote.person.attachments.images.filter(F._model ==
-  'biographyimage').filter(F.main == False).count() %}
-  <div class="col-md-4 biography-thumbnail-container">
-    {% if numbigimages > 0 %}
-    <a href="{{ '%s/@pictdisplay'|format(this.quote.person.path)|url }}">
-      {% endif %}
-      <img
-        class="biography-thumbnail"
-        src="{{ thumbnail|url }}"
-        alt="Thumbnail of {{ this.quote.person.shortname|e }}"
-      />
-      {% if numbigimages > 0 %}
-      <br />
-      View {{ numbigimages|num2words }} larger picture{% if numbigimages > 1
-      %}s{% endif %}</a
-    >
-    {% endif %}
+  {% if this.message %}
+  <div class="row">
+    <div class="col-md-12">
+      <h5>{{this.message.content}}</h5>
+    </div>
   </div>
   {% endif %}
-</div>
-{% endif %} {# do not change the line below! it is used by ofthedaytoday.php to
-add the theorem in #}
-<!-- insert theorem here -->
 
-{% endblock %}
+  <div class="row">
+    <div class="col-md-6 markup">
+      Click on <span class="blue-text"> &#x24C5; </span> for a poster.
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="row">
+    <div class="col-md-6">
+      <h5>Born:</h5>
+      <ul>
+        {% for page in this.born|sort(attribute='birthyear') %}
+        <li>
+          {{ page.birthyear|format_year }}:
+          <a href="{{ page|url }}">{{ page.shortname }}</a>
+          {% if page|has_born_poster %}
+          <a
+            href="{{ '%s/@poster/born'|format(page.path)|url }}"
+            aria-label="Poster of {{ page.shortname|e }}"
+            >&#x24C5;</a
+          >
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="col-md-6">
+      <h5>Died:</h5>
+      <ul>
+        {% for page in this.died|sort(attribute='deathyear') %}
+        <li>
+          {{ page.deathyear|format_year }}:
+          <a href="{{ page|url }}">{{ page.shortname }}</a>
+          {% if page|has_died_poster %}
+          <a
+            href="{{ '%s/@poster/died'|format(page.path)|url }}"
+            aria-label="Poster of {{ page.shortname|e }}"
+            >&#x24C5;</a
+          >
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  {% if this.quote %} {% set thumbnail =
+  this.quote.person.attachments.images.filter(F._model ==
+  'biographyimage').filter(F.main == True).first() %}
+  <hr />
+  <div class="row">
+    <div class="col-md-12">
+      <h4>Quotation of the day</h4>
+      <h5>
+        From
+        <a href="{{ this.quote.person|url }}"
+          >{{ this.quote.person.shortname }}</a
+        >
+      </h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-{% if thumbnail %}8{% else %}12{% endif %}">
+      {{ this.quote.quote }}
+    </div>
+
+    {% if thumbnail %} {% set numbigimages =
+    this.quote.person.attachments.images.filter(F._model ==
+    'biographyimage').filter(F.main == False).count() %}
+    <div class="col-md-4 biography-thumbnail-container">
+      {% if numbigimages > 0 %}
+      <a href="{{ '%s/@pictdisplay'|format(this.quote.person.path)|url }}">
+        {% endif %}
+        <img
+          class="biography-thumbnail"
+          src="{{ thumbnail|url }}"
+          alt="Thumbnail of {{ this.quote.person.shortname|e }}"
+        />
+        {% if numbigimages > 0 %}
+        <br />
+        View {{ numbigimages|num2words }} larger picture{% if numbigimages > 1
+        %}s{% endif %}</a
+      >
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %} {# do not change the line below! it is used by ofthedaytoday.php
+  to add the theorem in #}
+  <!-- insert theorem here -->
+
+  {% endblock %}
+</div>

@@ -124,7 +124,7 @@ class OfTheDayPage(VirtualSourceObject):
             if query.count() > 0:
                 self._message_cache = query.first()
             if (self._message_cache == None):
-                self._message_cache = "No message to show"
+                self._message_cache = {content: "No message to show"}
         return self._message_cache
 
     @property
