@@ -122,10 +122,10 @@ class OfTheDayPage(VirtualSourceObject):
             start_of_date = self.start_of_date
             query = self.pad.query(MESSAGE_PATH).filter(start_of_date.contains(datetime.datetime.strptime(F._id, '%m-%d').strftime('%d %B')))
             if query.count() > 0:
-                self._message_cache = query.first()
+                self._message_cache = query.first().content
             if (self._message_cache == None):
-                self._message_cache = {content: "No message to show"}
-        return self._message_cache
+                self._message_cache = "No message to show"
+        return self._message_cache + " here"
 
     @property
     def born(self):
