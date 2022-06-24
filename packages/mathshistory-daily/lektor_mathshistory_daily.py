@@ -123,7 +123,7 @@ class OfTheDayPage(VirtualSourceObject):
             query = self.pad.query(MESSAGE_PATH).filter(start_of_date.contains(datetime.datetime.strptime(F._id, '%m-%d').strftime('%d %B')))
             if query.count() > 0:
                 self._message_cache = query.first().content            
-        return " - " + self._message_cache + " - "
+        return self._message_cache
 
     @property
     def born(self):
