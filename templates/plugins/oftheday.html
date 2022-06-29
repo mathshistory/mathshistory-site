@@ -61,23 +61,13 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
-  {% if this.message %}
+  {% set message = site.query('/Miscellaneous/messages').first() %}
   <div class="row">
     <div class="col-md-12">
-      {{ this.message.content }}
+      {{ message.content }}
     </div>
   </div>
   <hr/>
-  {% endif %}
-
-  {% if this.message2 %}
-  <div class="row">
-    <div class="col-md-12">
-      {{ this.message2.birthdate }}
-    </div>
-  </div>
-  <hr/>
-  {% endif %}  
 
   <div class="row">
     <div class="col-md-6 markup">
