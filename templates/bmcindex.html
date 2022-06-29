@@ -47,7 +47,7 @@
       <tbody>
         {% for colloquium in this.children.order_by('year') %}
         <tr>
-          <td>{{ loop.index }}</td>
+          <td class="pr-3">{{ loop.index }}</td>
           <td>{{ colloquium.year }}</td>
           <td>{{ colloquium.place }}</td>
           <td><a href="{{ colloquium|url }}">Programme</a></td>
