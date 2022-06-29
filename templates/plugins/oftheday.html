@@ -61,19 +61,15 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
-  {% for item in site.query('/Miscellaneous/messages') %}
-    {% if item._id == this.day %}
-      {% set message = item.content %}
-    {% endif %}
-  {% endfor %}
-  {% if this.message %}
+  {% set message = site.query('/Miscellaneous/messages').filter(F._id.contains(this.day).first()) %}
+  
   <div class="row">
     <div class="col-md-12">
       {{ message }}
+      {{ this.day }}
     </div>
   </div>
   <hr/>
-  {% endif %}
 
   <div class="row">
     <div class="col-md-6 markup">
