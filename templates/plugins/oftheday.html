@@ -65,14 +65,16 @@ this.quote.person.attachments.images.filter(F._model ==
 
   <div class="row">
     <div class="col-md-4">
-      {{ item }}
+      {{ this.build_url.split("oftheday-",1)[1]) }}
     </div>
     <div class="col-md-4">
       {{ this.day_dash_month }}
     </div>
+    {% if this.build_url.split("oftheday-",1)[1]) == item._id %}
     <div class="col-md-4">
       {{ item._id }}
     </div>
+    {% endif %}
   </div>
 
   {% endfor %}

@@ -98,7 +98,6 @@ class OfTheDayPage(VirtualSourceObject):
         self.template = 'plugins/oftheday.html'
         self._born_cache = None
         self._died_cache = None
-        self._message_cache = None 
 
     def record_dependencies(self, records):
         ctx = get_ctx()
