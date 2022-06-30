@@ -110,10 +110,6 @@ class OfTheDayPage(VirtualSourceObject):
         thisday_datetime = datetime.datetime.fromtimestamp(time.mktime(time.strptime(self.day, '%m-%d')))
         return custom_strftime('{S} %B', thisday_datetime)
 
-    @property 
-    def day_dash_month(self):
-        return self.day
-
     @property
     def start_of_date(self):
         # the 2020 is because it was a leap year, and is needed for the 29th feb to work

@@ -61,23 +61,21 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
-  {% for item in site.query('/Miscellaneous/messages') %}  
+  {% set message = site.query('/Miscellaneous/messages').filter(F._id.contains('01-01')) %}  
+  {% set message2 = site.query('/Miscellaneous/messages').filter(this.url_path.contains(F._id)) %}  
 
   <div class="row">
     <div class="col-md-4">
-      {{ this.build_url.split("oftheday-",1)[1] }}
+      {{ message }}
     </div>
     <div class="col-md-4">
-      {{ this.day_dash_month }}
+      {{ message2 }}
     </div>
-    {% if this.build_url.split("oftheday-",1)[1] == item._id %}
     <div class="col-md-4">
-      {{ item._id }}
+      {{ this.url_path }}
     </div>
-    {% endif %}
   </div>
   <hr/>
-  {% endfor %}  
 
   <div class="row">
     <div class="col-md-6 markup">
