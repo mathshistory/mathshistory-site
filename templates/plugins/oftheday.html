@@ -61,14 +61,21 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
-  {% set message = site.query('/Miscellaneous/messages').filter(F._id.contains(this.day_dash_month)).first() %}
-  
+  {% for item in site.query('/Miscellaneous/messages') %}  
+
   <div class="row">
-    <div class="col-md-12">
-      {{ message }}
+    <div class="col-md-4">
+      {{ item }}
+    </div>
+    <div class="col-md-4">
       {{ this.day_dash_month }}
     </div>
+    <div class="col-md-4">
+      {{ item._id }}
+    </div>
   </div>
+
+  {% endfor %}
   <hr/>
 
   <div class="row">
