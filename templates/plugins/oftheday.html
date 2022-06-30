@@ -61,7 +61,7 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
-  {% set message = site.query('/Miscellaneous/messages').filter(F._id.contains(this.day_dash_month).first()) %}
+  {% set message = site.query('/Miscellaneous/messages').filter(F._id.contains(this.day_dash_month)).first() %}
   
   <div class="row">
     <div class="col-md-12">
