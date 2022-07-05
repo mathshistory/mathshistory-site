@@ -63,13 +63,13 @@ this.quote.person.attachments.images.filter(F._model ==
 
   <div class="row">
     <div class="col-md-12">
-      {{ this._path }}
+      {{ this._id }}
     </div>
   </div>  
 
   {% for item in site.query('/Miscellaneous/messages') %}  
 
-    {% if this._path.contains(item._id) %}
+    {% if this._id == item._id %}
     <div class="row">
       <div class="col-md-12">
         {{ item.content }}
