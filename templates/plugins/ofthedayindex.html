@@ -1,13 +1,11 @@
-{% extends "layout.html" %}
-
-{% block title %}Mathematicians Of The Day Index{% endblock %}
-
-{% block head %}
-{{ super() }}
-<link rel="stylesheet" href="{{ '/static/css/indexes.css'|asseturl }}" type="text/css">
-{% endblock %}
-
-{% block body %}
+{% extends "layout.html" %} {% block title %}Mathematicians Of The Day Index{%
+endblock %} {% block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ '/static/css/indexes.css'|asseturl }}"
+  type="text/css"
+/>
+{% endblock %} {% block body %}
 <div class="row">
   <div class="col-md-12">
     <h2>Mathematicians Of The Day</h2>
@@ -15,28 +13,33 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">{{this._path}}</div>
+</div>
+
 <!--noindex-->
-{% for month in range(1, 13) %}
-{% if loop.index0 is divisibleby 3 %}
+{% for month in range(1, 13) %} {% if loop.index0 is divisibleby 3 %}
 <div class="row mt-5">
-{% endif %}
+  {% endif %}
   <div class="col-md-4 of-the-day-month">
     <h5>{{ month|month_name }}</h5>
     <table>
-    {% for day in month_days(month) %}
-    {% if (day - 1) is divisibleby 7 %}
+      {% for day in month_days(month) %} {% if (day - 1) is divisibleby 7 %}
       <tr>
-    {% endif %}
-      <td><a href="{{ '/Biographies/@oftheday/%s'|format(format_day(day, month))|url }}">{{ day }}</a></td>
-    {% if day is divisibleby 7 or loop.last %}
+        {% endif %}
+        <td>
+          <a
+            href="{{ '/Biographies/@oftheday/%s'|format(format_day(day, month))|url }}"
+            >{{ day }}</a
+          >
+        </td>
+        {% if day is divisibleby 7 or loop.last %}
       </tr>
-    {% endif %}
-    {% endfor %}
+      {% endif %} {% endfor %}
     </table>
   </div>
-{% if (loop.index0 + 1) is divisibleby 3 or loop.last %}
+  {% if (loop.index0 + 1) is divisibleby 3 or loop.last %}
 </div>
-{% endif %}
-{% endfor %}
+{% endif %} {% endfor %}
 <!--endnoindex-->
 {% endblock %}
