@@ -13,10 +13,6 @@ endblock %} {% block head %} {{ super() }}
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12">{{this._slug}}</div>
-</div>
-
 <!--noindex-->
 {% for month in range(1, 13) %} {% if loop.index0 is divisibleby 3 %}
 <div class="row mt-5">
