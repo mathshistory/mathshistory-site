@@ -63,17 +63,16 @@ this.quote.person.attachments.images.filter(F._model ==
 
   {% for item in site.query('/Miscellaneous/messages') %}  
 
-  <div class="row">
-    <div class="col-md-4">
-      {{ item._path }}
+    {% if item._id == this._path %}
+    <div class="row">
+      <div class="col-md-12">
+        {{ item.content }}
+      </div>
     </div>
-    <div class="col-md-4">
-      {{ item._id }}
-    </div>
-  </div>
+    <hr/>
+    {% endif %}
 
-  {% endfor %}
-  <hr/>
+  {% endfor %}  
 
   <div class="row">
     <div class="col-md-6 markup">
