@@ -15,7 +15,6 @@ from lektor.db import Page, F
 VIRTUAL_SOURCE_ID = 'oftheday'
 SOURCE_PATH = '/Biographies'
 OUTPUT_PATH = '/OfTheDay'
-MESSAGE_PATH = '/Miscellaneous/messages'
 
 # thanks to https://stackoverflow.com/a/5891598/2370460
 def suffix(d):
@@ -98,6 +97,7 @@ class OfTheDayPage(VirtualSourceObject):
         self.template = 'plugins/oftheday.html'
         self._born_cache = None
         self._died_cache = None
+        self._message_cache = None 
 
     def record_dependencies(self, records):
         ctx = get_ctx()
