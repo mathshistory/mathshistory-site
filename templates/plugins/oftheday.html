@@ -61,6 +61,22 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
+  {% set message = site.query('/Miscellaneous/messages').filter(F._id.contains('01-01')) %}  
+  {% set message2 = site.query('/Miscellaneous/messages').filter(this.url_path.contains(F._id)) %}  
+
+  <div class="row">
+    <div class="col-md-4">
+      {{ message }}
+    </div>
+    <div class="col-md-4">
+      {{ message2 }}
+    </div>
+    <div class="col-md-4">
+      {{ this.url_path }}
+    </div>
+  </div>
+  <hr/>
+
   <div class="row">
     <div class="col-md-6 markup">
       Click on <span class="blue-text"> &#x24C5; </span> for a poster.
