@@ -61,20 +61,18 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
-  {% set message = site.query('/Miscellaneous/messages').filter(F._id.contains('01-01')) %}  
-  {% set message2 = site.query('/Miscellaneous/messages').filter(this.url_path.contains(F._id)) %}  
+  {% for item in site.query('/Miscellaneous/messages') %}  
 
   <div class="row">
     <div class="col-md-4">
-      {{ message }}
+      {{ item._path }}
     </div>
     <div class="col-md-4">
-      {{ message2 }}
-    </div>
-    <div class="col-md-4">
-      {{ this.url_path }}
+      {{ item._id }}
     </div>
   </div>
+
+  {% endfor %}
   <hr/>
 
   <div class="row">
