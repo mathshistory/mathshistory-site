@@ -132,6 +132,10 @@ class OfTheDayPage(VirtualSourceObject):
         return self._died_cache
 
     @property
+    def month_day(self):
+        return self.day;
+
+    @property
     def quote(self):
         # if already calculated, return the cache value
         if self._quote:
