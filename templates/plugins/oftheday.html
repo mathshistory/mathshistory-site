@@ -63,7 +63,7 @@ this.quote.person.attachments.images.filter(F._model ==
  
   {% for item in site.query('/Miscellaneous/messages') %}  
 
-    {% if item._id == this.pretty_day %}
+    {% if item.title == this.pretty_day %}
     <div class="row">
       <div class="col-md-12">
         {{ item.content }}
