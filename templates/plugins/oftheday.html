@@ -62,13 +62,18 @@ this.quote.person.attachments.images.filter(F._model ==
 <hr />
 
   {% set messages = site.get('/Miscellaneous/messages') %}  
-  
+  {% for item in site.query('/Miscellaneous/messages') %}  
+
+    {% if messages.url_to(this).contains(item._id) %}
     <div class="row">
       <div class="col-md-12">
-        {{ messages.url_to(this) }}
+        {{ item.content }}
       </div>
     </div>
     <hr/>
+    {% endif %}
+
+  {% endfor %}  
 
   <div class="row">
     <div class="col-md-6 markup">
