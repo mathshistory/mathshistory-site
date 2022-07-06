@@ -61,19 +61,12 @@ this.quote.person.attachments.images.filter(F._model ==
 
 <hr />
 
-  {% set messages = site.get('/Miscellaneous/messages') %}  
-  {% for item in site.query('/Miscellaneous/messages') %}  
-
-    {% if item._id in messages.url_to(this) %}
     <div class="row">
       <div class="col-md-12">
-        {{ item.content }}
+        {{ this.month_day }}
       </div>
     </div>
     <hr/>
-    {% endif %}
-
-  {% endfor %}  
 
   <div class="row">
     <div class="col-md-6 markup">
