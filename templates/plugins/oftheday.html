@@ -60,13 +60,19 @@ this.quote.person.attachments.images.filter(F._model ==
 <!--endnoindex-->
 
 <hr />
+ 
+  {% for item in site.query('/Miscellaneous/messages') %}  
 
+    {% if item._id == '01-01' %}
     <div class="row">
       <div class="col-md-12">
-        {{ this.month_day }}
+        {{ item.content }}
       </div>
     </div>
     <hr/>
+    {% endif %}
+
+  {% endfor %}  
 
   <div class="row">
     <div class="col-md-6 markup">
