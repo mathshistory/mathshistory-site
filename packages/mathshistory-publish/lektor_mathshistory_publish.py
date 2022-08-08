@@ -40,10 +40,11 @@ def yield_git_commands(dir, commit_message):
 
 class MathshistoryPreviewPublisher(Publisher):
 
-    def publish(self, target_url, credentials=None, **extra):
+    def publish(self, target_url, commit_message=None, credentials=None, **extra):
         build_out_directory = self.output_path.rstrip('/\\') + '/'
         deploy_target_directory = target_url.path.rstrip('/') + '/'
-        commit_message = 'autocommit: %s' % random_string(8)
+        if (commit_message==None):
+            commit_message = 'autocommit: %s' % random_string(8)
 
         # git add/commit/push the source repo
         for line in yield_git_commands(GIT_SOURCE_DIRECTORY, commit_message):
@@ -65,10 +66,11 @@ class MathshistoryPreviewPublisher(Publisher):
 
 
 class MathshistoryProductionPublisher(RsyncPublisher):
-    def publish(self, target_url, credentials=None, **extra):
+    def publish(self, target_url, commit_message=None, credentials=None, **extra):
         build_out_directory = self.output_path.rstrip('/\\') + '/'
-        deploy_target_directory = target_url.path.rstrip('/') + '/'
-        commit_message = 'autocommit: %s' % random_string(8)
+        deploy_target_directory = target_url.path.rstrip('/') + '/'        
+        if (commit_message==None):
+            commit_message = 'autocommit: %s' % random_string(8)
 
         # git add/commit/push the source repo
         for line in yield_git_commands(GIT_SOURCE_DIRECTORY, commit_message):
