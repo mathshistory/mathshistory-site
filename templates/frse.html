@@ -1,14 +1,14 @@
 <div class="row">
   <h3>{{ this.name }}</h3>
   <p>
-    <b>Birth/death dates:</b> {{ this.birth }} - {{ this.birth }}
-    <br/>
+    <b>Birth/death dates:</b> {{ this.birth }} - {{ this.death }}
+    <br />
     {% if this.birthplace %}<b>Birth place:</b> {{ this.birthplace }}{% endif %}
-    <br/>
+    <br />
     <b>Elected:</b> {{ this.elected.strftime('%d/%m/%Y') }}
-    <br/>
+    <br />
     <b>Profession:</b>{{ this.profession }}
-    <br/>
+    <br />
     <b>Type of fellowship:</b>{{ this.fellowship }}
   </p>
 </div>
