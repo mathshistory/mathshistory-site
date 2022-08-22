@@ -40,19 +40,19 @@ def yield_git_commands(dir, commit_message):
 
 class MathshistoryPreviewPublisher(Publisher):
 
-    def publish(self, target_url, commit_message=None, credentials=None, **extra):
+    def publish(self, target_url, credentials=None, **extra):
         build_out_directory = self.output_path.rstrip('/\\') + '/'
         deploy_target_directory = target_url.path.rstrip('/') + '/'
-        if (commit_message==None):
-            commit_message = 'autocommit: %s' % random_string(8)
+        if (self.commit_message==None):
+            self.commit_message = 'autocommit: %s' % random_string(8)
 
         # git add/commit/push the source repo
-        for line in yield_git_commands(GIT_SOURCE_DIRECTORY, commit_message):
+        for line in yield_git_commands(GIT_SOURCE_DIRECTORY, self.commit_message):
             print("preview publish: %s" % line)
             yield line
 
         # git add/commit/push the build output repo
-        for line in yield_git_commands(build_out_directory, commit_message):
+        for line in yield_git_commands(build_out_directory, self.commit_message):
             print("preview publish: %s" % line)
             yield line
 
@@ -66,19 +66,19 @@ class MathshistoryPreviewPublisher(Publisher):
 
 
 class MathshistoryProductionPublisher(RsyncPublisher):
-    def publish(self, target_url, commit_message=None, credentials=None, **extra):
+    def publish(self, target_url, credentials=None, **extra):
         build_out_directory = self.output_path.rstrip('/\\') + '/'
         deploy_target_directory = target_url.path.rstrip('/') + '/'        
-        if (commit_message==None):
-            commit_message = 'autocommit: %s' % random_string(8)
+        if (self.commit_message==None):
+            self.commit_message = 'autocommit: %s' % random_string(8)
 
         # git add/commit/push the source repo
-        for line in yield_git_commands(GIT_SOURCE_DIRECTORY, commit_message):
+        for line in yield_git_commands(GIT_SOURCE_DIRECTORY, self.commit_message):
             print("production publish: %s" % line)
             yield line
 
         # git add/commit/push the build output repo
-        for line in yield_git_commands(build_out_directory, commit_message):
+        for line in yield_git_commands(build_out_directory, self.commit_message):
             print("production publish: %s" % line)
             yield line
 
