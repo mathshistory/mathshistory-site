@@ -42,9 +42,11 @@ class MathshistoryPreviewPublisher(Publisher):
 
     def publish(self, target_url, credentials=None, **extra):
         build_out_directory = self.output_path.rstrip('/\\') + '/'
-        deploy_target_directory = target_url.path.rstrip('/') + '/'
+        deploy_target_directory = target_url.path.rstrip('/') + '/'        
         if (self.commit_message==None):
             self.commit_message = 'autocommit: %s' % random_string(8)
+
+        print("Commit message: ", self.commit_message)
 
         # git add/commit/push the source repo
         for line in yield_git_commands(GIT_SOURCE_DIRECTORY, self.commit_message):
