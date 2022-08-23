@@ -347,6 +347,7 @@ def drender(match, record):
     try:
         pad = get_ctx().pad
         diagram = pad.get(href)
+        alttext = False
         if (diagram):
             alttext = diagram['alttext']
             alttext = html.escape(alttext, quote=True)
