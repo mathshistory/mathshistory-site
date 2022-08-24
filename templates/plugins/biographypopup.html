@@ -6,7 +6,7 @@
     <div class="float-right">
       <img
         class="biography-thumbnail"
-        src="{{ '%s/thumbnail.jpg'|format(this.path)|url }}"
+        src="{{ '/Biographies/%s/thumbnail.jpg'|format(this._slug)|url }}"
         alt="Thumbnail of {{ this.shortname|e }}"
       />
     </div>
