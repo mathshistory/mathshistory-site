@@ -1,20 +1,24 @@
 <!--noindex-->
 <div class="row">
   <div class="col-md-12">
-    {% set thumbnail = this.attachments.images.filter(F._model == 'biographyimage').filter(F.main == True).first() %}
-    {% if thumbnail %}
+    {% set thumbnail = this.attachments.images.filter(F._model ==
+    'biographyimage').filter(F.main == True).first() %} {% if thumbnail %}
     <div class="float-right">
-      <img class="biography-thumbnail" src="{{ thumbnail|url }}" alt="Thumbnail of {{ this.shortname|e }}" />
+      <img
+        class="biography-thumbnail"
+        src="{{ '/Biographies/@biographyindex/%s'|format(thumbnail|url }}"
+        alt="Thumbnail of {{ this.shortname|e }}"
+      />
     </div>
     {% endif %}
     <div>
       <h3>{{ this.shortname }}</h3>
       {% if this.birthdate or this.birthplace %}
-      <h5>{% if this.birthyear %}{{ this.birthyear|format_year }}{% endif %} - {% if this.deathyear %}{{ this.deathyear|format_year }}{% endif %}</h5>
-      {% endif %}
-      {% if this.summary %}
-      {{ this.summary }}
-      {% endif %}
+      <h5>
+        {% if this.birthyear %}{{ this.birthyear|format_year }}{% endif %} - {%
+        if this.deathyear %}{{ this.deathyear|format_year }}{% endif %}
+      </h5>
+      {% endif %} {% if this.summary %} {{ this.summary }} {% endif %}
     </div>
   </div>
   <div class="col-md-12 text-center">
