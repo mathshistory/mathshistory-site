@@ -24,14 +24,32 @@ scoped #}
 
 <hr />
 
-{% if this.summary %}
 <div class="row">
+  {% if this.married_name %}
   <div class="col-md-12">
-    <h3>Summary</h3>
-    <dd>{{ this.summary }}</dd>
+    <dt>Married name</dt>
+    <dd>{{ this.married_name }}</dd>
   </div>
+  {% endif %} {% if this.university %}
+  <div class="col-md-12">
+    <dt>University</dt>
+    <dd>{{ this.university }}</dd>
+  </div>
+  <div class="col-md-6">
+    <dt>Degree classification</dt>
+    <dd>{{ this.classification }}</dd>
+  </div>
+  <div class="col-md-6">
+    <dt>Graduation year</dt>
+    <dd>{{ this.graduation_year }}</dd>
+  </div>
+  {% endif %} {% if this.further_details %}
+  <div class="col-md-12">
+    <dt>Further details</dt>
+    <dd>{{ this.further_details }}</dd>
+  </div>
+  {% endif %}
 </div>
-{% endif %}
 
 <!-- END MAIN BODY -->
 
