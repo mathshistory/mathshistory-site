@@ -1,0 +1,38 @@
+{% extends "layout.html" %} {% block title %}{{ this.shortname }} {% if
+this.birthyear %} ({{ this.birthyear|format_year }} - {% if this.deathyear %}{{
+this.deathyear|format_year }}{% endif %}){% endif %} - Biography{% endblock %}
+{% block head %} {{ super() }}
+<!-- opengraph -->
+<meta property="og:title" content="{{ this.shortname|e }} - Biography" />
+<meta property="og:description" content="{{ this.summary|striptags|e }}" />
+<meta property="og:site_name" content="Maths History" />
+<meta property="og:locale" content="en_GB" />
+<meta property="og:url" content="{{ this|canonical_url }}" />
+
+<!-- twitter card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="Maths History" />
+<meta name="twitter:title" content="{{ this.shortname|e }}" />
+<meta name="twitter:description" content="{{ this.summary|striptags|e }}" />
+{% endblock %} {% block body %} {# we have to do this again, because blocks are
+scoped #}
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ this.fullname }}</h1>
+  </div>
+</div>
+
+<hr />
+
+{% if this.summary %}
+<div class="row">
+  <div class="col-md-12">
+    <h3>Summary</h3>
+    <dd>{{ this.summary }}</dd>
+  </div>
+</div>
+{% endif %}
+
+<!-- END MAIN BODY -->
+
+{% endblock %}
