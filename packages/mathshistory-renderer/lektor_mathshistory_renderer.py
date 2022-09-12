@@ -413,7 +413,7 @@ def katexrender_stdio(latex_array):
 
 def correct_link(link, record):
     url = url_parse(link)
-    if not url.scheme:
+    if not url.scheme and "Societies" not in link:
         # if you do it the markdown way, then it doesn't resolve virtual source paths
         # so we do it this way instead
         link = record.url_to(link)
