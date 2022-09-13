@@ -252,7 +252,8 @@ def societyrender(match, record):
     society = match.group('society')
     text = match.group('text')
     href = '/Societies/%s/' % society
-    href = correct_link(href, record)
+    href = escape(href)
+    # href = correct_link(href, record)
     return '<a class="aclink" href="%s" target="_blank">%s</a>' % (href, text)
 
 def extrarender(match, record):
@@ -413,7 +414,7 @@ def katexrender_stdio(latex_array):
 
 def correct_link(link, record):
     url = url_parse(link)
-    if not url.scheme and "Societies" not in link:
+    if not url.scheme:
         # if you do it the markdown way, then it doesn't resolve virtual source paths
         # so we do it this way instead
         link = record.url_to(link)
