@@ -254,7 +254,7 @@ def societyrender(match, record):
     href = '/Societies/%s/' % society
     href = escape(href)
     # href = correct_link(href, record)
-    return '<a class="aclink" href="%s" target="_blank">%s</a>' % (href, text)
+    return '<a class="aclink" href="%s" target="_blank" rel="noreferrer">%s</a>' % (href, text)
 
 def extrarender(match, record):
     number = match.group('number')
