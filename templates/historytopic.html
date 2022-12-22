@@ -1,23 +1,17 @@
-{% extends "layout.html" %}
-
-{% block head %}
-{{ super() }}
+{% extends "layout.html" %} {% block head %} {{ super() }}
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.shortname|e }}">
-<meta property="og:site_name" content="Maths History">
-<meta property="og:locale" content="en_GB">
-<meta property="og:url" content="{{ this|canonical_url }}">
+<meta property="og:title" content="{{ this.shortname|e }}" />
+<meta property="og:site_name" content="Maths History" />
+<meta property="og:locale" content="en_GB" />
+<meta property="og:url" content="{{ this|canonical_url }}" />
 
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
 <meta name="twitter:title" content="{{ this.shortname|e }}" />
 <meta name="twitter:description" content="{{ this.summary }}" />
-{% endblock %}
-
-{% block title %}{{ this.shortname }}{% endblock %}
-
-{% block body %}
+{% endblock %} {% block title %}{{ this.shortname }}{% endblock %} {% block body
+%}
 
 <div class="row">
   <div class="col-md-12">
@@ -25,26 +19,23 @@
   </div>
 </div>
 
-<hr/>
+<hr />
 
 <div class="row">
-  <div class="col-md-12">
-    {{ this.content }}
-  </div>
+  <div class="col-md-12">{{ this.content }}</div>
 </div>
 
-{% import 'macros/references.html' as references %}
-{{ references.references(this.references) }}
-
-{% import 'macros/additional.html' as additional %}
-{{ additional.additional(this.additional, this.otherweb, this.shortname) }}
-
-{% if this.authors or this.update %}
-<hr/>
+{% import 'macros/references.html' as references %} {{
+references.references(this.references) }} {% import 'macros/additional.html' as
+additional %} {{ additional.additional(this.additional, this.otherweb,
+this.shortname) }} {% if this.authors or this.update %}
+<hr />
 <div class="row">
   <div class="col-md-12">
-    {% if this.authors %}Written by {{ this.authors }}{% endif %}
-    {% if this.authors and this.update %}<br/>{% endif %}
+    {% if this.authors %}Written by {{ this.authors }}{% endif %} {% if
+    this.authors and this.revisedby %}<br />{% endif %} {% if this.revisedby
+    %}Revised by {{ this.revisedby }}{% endif %}
+    <br />
     {% if this.update %}Last Update {{ this.update }}{% endif %}
   </div>
 </div>

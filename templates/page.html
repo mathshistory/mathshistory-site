@@ -1,74 +1,63 @@
-{% extends "layout.html" %}
-
-{% block title %}{{ this.title }}{% endblock %}
-
-{% block head %}
-{{ super() }}
+{% extends "layout.html" %} {% block title %}{{ this.title }}{% endblock %} {%
+block head %} {{ super() }}
 <!-- opengraph -->
-<meta property="og:title" content="{{ this.title|e }}">
-<meta property="og:site_name" content="Maths History">
-<meta property="og:locale" content="en_GB">
-<meta property="og:url" content="{{ this|canonical_url }}">
+<meta property="og:title" content="{{ this.title|e }}" />
+<meta property="og:site_name" content="Maths History" />
+<meta property="og:locale" content="en_GB" />
+<meta property="og:url" content="{{ this|canonical_url }}" />
 
 <!-- twitter card -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="Maths History" />
 <meta name="twitter:title" content="{{ this.title|e }}" />
-{% endblock %}
-
-{% block body %}
+{% endblock %} {% block body %}
 
 <div class="row">
   {% if this.sidebar and this.sidebar.blocks|length > 0 %}
   <div class="col-md-8">
-  {% else %}
-  <div class="col-md-12">
-  {% endif %}
+    {% else %}
+    <div class="col-md-12">
+      {% endif %}
 
-    <div class="row">
-      <div class="col-md-12">
-        <h1>{{ this.title }}</h1>
+      <div class="row">
+        <div class="col-md-12">
+          <h1>{{ this.title }}</h1>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">{{ this.content }}</div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        {{ this.content }}
-      </div>
-    </div>
+    {# tell funnelback not to index the sidebar #}
+    <!--noindex-->
 
+    {% if this.sidebar and this.sidebar.blocks|length > 0 %}
+    <aside class="col-md-4">
+      <div class="p-3 mb-3 bg-light rounded">
+        <ul class="sidebar-links">
+          {% for link in this.sidebar.blocks %} {{ link }} {% endfor %}
+        </ul>
+      </div>
+    </aside>
+    {% endif %}
+
+    <!--endnoindex-->
   </div>
 
-  {#  tell funnelback not to index the sidebar #}
-  <!--noindex-->
-
-  {% if this.sidebar and this.sidebar.blocks|length > 0 %}
-  <aside class="col-md-4">
-    <div class="p-3 mb-3 bg-light rounded">
-      <ul class="sidebar-links">
-        {% for link in this.sidebar.blocks %}
-        {{ link }}
-        {% endfor %}
-      </ul>
+  {% import 'macros/references.html' as references %} {{
+  references.references(this.references) }} {% if this.authors %}
+  <hr />
+  <div class="row">
+    <div class="col-md-12">
+      <p>Written by {{ this.authors }}</p>
+      <p>{% if this.revisedby %}Revised by {{ this.revisedby }}{% endif %}</p>
     </div>
-  </aside>
+  </div>
   {% endif %}
 
-  <!--endnoindex-->
+  <!-- END MAIN BODY -->
+
+  {% endblock %}
 </div>
-
-{% import 'macros/references.html' as references %}
-{{ references.references(this.references) }}
-
-{% if this.authors %}
-<hr/>
-<div class="row">
-  <div class="col-md-12">
-    <p>Written by {{ this.authors }}</p>
-  </div>
-</div>
-{% endif %}
-
-<!-- END MAIN BODY -->
-
-{% endblock %}
