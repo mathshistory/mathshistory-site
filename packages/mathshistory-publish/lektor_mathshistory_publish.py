@@ -24,7 +24,7 @@ def yield_git_commands(dir, commit_message, author):
             yield line
 
     # commit the changes
-    git_commit = get_git_command(dir) + ['commit', '--author', author, '-m', commit_message]
+    git_commit = get_git_command(dir) + ['commit', '--author="%s <>"' % author, '-m', commit_message]
     commit_command = Command(git_commit, env={})
     with commit_command:
         for line in commit_command:
@@ -48,7 +48,7 @@ class MathshistoryPreviewPublisher(Publisher):
             self.commit_message = 'autocommit: %s' % random_string(8)
 
         if (self.author==None):
-            self.author = 'Maths History <>'
+            self.author = 'Maths History'
 
         print("Commit message: %s" % self.commit_message)
         print("Author: %s" % self.author)
@@ -80,7 +80,7 @@ class MathshistoryProductionPublisher(RsyncPublisher):
             self.commit_message = 'autocommit: %s' % random_string(8)
 
         if (self.author==None):
-            self.author = 'Maths History <>'
+            self.author = 'Maths History'
 
         print("Commit message: %s" % self.commit_message)
         print("Author: %s" % self.author)

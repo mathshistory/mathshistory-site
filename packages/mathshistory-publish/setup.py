@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     py_modules=['lektor_mathshistory_publish'],
     url='https://github.com/mathshistory/mathshistory-publish',
-    version='0.1.3',
+    version='0.1.4',
     classifiers=[
         'Framework :: Lektor',
         'Environment :: Plugins',
