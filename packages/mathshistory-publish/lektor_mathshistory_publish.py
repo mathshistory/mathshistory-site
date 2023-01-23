@@ -15,7 +15,7 @@ def random_string(n):
 def get_git_command(dir):
     return ['git', '-C', dir]
 
-def yield_git_commands(dir, commit_message):
+def yield_git_commands(dir, commit_message, author):
     # add all changes
     git_add = get_git_command(dir) + ['add', dir]
     add_command = Command(git_add, env={})
@@ -24,7 +24,7 @@ def yield_git_commands(dir, commit_message):
             yield line
 
     # commit the changes
-    git_commit = get_git_command(dir) + ['commit', '-m', commit_message]
+    git_commit = get_git_command(dir) + ['commit', '--author', author, '-m', commit_message]
     commit_command = Command(git_commit, env={})
     with commit_command:
         for line in commit_command:
@@ -43,18 +43,23 @@ class MathshistoryPreviewPublisher(Publisher):
     def publish(self, target_url, credentials=None, **extra):
         build_out_directory = self.output_path.rstrip('/\\') + '/'
         deploy_target_directory = target_url.path.rstrip('/') + '/'        
+        
         if (self.commit_message==None):
             self.commit_message = 'autocommit: %s' % random_string(8)
 
+        if (self.author==None):
+            self.author = 'Maths History <>'
+
         print("Commit message: %s" % self.commit_message)
+        print("Author: %s" % self.author)
 
         # git add/commit/push the source repo
-        for line in yield_git_commands(GIT_SOURCE_DIRECTORY, self.commit_message):
+        for line in yield_git_commands(GIT_SOURCE_DIRECTORY, self.commit_message, self.author):
             print("preview publish: %s" % line)
             yield line
 
         # git add/commit/push the build output repo
-        for line in yield_git_commands(build_out_directory, self.commit_message):
+        for line in yield_git_commands(build_out_directory, self.commit_message, self.author):
             print("preview publish: %s" % line)
             yield line
 
@@ -74,15 +79,19 @@ class MathshistoryProductionPublisher(RsyncPublisher):
         if (self.commit_message==None):
             self.commit_message = 'autocommit: %s' % random_string(8)
 
+        if (self.author==None):
+            self.author = 'Maths History <>'
+
         print("Commit message: %s" % self.commit_message)
+        print("Author: %s" % self.author)
 
         # git add/commit/push the source repo
-        for line in yield_git_commands(GIT_SOURCE_DIRECTORY, self.commit_message):
+        for line in yield_git_commands(GIT_SOURCE_DIRECTORY, self.commit_message, self.author):
             print("production publish: %s" % line)
             yield line
 
         # git add/commit/push the build output repo
-        for line in yield_git_commands(build_out_directory, self.commit_message):
+        for line in yield_git_commands(build_out_directory, self.commit_message, self.author):
             print("production publish: %s" % line)
             yield line
 
