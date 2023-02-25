@@ -1,134 +1,213 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    {% block head %}
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="icon" href="{{ '/static/img/favicon.gif'|url }}" />
 
-<head>
-  {% block head %}
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="icon" href="{{ '/static/img/favicon.gif'|url }}">
+    <title>
+      {% block title %}{% endblock %} - MacTutor History of Mathematics
+    </title>
 
-  <title>{% block title %}{% endblock %} - MacTutor History of Mathematics</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ '/static/css/bootstrap.min.css'|asseturl }}"
+    />
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="{{ '/static/css/bootstrap.min.css'|asseturl }}">
+    <!-- Custom CSS - must be in this order -->
+    <link rel="stylesheet" href="{{ '/static/css/lato.css'|asseturl }}" />
+    <link rel="stylesheet" href="{{ '/static/css/reset.css'|asseturl }}" />
+    <link rel="stylesheet" href="{{ '/static/css/custom.css'|asseturl }}" />
+    <link rel="stylesheet" href="{{ '/static/css/site.css'|asseturl }}" />
+    <link rel="stylesheet" href="{{ '/static/css/content.css'|asseturl }}" />
+    <link
+      rel="stylesheet"
+      href="{{ '/static/katex/katex.min.css'|asseturl }}"
+    />
+    <link rel="stylesheet" href="{{ '/static/css/tooltip.css'|asseturl }}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- Switch design skin -->
+    <link id="new-theme-style" rel="stylesheet" />
 
-  <!-- Custom CSS - must be in this order -->
-  <link rel="stylesheet" href="{{ '/static/css/lato.css'|asseturl }}">
-  <link rel="stylesheet" href="{{ '/static/css/reset.css'|asseturl }}">
-  <link rel="stylesheet" href="{{ '/static/css/custom.css'|asseturl }}">
-  <link rel="stylesheet" href="{{ '/static/css/site.css'|asseturl }}">
-  <link rel="stylesheet" href="{{ '/static/css/content.css'|asseturl }}">
-  <link rel="stylesheet" href="{{ '/static/katex/katex.min.css'|asseturl }}">
-  <link rel="stylesheet" href="{{ '/static/css/tooltip.css'|asseturl }}">
-
-  {# want the homepage ONLY to have full background #}
-  {% if this.path == '/' %}
-  <style>
-    @media (min-width: 768px) {
-      body {
-        background-image: url("{{ '/static/img/background.png'|asseturl }}");
-      }
-    }
-  </style>
-  {% endif %}
-
-  <!-- opposite of noscript -->
-  <noscript>
+    {# want the homepage ONLY to have full background #} {% if this.path == '/'
+    %}
     <style>
-      .nonoscript {
-        display: none;
+      @media (min-width: 768px) {
+        body {
+          background-image: url("{{ '/static/img/background.png'|asseturl }}");
+        }
       }
     </style>
-  </noscript>
-  {% endblock %}
-</head>
+    {% endif %}
 
-<body>
-  <div class="container">
+    <!-- opposite of noscript -->
+    <noscript>
+      <style>
+        .nonoscript {
+          display: none;
+        }
+      </style>
+    </noscript>
+    {% endblock %}
+  </head>
 
-    {#  tell funnelback not to index the header #}
-    <!--noindex-->
+  <body>
+    <div class="container">
+      {# tell funnelback not to index the header #}
+      <!--noindex-->
 
-    <!-- HEADER -->
-    <header class="site-header py-3">
-      <!-- skip link for accessibility -->
-      <a class="skip-link" href="#main">Skip to content</a>
+      <!-- HEADER -->
+      <header class="site-header py-3">
+        <!-- skip link for accessibility -->
+        <a class="skip-link" href="#main">Skip to content</a>
 
-      <div class="row flex-nowrap justify-content-between align-items-center">
-        <div class="col pt-1">
-          <a class="site-header-name" href="{{ '/'|url }}">
-            <h1 class="site-header-name"><img height="48" src="{{ '/static/img/logo.png'|url }}" alt="MacTutor logo" />&nbsp;MacTutor</h1>
+        <div class="row flex-nowrap justify-content-between align-items-center">
+          <div class="col pt-1">
+            <a
+              class="site-header-name text-decoration-none"
+              href="{{ '/'|url }}"
+            >
+              <h1 class="site-header-name">
+                <img
+                  height="48"
+                  src="{{ '/static/img/logo.png'|url }}"
+                  alt="MacTutor logo"
+                />&nbsp;MacTutor
+              </h1>
+            </a>
+          </div>
+        </div>
+      </header>
+      <!-- END HEADER -->
+
+      <!-- NAVIGATION -->
+      <div class="container nav-bar" role="navigation">
+        <div class="row nav">
+          {% for href, title in [ ['/', 'Home'], ['/Biographies',
+          'Biographies'], ['/HistTopics', 'History Topics'], ['/Map', 'Map'],
+          ['/Curves', 'Curves'], ['/@search', 'Search'] ] %}
+          <a class="col-md-auto p-2" href="{{ href|url }}">{{ title }}</a>
+          {% endfor %}
+          <a
+            href="javascript:void()"
+            class="col-md-auto p-2"
+            id="theme-toggler"
+            onclick="toggleTheme()"
+          >
+            <i class="fa">&#xf1fc;</i>
           </a>
         </div>
       </div>
-    </header>
-    <!-- END HEADER -->
+      <!-- END NAVIGATION -->
 
-    <!-- NAVIGATION -->
-    <div class="container nav-bar" role="navigation">
-      <div class="row nav">
-        {% for href, title in [
-          ['/', 'Home'],
-          ['/Biographies', 'Biographies'],
-          ['/HistTopics', 'History Topics'],
-          ['/Map', 'Map'],
-          ['/Curves', 'Curves'],
-          ['/@search', 'Search']
-        ] %}
-          <a class="col-md-auto p-2" href="{{ href|url }}">{{ title }}</a>
-        {% endfor %}
-      </div>
+      <!--endnoindex-->
+
+      <main id="main">{% block body %}{% endblock %}</main>
+
+      {# tell funnelback not to index the footer #}
+      <!--noindex-->
+
+      <footer class="site-footer mt-3 pb-3 pt-3 pt-md-0">
+        <div class="row">
+          <div class="cr-footer col-md-4">
+            DJF/JOC/EFR<br />
+            <a href="{{ '/Miscellaneous/copyright/'|url }}"
+              >Copyright information</a
+            ><br />
+            <a href="{{ '/Miscellaneous/accessibility/'|url }}"
+              >Accessibility statement</a
+            >
+          </div>
+          <div class="links-footer col-md-6">
+            <a
+              href="https://www.st-andrews.ac.uk/mathematics-statistics/"
+              target="_blank"
+              >School of Mathematics and Statistics</a
+            >
+            <br />
+            <a href="http://www.st-andrews.ac.uk/" target="_blank"
+              >University of St Andrews, Scotland</a
+            >
+          </div>
+          <div class="col-md-2">
+            <img
+              src="{{ '/static/img/st-andrews-logo.png'|asseturl }}"
+              alt="University of St. Andrews logo"
+            />
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-md-12">
+            If you have comments, or spot errors, we are always pleased to
+            <a href="{{ '/Miscellaneous/contact_us/'|url }}">hear from you</a>.
+          </div>
+        </div>
+      </footer>
+
+      <!--endnoindex-->
     </div>
-    <!-- END NAVIGATION -->
 
-    <!--endnoindex-->
+    {% block scripts %}
+    <script src="{{ '/static/js/popper.min.js'|asseturl }}"></script>
+    <script src="{{ '/static/js/tippy-bundle.iife.min.js'|asseturl }}"></script>
+    <script src="{{ '/static/js/site-popups.js'|asseturl }}"></script>
+    <script src="{{ '/static/js/foldup.js'|asseturl }}"></script>
+    {% if not this.path.startswith('/Extras/') %}
+    <script src="{{ '/static/js/extras-popup.js'|asseturl }}"></script>
+    {% endif %}
+    <script src="{{ '/static/js/imageMapResizer.min.js'|asseturl }}"></script>
+    <script>
+      imageMapResize();
 
-    <main id="main">
-      {% block body %}{% endblock %}
-    </main>
+      // https://blog.shhdharmen.me/toggle-light-and-dark-themes-in-bootstrap
+      const LOCAL_STORAGE_KEY = 'toggle-bootstrap-theme';
+      const LOCAL_META_DATA = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_KEY)
+      );
+      const DARK_THEME_PATH = 'https://bootswatch.com/5/lux/bootstrap.min.css';
+      const DARK_STYLE_LINK = document.getElementById('new-theme-style');
+      let isDark = LOCAL_META_DATA && LOCAL_META_DATA.isDark;
 
-    {#  tell funnelback not to index the footer #}
-    <!--noindex-->
+      // check if user has already selected dark theme earlier
+      if (isDark) {
+        enableDarkTheme();
+      } else {
+        disableDarkTheme();
+      }
 
-    <footer class="site-footer mt-3 pb-3 pt-3 pt-md-0">
-      <div class="row">
-        <div class="cr-footer col-md-4">
-          DJF/JOC/EFR<br/>
-          <a href="{{ '/Miscellaneous/copyright/'|url }}">Copyright information</a><br/>
-          <a href="{{ '/Miscellaneous/accessibility/'|url }}">Accessibility statement</a>
-        </div>
-        <div class="links-footer col-md-6">
-          <a href="https://www.st-andrews.ac.uk/mathematics-statistics/" target="_blank">School of Mathematics and Statistics</a>
-          <br/>
-          <a href="http://www.st-andrews.ac.uk/" target="_blank">University of St Andrews, Scotland</a>
-        </div>
-        <div class="col-md-2">
-          <img src="{{ '/static/img/st-andrews-logo.png'|asseturl }}" alt="University of St. Andrews logo">
-        </div>
-      </div>
-      <hr/>
-      <div class="row">
-        <div class="col-md-12">
-          If you have comments, or spot errors, we are always pleased to <a href="{{ '/Miscellaneous/contact_us/'|url }}">hear from you</a>.
-        </div>
-      </div>
-    </footer>
+      /**
+       * Apart from toggling themes, this will also store user's theme preference in local storage.
+       * So when user visits next time, we can load the same theme.
+       *
+       */
+      function toggleTheme() {
+        isDark = !isDark;
+        if (isDark) {
+          enableDarkTheme();
+        } else {
+          disableDarkTheme();
+        }
+        const META = { isDark };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(META));
+      }
 
-    <!--endnoindex-->
+      function enableDarkTheme() {
+        DARK_STYLE_LINK.setAttribute('href', DARK_THEME_PATH);
+      }
 
-  </div>
-
-  {% block scripts %}
-  <script src="{{ '/static/js/popper.min.js'|asseturl }}"></script>
-  <script src="{{ '/static/js/tippy-bundle.iife.min.js'|asseturl }}"></script>
-  <script src="{{ '/static/js/site-popups.js'|asseturl }}"></script>
-  <script src="{{ '/static/js/foldup.js'|asseturl }}"></script>
-  {% if not this.path.startswith('/Extras/') %}
-  <script src="{{ '/static/js/extras-popup.js'|asseturl }}"></script>
-  {% endif %}
-  <script src="{{ '/static/js/imageMapResizer.min.js'|asseturl }}"></script>
-  <script>imageMapResize();</script>
-  {% endblock %}
-</body>
-
+      function disableDarkTheme() {
+        DARK_STYLE_LINK.setAttribute('href', '');
+      }
+    </script>
+    {% endblock %}
+  </body>
 </html>
