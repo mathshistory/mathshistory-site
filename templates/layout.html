@@ -65,10 +65,9 @@
       <!--noindex-->
 
       <!-- HEADER -->
-      <header class="site-header py-3">
+      <header class="site-header py-3 position-relative">
         <!-- skip link for accessibility -->
         <a class="skip-link" href="#main">Skip to content</a>
-
         <div class="row flex-nowrap justify-content-between align-items-center">
           <div class="col pt-1">
             <a
@@ -85,6 +84,14 @@
             </a>
           </div>
         </div>
+        <a
+          href="javascript:void()"
+          class="row justify-content-end small pr-4"
+          id="theme-toggler"
+          onclick="toggleTheme()"
+        >
+          <i class="fa" style="width: min-content">&#xf1fc;</i>
+        </a>
       </header>
       <!-- END HEADER -->
 
@@ -96,14 +103,6 @@
           ['/Curves', 'Curves'], ['/@search', 'Search'] ] %}
           <a class="col-md-auto p-2" href="{{ href|url }}">{{ title }}</a>
           {% endfor %}
-          <a
-            href="javascript:void()"
-            class="col-md-auto p-2"
-            id="theme-toggler"
-            onclick="toggleTheme()"
-          >
-            <i class="fa">&#xf1fc;</i>
-          </a>
         </div>
       </div>
       <!-- END NAVIGATION -->
@@ -173,7 +172,8 @@
       const LOCAL_META_DATA = JSON.parse(
         localStorage.getItem(LOCAL_STORAGE_KEY)
       );
-      const DARK_THEME_PATH = 'https://bootswatch.com/5/lux/bootstrap.min.css';
+      const DARK_THEME_PATH =
+        'https://bootswatch.com/5/flatly/bootstrap.min.css';
       const DARK_STYLE_LINK = document.getElementById('new-theme-style');
       let isDark = LOCAL_META_DATA && LOCAL_META_DATA.isDark;
 
