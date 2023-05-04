@@ -74,10 +74,10 @@ class MathshistoryPreviewPublisher(Publisher):
 
 class MathshistoryProductionPublisher(RsyncPublisher):
     def publish(self, target_url, credentials=None, **extra):
-        build_out_directory = self.output_path.rstrip('/\\') + '/'
-        deploy_target_directory = target_url.path.rstrip('/') + '/'        
+        build_out_directory = self.output_path.rstrip('/\\') + '/'       
         if (self.commit_message==None):
             self.commit_message = 'autocommit: %s' % random_string(8)
+        self.commit_message = 'PRODUCTION: ' + self.commit_message # prepend PRODUCTION to the commit message
 
         if (self.author==None):
             self.author = 'Maths History'
