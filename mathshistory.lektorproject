@@ -10,7 +10,7 @@ default = yes
 
 [servers.production]
 name = Production/Live
-target = rsync://bac4@l-mathshist-w1.st-andrews.ac.uk/var/www/html
+target = rsync://mservice@l-mathshist-w1.st-andrews.ac.uk/var/www/html
 enabled = yes
 default = no
 
