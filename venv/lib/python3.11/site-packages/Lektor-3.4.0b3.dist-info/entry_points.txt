@@ -1,0 +1,2 @@
+[console_scripts]
+lektor = lektor.cli:main

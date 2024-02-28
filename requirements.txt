@@ -1,0 +1,25 @@
+Babel==2.9.0
+certifi==2020.12.5
+cffi==1.14.4
+chardet==4.0.0
+click==7.1.2
+cryptography
+ExifRead==2.3.2
+Flask
+Flask-Executor==0.9.4
+idna==2.10
+inifile==0.4
+itsdangerous==1.1.0
+Jinja2
+#-e git+https://github.com/mathshistory/mathshistory-lektor.git@de18d4a728cc0e43e3df0fd778d169443a36ace7#egg=Lektor
+MarkupSafe==1.1.1
+mistune==0.8.4
+pycparser==2.20
+pyOpenSSL==20.0.1
+pytz==2020.5
+requests==2.25.1
+sib-api-v3-sdk==7.5.0
+six==1.15.0
+urllib3==1.26.2
+watchdog==1.0.2
+Werkzeug==1.0.1
