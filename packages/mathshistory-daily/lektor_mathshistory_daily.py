@@ -175,10 +175,15 @@ class OfTheDayPage(VirtualSourceObject):
 
     def get_deltaday(self, delta):
         thisday_datetime = datetime.datetime.fromtimestamp(time.mktime(time.strptime(self.day, '%m-%d')))
+        current_year = time.localtime().tm_year
+        # if today is 28th feb and its a leap year, then 29th feb is valid
+        if thisday_datetime.month == 2 and thisday_datetime.day == 28:            
+            if current_year % 4 == 0 and (current_year % 100 != 0 or current_year % 400 == 0):        
+                return OfTheDayPage(self.parent, '02-29')
         delta_datetime = thisday_datetime + datetime.timedelta(days=delta)
         day = delta_datetime.day
-        month = delta_datetime.month
-        formatted = format_day(day, month)
+        month = delta_datetime.month        
+        formatted = format_day(day, month)    
         return OfTheDayPage(self.parent, formatted)
 
     @property
