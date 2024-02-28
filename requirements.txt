@@ -20,6 +20,6 @@ pytz==2020.5
 requests==2.25.1
 sib-api-v3-sdk==7.5.0
 six==1.15.0
-urllib3==1.26.2
+urllib3==1.26.18
 watchdog==1.0.2
 Werkzeug==1.0.1
