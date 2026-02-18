@@ -6,10 +6,10 @@
     ),
   );
 
-  $baseUrl = "https://st-andrews-search.clients.uk.funnelback.com/s/search.html?";
+  $baseUrl = "https://standrews-search.funnelback.squiz.cloud/s/search.html?";
   $mode = "";
   $query = "";
-  $collection = "uosa-web-maths-history";
+  $collection = "standrews~sp-web-maths-history";
   $profile = "_default";
   $form = "resultsonly";
   $theme = "";
